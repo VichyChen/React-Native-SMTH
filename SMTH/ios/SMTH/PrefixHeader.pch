@@ -1,0 +1,107 @@
+//
+//  PrefixHeader.pch
+//  SMTH
+//
+//  Created by mac on 2017/12/30.
+//  Copyright © 2017年 Facebook. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import <UIKit/UIKit.h>
+#import "Util.h"
+#import "GCStatistics.h"
+
+#define ScreenHeight ([UIScreen mainScreen].bounds.size.height)
+#define ScreenWidth ([UIScreen mainScreen].bounds.size.width)
+#define APP ((AppDelegate *)[UIApplication sharedApplication].delegate)
+#define NSNC [NSNotificationCenter defaultCenter]
+#define NSUD [NSUserDefaults standardUserDefaults]
+#define iPad UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad
+
+#define String(obj) ((!(obj) || ![(obj) isKindOfClass:[NSString class]]  || ([(obj) isKindOfClass:[NSString class]] && [(obj) length] == 0)) ? @"" : (obj))
+#define StringIsEmpty(obj) (!(obj) || ![(obj) isKindOfClass:[NSString class]] || ([(obj) isKindOfClass:[NSString class]] && [[(obj) trim] length] == 0))
+#define StringIfEmptyWithDefault(obj, default) (StringIsEmpty((obj)) ? default : (obj))
+
+#define ArrayHasObject(obj) ((obj) && [(obj) isKindOfClass:[NSArray class]] && [(obj) count] > 0)
+
+//NSUserDefault
+#define kGCToday @"GCToday"
+
+//Debug
+#ifdef DEBUG
+
+//*********************  免费版  ***********************
+#if FREEVERSION
+
+//友盟appkey
+#define kUmengAppKey @"5a470acdf29d9838d60000dc"
+
+//广点通
+#define kGDTAppKey @"1105344611"
+#define kGDTBannerPlacementID @"4090812164690039"
+#define kGDTSplashPlacementID @"9040714184494018"
+#define kGDTNativeExpressPlacementID @"9090529359814184"
+
+#define kGDTSplashTShowTimeInterVal 5
+
+
+//*********************  收费版  ***********************
+#else
+
+//友盟appkey
+#define kUmengAppKey @"5a470bb2f43e48407a000a36"
+
+//广点通
+#define kGDTAppKey  @""
+#define kGDTBannerPlacementID @""
+#define kGDTSplashPlacementID @""
+#define kGDTNativeExpressPlacementID @""
+
+#endif
+
+//Release
+#else
+
+//*********************  免费版  ***********************
+#if FREEVERSION
+
+//友盟appkey
+//正式
+#define kUmengAppKey @"5a470b8cf43e487a6a000188"
+//测试
+//#define kUmengAppKey @"5a470acdf29d9838d60000dc"
+
+//广点通
+//正式
+#define kGDTAppKey @"1106572785"
+#define kGDTBannerPlacementID @""
+#define kGDTSplashPlacementID @"1050322993120521"
+#define kGDTNativeExpressPlacementID @""
+//测试
+//#define kGDTAppKey @"1105344611"
+//#define kGDTBannerPlacementID @"4090812164690039"
+//#define kGDTSplashPlacementID @"9040714184494018"
+//#define kGDTNativeExpressPlacementID @"9090529359814184"
+
+#define kGDTSplashTShowTimeInterVal 1800
+
+//*********************  收费版  ***********************
+#else
+
+//友盟appkey
+#define kUmengAppKey @"5a470b9ef43e4873fd000835"
+
+//广点通
+#define kGDTAppKey  @""
+#define kGDTBannerPlacementID @""
+#define kGDTSplashPlacementID @""
+#define kGDTNativeExpressPlacementID @""
+
+#endif
+
+#endif
+
+
+#endif /* PrefixHeader_pch */

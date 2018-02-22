@@ -1,0 +1,16 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '7.0'
+
+target "SMTH" do
+
+pod 'UMengSocial'
+pod 'UMengAnalytics'
+
+end
+
+target "SMTH Pro" do
+    
+    pod 'UMengSocial'
+    pod 'UMengAnalytics'
+    
+end
