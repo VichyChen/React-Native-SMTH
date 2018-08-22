@@ -12,7 +12,6 @@ import {
     Modal
 } from 'react-native';
 
-import Color from '../config/Color'
 import {
     BackgroundMaskView
 } from '../config/Common';

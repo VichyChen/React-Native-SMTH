@@ -8,7 +8,6 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
-import Color from 'Color'
 import {
     SeperatorLine,
     CellBackground

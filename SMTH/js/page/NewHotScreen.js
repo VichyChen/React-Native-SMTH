@@ -41,9 +41,39 @@ import {
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
+import Tabs from 'antd-mobile/lib/tabs';
+import ScrollableTabView, {DefaultTabBar, ScrollableTabBar} from 'react-native-scrollable-tab-view';
+
+import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
+import { Dimensions } from 'react-native';
+
 var _array;
 
-export default class HotScreen extends Component {
+const FirstRoute = () => (
+  <View style={[{ backgroundColor: '#ff4081', flex: 1 }]} />
+);
+
+const SecondRoute = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+
+const SecondRoute1 = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+const SecondRoute2 = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+const SecondRoute3 = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+const SecondRoute4 = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+const SecondRoute5 = () => (
+  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
+);
+
+export default class NewHotScreen extends Component {
   static navigationOptions = {
     title: '热门',
   };
@@ -56,6 +86,16 @@ export default class HotScreen extends Component {
       screenText: null,
       dataArray: [],
       showLogin: false,
+      index: 0,
+      routes: [
+        { key: 'first', title: '全站' },
+        { key: 'second', title: '社区管理' },
+        { key: 'second1', title: '国内院校' },
+        { key: 'second2', title: '休闲娱乐' },
+        { key: 'second3', title: '五湖四海' },
+        { key: 'second4', title: '游戏运动' },
+        { key: 'second5', title: '社会信息' },
+      ],
     }
 
     _array = [
@@ -244,47 +284,36 @@ export default class HotScreen extends Component {
     </CellBackground>
   );
 
-  render() {
-    return (
-      <Screen
-        showLoading={this.state.viewLoading}
-        loadingType={'background'}
-        text={this.state.screenText}
-        onPress={() => {
-          this.setState({
-            viewLoading: true,
-            loadingType: 'background',
-            screenText: null
-          });
-          this.net_LoadSectionHot();
-        }}
-      >
-        <SectionList
-          sections={this.state.dataArray}
-          renderItem={this._renderItem}
-          renderSectionHeader={this._renderHeader}
-          removeClippedSubviews={false}
-          style={{
-            backgroundColor: global.colors.backgroundGrayColor,
-          }}
-          onRefresh={() => {
-            this.setState({
-              pullLoading: true
-            });
 
-            this.net_LoadSectionHot();
-          }
-          }
-          refreshing={this.state.pullLoading}
-        />
-        <LoginView visible={this.state.showLogin} success={() => {
-          this.setState({
-            showLogin: false,
-            viewLoading: true
-          });
-          this.net_LoadSectionHot();
-        }} />
-      </Screen>
+  _renderTabBar = props => <TabBar scrollEnabled {...props} 
+  tabStyle={{width:86, height:40}} 
+  indicatorStyle={{width:20, marginLeft:33}} 
+  labelStyle={{fontSize:global.configures.fontSize15}}/>;
+
+  _renderScene = SceneMap({
+    first: FirstRoute,
+    second: SecondRoute,
+    second1: SecondRoute1,
+    second2: SecondRoute2,
+    second3: SecondRoute3,
+    second4: SecondRoute4,
+    second5: SecondRoute5,
+  });
+
+  render() {
+  
+    return (
+    
+      <TabView
+        navigationState={this.state}
+        renderScene={this._renderScene}
+        renderTabBar={this._renderTabBar}
+        onIndexChange={ index => { this.setState({ index }) } }
+        initialLayout={{
+          width: Dimensions.get('window').width,
+          height: 0,
+        }}
+      />
     )
   }
 }

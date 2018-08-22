@@ -9,7 +9,6 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import Color from '../config/Color'
 
 export default class NavigatorTitleButton extends Component {
     constructor(props) {

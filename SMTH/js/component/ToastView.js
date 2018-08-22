@@ -11,7 +11,6 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-import Color from '../config/Color'
 import {
 } from '../config/Common';
 

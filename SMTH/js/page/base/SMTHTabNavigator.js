@@ -11,6 +11,8 @@ import BoardScreen from '../BoardScreen';
 import FavouriteScreen from '../FavouriteScreen';
 import MyScreen from '../MyScreen';
 
+import NewHotScreen from '../NewHotScreen';
+
 import {
     Color
 } from '../../config/Common';

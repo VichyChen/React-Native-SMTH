@@ -6,8 +6,6 @@ import {
     Text,
 } from 'react-native';
 
-import Color from '../config/Color'
-
 export default class SectionBlankHeader extends Component {
     render() {
         return (

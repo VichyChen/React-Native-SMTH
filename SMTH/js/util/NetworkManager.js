@@ -951,4 +951,149 @@ export default class NetworkManager {
     static net_getAttachmentImage(board_id, article_id, pos) {
         return 'http://att.newsmth.net/nForum/att/' + board_id + '/' + article_id + '/' + pos;
     }
+
+
+//**************************************** https://exp.newsmth.net/ ****************************************/
+
+    //全部、社区管理！@#¥%……&*（）
+    static getNewHot(section_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global'), null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //版面列表
+    static getNewSections(section_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/section/' + section_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //版面主题
+    static getNewBoardTopics(board_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/board/topics/' + board_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //版面热点
+    static getNewBoardHot(board_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/board/hot/' + board_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //版面体验
+    static getNewBoardExperience(board_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/board/experience/' + board_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //帖子详情页
+    static getNewTopic(topic_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/topic/' + topic_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    /*
+    https://exp.newsmth.net/search?keyword=%E7%A5%9E%E5%B8%96&mode=Article&original=false&attachment=false 搜索帖子
+    https://exp.newsmth.net/search?mode=board&keyword=%E6%88%BF%E5%9C%B0%E4%BA%A7 搜索版面
+    https://exp.newsmth.net/search?mode=account&keyword=%E6%88%BF%E5%9C%B0%E4%BA%A7 搜索用户
+    */
+    static getNewSearch(keyword, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/topic/', null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }    
+
+    //个人信息页+主题列表
+    static getNewAccount(account_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/account/' + account_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //个人信息页 驻版
+    static getNewAccountMembers(account_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/account/members/' + account_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //个人信息页 关注
+    static getNewAccountFriends(account_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/account/friends/' + account_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //个人信息页 粉丝
+    static getNewAccountFans(account_id, success, failure, netError) {
+        NetworkManager.get('https://exp.newsmth.net/account/fans/' + account_id, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
+    //获取登陆页面
+
+    //获取登陆验证码
+
+    //登陆
+
+    
+    //获取发帖页面
+    
+    //发帖
+
+    //获取回帖页面
+    
+    //回帖
+
+    //上传图片
 }

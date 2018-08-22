@@ -7,8 +7,6 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native';
 
-import Color from '../config/Color'
-
 export default class AvatorImage extends Component {
     render() {
         return (

@@ -5,8 +5,6 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
-import Color from '../config/Color'
-
 import {
     LoadingView,
     LoadingViewText,

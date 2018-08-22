@@ -5,8 +5,6 @@ import {
     View,
 } from 'react-native';
 
-import Color from '../config/Color'
-
 export default class HorizontalSeperatorLine extends Component {
     render() {
         return (

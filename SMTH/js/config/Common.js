@@ -1,4 +1,3 @@
-import Color from './Color';
 
 import NetworkManager from '../util/NetworkManager';
 

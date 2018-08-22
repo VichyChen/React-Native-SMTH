@@ -7,7 +7,6 @@ import {
     Image
 } from 'react-native';
 
-import Color from '../config/Color'
 import {
     CellBackground
 } from '../config/Common';

@@ -9,7 +9,6 @@ import {
     Modal
 } from 'react-native';
 
-import Color from '../config/Color'
 import HorizontalSeperatorLine from '../component/HorizontalSeperatorLine'
 import {
     Button,

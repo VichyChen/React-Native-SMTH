@@ -7,8 +7,6 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import Color from '../config/Color'
-
 export default class CellBackground extends Component {
     constructor(props) {
         super(props);

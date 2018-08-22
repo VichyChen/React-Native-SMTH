@@ -12,8 +12,6 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import Color from '../config/Color'
-
 export default class ImageButton extends Component {
     constructor(props) {
         super(props);
