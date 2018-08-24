@@ -166,7 +166,7 @@ export default class UserThreadScreen extends Component {
                     renderItem={this._renderItem}
                     removeClippedSubviews={false}
                     extraData={this.state}
-                    style={{ height: global.constants.SCREEN_HEIGHT - 64 }}
+                    style={{ height: global.constants.ScreenHeight - 64 }}
                     onRefresh={() => {
                         this.setState({
                             pullLoading: true

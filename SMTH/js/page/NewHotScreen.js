@@ -36,42 +36,16 @@ import {
   Screen,
   Toast,
   ToastUtil,
-  AvatorImage
+  AvatorImage,
+  NavigationBar,
+  TabPageView,
+  NewHotListScreen
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
-import Tabs from 'antd-mobile/lib/tabs';
-import ScrollableTabView, {DefaultTabBar, ScrollableTabBar} from 'react-native-scrollable-tab-view';
-
-import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import { Dimensions } from 'react-native';
 
 var _array;
-
-const FirstRoute = () => (
-  <View style={[{ backgroundColor: '#ff4081', flex: 1 }]} />
-);
-
-const SecondRoute = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
-
-const SecondRoute1 = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
-const SecondRoute2 = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
-const SecondRoute3 = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
-const SecondRoute4 = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
-const SecondRoute5 = () => (
-  <View style={[{ backgroundColor: '#673ab7', flex: 1 }]} />
-);
 
 export default class NewHotScreen extends Component {
   static navigationOptions = {
@@ -86,16 +60,6 @@ export default class NewHotScreen extends Component {
       screenText: null,
       dataArray: [],
       showLogin: false,
-      index: 0,
-      routes: [
-        { key: 'first', title: '全站' },
-        { key: 'second', title: '社区管理' },
-        { key: 'second1', title: '国内院校' },
-        { key: 'second2', title: '休闲娱乐' },
-        { key: 'second3', title: '五湖四海' },
-        { key: 'second4', title: '游戏运动' },
-        { key: 'second5', title: '社会信息' },
-      ],
     }
 
     _array = [
@@ -241,79 +205,29 @@ export default class NewHotScreen extends Component {
     });
   }
 
-  _renderHeader = ({ section }) => (
-    <View>
-      <SectionHeader title={section.key} />
-    </View>
-  );
-
-  _renderItem = ({ item }) => (
-    <CellBackground
-      onPress={() => {
-        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board, subject: item.subject })
-      }}
-    >
-      <View style={styles.container}>
-        <Text style={styles.subject}>{item.subject + '(' + item.count + ')'}</Text>
-        <View style={styles.other}>
-          <Text style={styles.board}>{item.boardName == null ? item.board : item.boardName}</Text>
-          <Text style={styles.dot}>•</Text>
-          <Text style={styles.author}>{item.author_id}</Text>
-        </View>
-
-        {/* <View style={{ flexDirection: 'row', padding: 13, backgroundColor: global.colors.whiteColor }}>
-          <AvatorImage
-            style={styles.avator}
-            borderRadius={20}
-            widthAndHeight={40}
-            onPressClick={() => {
-              this.props.navigation.navigate('userScreen', { id: item.author_id });
-            }}
-            uri={NetworkManager.net_getFace(item.author_id)} />
-          <View>
-            <Text style={styles.author}>{item.author_id}</Text>
-            <Text style={styles.time}>{DateUtil.formatTimeStamp(item.time) + '     ' + item.count + '回复'}</Text>
-          </View>
-          <Text style={styles.board}>{unescape(item.board)}</Text>
-        </View>
-        <Text style={styles.subject}>{item.subject}</Text> */}
-
-
-        <SeperatorLine />
-      </View>
-    </CellBackground>
-  );
-
-
-  _renderTabBar = props => <TabBar scrollEnabled {...props} 
-  tabStyle={{width:86, height:40}} 
-  indicatorStyle={{width:20, marginLeft:33}} 
-  labelStyle={{fontSize:global.configures.fontSize15}}/>;
-
-  _renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-    second1: SecondRoute1,
-    second2: SecondRoute2,
-    second3: SecondRoute3,
-    second4: SecondRoute4,
-    second5: SecondRoute5,
-  });
-
   render() {
-  
     return (
-    
-      <TabView
-        navigationState={this.state}
-        renderScene={this._renderScene}
-        renderTabBar={this._renderTabBar}
-        onIndexChange={ index => { this.setState({ index }) } }
-        initialLayout={{
-          width: Dimensions.get('window').width,
-          height: 0,
-        }}
-      />
+      <View style={{ flex: 1 }}>
+
+        <NavigationBar title='热点' />
+
+        <TabPageView
+          titles={['全站', '社区管理', '国内院校', '休闲娱乐', '五湖四海', '游戏运动', '社会信息', '知性感性', '文化人文', '学术科学', '电脑技术']}
+          pages={[
+            (<View style={[{ backgroundColor: 'blue', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'red', flex: 1 }]} />),
+            (<NewHotListScreen />),
+            (<View style={[{ backgroundColor: 'green', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'black', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'blue', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'red', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'green', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'black', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'blue', flex: 1 }]} />),
+            (<View style={[{ backgroundColor: 'red', flex: 1 }]} />),
+          ]}
+        />
+      </View>
     )
   }
 }

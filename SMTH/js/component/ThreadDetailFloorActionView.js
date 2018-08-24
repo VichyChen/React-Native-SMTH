@@ -40,7 +40,7 @@ export default class ThreadDetailFloorActionView extends Component {
                 onRequestClose={() => { console.log("Modal has been closed.") }}
             >
                 <BackgroundMaskView
-                    height={global.constants.SCREEN_HEIGHT}
+                    height={global.constants.ScreenHeight}
                     onPress={this.props.onCancelClick}
                     hidden={this.props.hidden}
                 />
@@ -78,8 +78,8 @@ var styles = {
             backgroundColor: global.colors.backgroundGrayColor,
             height: height,
             position: 'absolute',
-            width: global.constants.SCREEN_WIDTH,
-            top: global.constants.SCREEN_HEIGHT,
+            width: global.constants.ScreenWidth,
+            top: global.constants.ScreenHeight,
             alignContent: 'center',
         }
     },

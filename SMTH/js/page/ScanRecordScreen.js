@@ -97,7 +97,7 @@ export default class ScanRecordScreen extends Component {
                     keyExtractor={(item, index) => index}
                     style={{
                         backgroundColor: global.colors.backgroundGrayColor,
-                        height: global.constants.SCREEN_HEIGHT - 64
+                        height: global.constants.ScreenHeight - 64
                     }}
                 />
             </Screen>

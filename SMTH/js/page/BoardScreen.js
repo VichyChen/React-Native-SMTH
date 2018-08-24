@@ -193,7 +193,7 @@ export default class BoardScreen extends Component {
           extraData={this.state}
           style={{
             backgroundColor: global.colors.backgroundGrayColor,
-            height: global.constants.SCREEN_HEIGHT - 64 - (this.props.navigation.state.params == undefined ? 48 : 0)
+            height: global.constants.ScreenHeight - 64 - (this.props.navigation.state.params == undefined ? 48 : 0)
           }}
           onRefresh={() => {
             this.setState({

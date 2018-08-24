@@ -102,19 +102,19 @@ export default class SettingScreen extends Component {
 
         <View style={{ backgroundColor: global.colors.whiteColor }}>
           <Text style={[{ fontSize: global.configures.fontSize17, color: global.colors.fontColor, marginLeft: 13, marginTop: 13 }]} >字体大小：</Text>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.SCREEN_WIDTH, height: 60, }}>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 60, }}>
             <Text style={[{
               fontSize: this.state.fontSizeValue,
               textAlign: 'center',
               marginLeft: 13,
-              width: global.constants.SCREEN_WIDTH - 26,
+              width: global.constants.ScreenWidth - 26,
               color: global.colors.fontColor
             }]}>
               拖动滑动条调整字体大小。
           </Text>
           </View>
 
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.SCREEN_WIDTH, height: 44, }}>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 44, }}>
             <Text style={[styles.silderHorizonText, { fontSize: minFontSize, }]} >A</Text>
             <Slider
               style={styles.slider}
@@ -181,7 +181,7 @@ export default class SettingScreen extends Component {
 var styles = {
   get slider() {
     return {
-      width: global.constants.SCREEN_WIDTH - 100,
+      width: global.constants.ScreenWidth - 100,
       height: 44,
     }
   },

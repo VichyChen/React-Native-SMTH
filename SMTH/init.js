@@ -10,26 +10,51 @@ import {
     BoardModel
 } from 'ModelModule';
 
+global.bool = {
+    iOS: Platform.OS === 'ios',
+    Android: Platform.OS === 'android',
+    iPhoneX: Platform.OS === 'ios' ? (Dimensions.get('window').width == 375 && Dimensions.get('window').height == 812) : false,
+};
+
 global.constants = {
-    IOS: Platform.OS === 'ios',
-    ANDROID: Platform.OS === 'android',
-    SCREEN_WIDTH: Dimensions.get('window').width,
-    SCREEN_HEIGHT: Platform.OS === 'ios' ? Dimensions.get('window').height : Dimensions.get('window').height - 24,
-    NAVIGATIONBAR_HEIGHT: Platform.OS === 'ios' ? 64 : 80,
+    ScreenWidth: Dimensions.get('window').width,
+    ScreenHeight: global.bool.iOS ? Dimensions.get('window').height : Dimensions.get('window').height - 24,
+    StatusBarHeight: global.bool.iOS ? (global.bool.iPhoneX ? 44 : 20) : 20,
+    NavigationBarHeight: global.bool.iOS ? (global.bool.iPhoneX ? 88 : 64) : 80,
+    TabBarHeight: global.bool.iOS ? (global.bool.iPhoneX ? 49 + 34 : 49) : 49,
+    TopSaveArea: global.bool.iOS ? (global.bool.iPhoneX ? 24 : 0) : 0,
+    BottomSaveArea: global.bool.iOS ? (global.bool.iPhoneX ? 34 : 0) : 0,
+    TopMargin: 15,
+    BottomMargin: 15,
+    LeftMargin: 15,
+    RightMargin: 15,
 };
 
 global.colors = {
     whiteColor: 'white',
     clearColor: '#00000000',
     themeColor: '#6495ED', //167efb、4788c7、6495ED
-    blueColor: '#167efb',
-    fontColor: '#323232',
-    gray1Color: '#646464',
-    gray2Color: '#969696',
+    blueColor: '#337ab7',
+    fontColor: '#333333',
+    gray1Color: '#666666',
+    gray2Color: '#999999',
     gray3Color: '#b4b4b4',
     gray4Color: '#dcdcdc',
-    backgroundGrayColor: '#f5f5f5',
-    seperatorColor: '#f2f2f2',
+    backgroundGrayColor: '#F5F5F5',
+    seperatorColor: '#F1F1F1',
+};
+
+global.fontSize = {
+    20: 20,
+    19: 19,
+    18: 18,
+    17: 17,
+    16: 16,
+    15: 15,
+    14: 14,
+    13: 13,
+    12: 12,
+    11: 11,
 };
 
 global.images = {
@@ -54,6 +79,8 @@ global.images = {
     get tabbar_tree() { return require('./js/image/tabbar_tree.png') },
     get tabbar_user_filled() { return require('./js/image/tabbar_user_filled.png') },
     get tabbar_user() { return require('./js/image/tabbar_user.png') },
+
+    get ic_return_b_90x90() { return require('./js/image/ic_return_b_90x90.png') },
 };
 
 global.storageKeys = {

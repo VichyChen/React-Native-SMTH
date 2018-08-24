@@ -79,7 +79,7 @@ var styles = {
         return {
             backgroundColor: global.colors.backgroundGrayColor,
             height: height,
-            width: global.constants.SCREEN_WIDTH,
+            width: global.constants.ScreenWidth,
             position: 'absolute',
             top: 0,
             alignContent: 'center',

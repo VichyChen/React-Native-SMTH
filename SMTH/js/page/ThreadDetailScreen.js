@@ -339,7 +339,7 @@ export default class ThreadDetailScreen extends Component {
   _attachmentImageItem = ({ item }) => (
     <AutoHeightImage
       style={styles.image}
-      width={global.constants.SCREEN_WIDTH - 26}
+      width={global.constants.ScreenWidth - 26}
       imageURL={NetworkManager.net_getAttachmentImage(board, item.id, item.pos)}
     />
   );
@@ -407,7 +407,7 @@ export default class ThreadDetailScreen extends Component {
           }}
         />
 
-        <BackgroundMaskView height={Dimensions.get('window').height - global.constants.NAVIGATIONBAR_HEIGHT}
+        <BackgroundMaskView height={Dimensions.get('window').height - global.constants.NavigationBarHeight}
           onPress={() => {
             this.setState({
               selectPageViewHidden: true,
@@ -582,7 +582,7 @@ export default class ThreadDetailScreen extends Component {
 var styles = {
   get flatList() {
     return {
-      height: Dimensions.get('window').height - 40 - global.constants.NAVIGATIONBAR_HEIGHT,
+      height: Dimensions.get('window').height - 40 - global.constants.NavigationBarHeight,
       backgroundColor: global.colors.backgroundGrayColor,
     }
   },

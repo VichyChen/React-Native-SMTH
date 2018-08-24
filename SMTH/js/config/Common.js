@@ -35,6 +35,10 @@ import Screen from '../component/Screen';
 import Toast from 'antd-mobile/lib/toast';
 
 import PickerSelectView from '../component/PickerSelectView';
+import NavigationBar from '../component/NavigationBar';
+import TabPageView from '../component/TabPageView';
+
+import NewHotListScreen from '../page/NewHotListScreen';
 
 export {
     NetworkManager,
@@ -65,5 +69,8 @@ export {
     LoginView,
     Screen,
     Toast,
-    PickerSelectView
+    PickerSelectView,
+    NavigationBar,
+    TabPageView,
+    NewHotListScreen,
 }

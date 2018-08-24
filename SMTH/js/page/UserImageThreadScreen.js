@@ -164,7 +164,7 @@ export default class UserImageThreadScreen extends Component {
                     renderItem={this._renderItem}
                     removeClippedSubviews={false}
                     extraData={this.state}
-                    style={{ height: global.constants.SCREEN_HEIGHT - 64 }}
+                    style={{ height: global.constants.ScreenHeight - 64 }}
                     onRefresh={() => {
                         this.setState({
                             pullLoading: true
@@ -193,7 +193,7 @@ var styles = {
             position: 'absolute',
             bottom: 13,
             left: 13,
-            width: global.constants.SCREEN_WIDTH - 26,
+            width: global.constants.ScreenWidth - 26,
         }
     },
     get subject() {
@@ -218,8 +218,8 @@ var styles = {
         return {
             margin: 13,
             backgroundColor: global.colors.backgroundGrayColor,
-            height: global.constants.SCREEN_WIDTH * 0.6,
-            width: global.constants.SCREEN_WIDTH - 26,
+            height: global.constants.ScreenWidth * 0.6,
+            width: global.constants.ScreenWidth - 26,
         }
     },
     get countImage() {

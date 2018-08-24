@@ -170,14 +170,14 @@ export default class LoginView extends Component {
 var styles = {
     get scrollView() {
         return {
-            height: global.constants.SCREEN_HEIGHT,
+            height: global.constants.ScreenHeight,
         }
     },
     get contain() {
         return {
             marginTop: 100,
             marginLeft: 40,
-            width: global.constants.SCREEN_WIDTH - 80,
+            width: global.constants.ScreenWidth - 80,
         }
     },
     get textInput() {
