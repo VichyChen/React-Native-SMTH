@@ -19,7 +19,7 @@ import {
 
 const SMTHTabNavigator = TabNavigator({
     HotScreen: {
-        screen: HotScreen,
+        screen: NewHotScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '热点',
             tabBarIcon: ({ tintColor, focused }) => (

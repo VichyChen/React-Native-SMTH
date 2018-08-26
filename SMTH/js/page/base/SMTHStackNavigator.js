@@ -51,7 +51,7 @@ const SMTHStackNavigator = StackNavigator({
         navigationOptions: {
             headerBackTitle: null,
             headerTintColor: 'white',
-            // header:null,
+            header:null,
             headerStyle: {
                 backgroundColor: global.colors.themeColor//'#63B8FF' //87CEFA、63B8FF、87CEFF、7EC0EE    40E0D0、48D1CC
             },
