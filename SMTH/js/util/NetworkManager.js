@@ -18,11 +18,8 @@ export default class NetworkManager {
     static get(url, params, success, failure, netError) {
         NetworkUtil.get(url, params
         ).then(result => {
-            console.log(11111);
-            console.log(11111, result._bodyInit);
             success(result);
         }).catch(error => {
-            console.log(22222);
             console.log(error);
             if (error.message == 'Timeout' || error.message == 'Network request failed') {
                 netError('网络连接出错');
@@ -957,7 +954,7 @@ export default class NetworkManager {
     }
 
 
-//**************************************** https://exp.newsmth.net/ ****************************************/
+    //**************************************** https://exp.newsmth.net/ ****************************************/
 
     //全部、社区管理！@#¥%……&*（）
     static getNewHot(section_id, page, success, failure, netError) {
@@ -1038,7 +1035,7 @@ export default class NetworkManager {
         }, errorMessage => {
             netError(errorMessage);
         });
-    }    
+    }
 
     //个人信息页+主题列表
     static getNewAccount(account_id, success, failure, netError) {
@@ -1090,13 +1087,13 @@ export default class NetworkManager {
 
     //登陆
 
-    
+
     //获取发帖页面
-    
+
     //发帖
 
     //获取回帖页面
-    
+
     //回帖
 
     //上传图片

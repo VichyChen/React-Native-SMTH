@@ -61,24 +61,16 @@ export default class NewHotListScreen extends Component {
     }
 
     getNewHot(page) {
-        NetworkManager.getNewHot(this.props.section, page, () => {
+        NetworkManager.getNewHot(this.props.section, page, (result) => {
             this.$ = cio.load(result);
-            this.$ = cio.load('<ul class="article-list">...</ul>');
+            this.$ = cio.load(this.$('ul[class=article-list]').html());
+
             var array = [];
-            console.log('success');
-
             this.$('li').each(function (i, elem) {
-
-                console.log(elem);
-
-                // array.push({
-                //     typeText: elem.children[0].children[0].data,
-                //     type: elem.children[0].next.next.attribs.href.split('/')[1],
-                //     href: elem.children[0].next.next.attribs.href,
-                //     id: elem.children[0].next.next.attribs.href.split('/')[2],
-                //     text: elem.children[0].next.next.children[0].data
-                // });
-
+                this.$ = cio.load(elem);
+                array.push({
+                    title: this.$('a[class=article-subject]').text(),
+                });
             });
 
             if (array.length == 0) {
@@ -126,32 +118,9 @@ export default class NewHotListScreen extends Component {
                 }}
             >
                 <View style={styles.container}>
-                    <View style={{ flexDirection: 'row', padding: 13 }}>
-                        <AvatorImage
-                            style={styles.avator}
-                            borderRadius={20}
-                            widthAndHeight={40}
-                            onPressClick={() => {
-                                this.props.navigation.navigate('userScreen', { id: item.author_id });
-                            }}
-                            uri={NetworkManager.net_getFace(item.author_id)} />
-                        <View style={{ height: 42 }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                <Text style={styles.author}>{item.author_id}</Text>
-                            </View>
-                            <Text style={styles.time}>
-                                {DateUtil.formatTimeStamp(item.time) + '     ' + item.count + '回复'}
-                            </Text>
-                        </View>
-                    </View>
-                    <Text style={[styles.subject, {
-                        color: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'red' : global.colors.fontColor,
-                        fontWeight: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'bold' : 'normal'
-                    }]}>{item.subject}</Text>
+                   
+                   
+                    <Text>{item.title}</Text>
 
                     {/* <Text style={[styles.subject, {
                         color: item.flags.toUpperCase() == 'DNN D' ||
@@ -176,24 +145,25 @@ export default class NewHotListScreen extends Component {
     render() {
         console.log('NewHotListScreen render');
         return (
-            <Screen
-                showLoading={this.state.viewLoading}
-                loadingType={'background'}
-                text={this.state.screenText}
-                onPress={() => {
-                    this.setState({
-                        viewLoading: true,
-                        screenText: null
-                    });
-                    this.getNewHot(_page);
-                }}
-            >
+            // <Screen
+            //     showLoading={this.state.viewLoading}
+            //     loadingType={'background'}
+            //     text={this.state.screenText}
+            //     onPress={() => {
+            //         this.setState({
+            //             viewLoading: true,
+            //             screenText: null
+            //         });
+            //         this.getNewHot(_page);
+            //     }}
+            // >
+            <View style={styles.container}>
                 <FlatList
                     data={this.state.dataArray}
                     renderItem={this._renderItem}
                     removeClippedSubviews={false}
                     extraData={this.state}
-                    style={{ backgroundColor: global.colors.backgroundGrayColor, }}
+                    style={styles.flatList}
                     onRefresh={() => {
                         this.setState({
                             pullLoading: true
@@ -207,7 +177,7 @@ export default class NewHotListScreen extends Component {
                             this.setState({
                                 pullMoreLoading: true
                             });
-                            from = from + size;
+                            _page++;
                             this.getNewHot(_page);
                         }
                     }
@@ -215,7 +185,7 @@ export default class NewHotListScreen extends Component {
                     onEndReachedThreshold={0.2}
                     refreshing={this.state.pullLoading}
                 />
-            </Screen>
+            </View>
         )
     }
 }
@@ -224,9 +194,14 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            padding: 0,
-            backgroundColor: global.colors.clearColor
+            backgroundColor: global.colors.whiteColor
         }
     },
-
+    get flatList() {
+        return {
+            // flex: 1,
+            backgroundColor: global.colors.whiteColor
+        }
+    },
+    
 }

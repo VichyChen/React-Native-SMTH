@@ -61,7 +61,7 @@ export default class NewHotScreen extends Component {
         <TabPageView
           titles={['全站', '社区管理', '国内院校', '休闲娱乐', '五湖四海', '游戏运动', '社会信息', '知性感性', '文化人文', '学术科学', '电脑技术']}
           pages={[
-            (<NewHotListScreen section='' />),
+            (<NewHotListScreen section='' navigation={this.props.navigation} />),
             (<NewHotListScreen section='a0de82aa57b9c9d0eed752f60e8e215c' />),
             (<NewHotListScreen section='ad014fa45379dcd4c5d543dee2ffcb9e' />),
             (<NewHotListScreen section='710c5f8e5a5cb9825a7ba42431503290' />),

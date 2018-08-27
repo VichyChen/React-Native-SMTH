@@ -41,6 +41,8 @@ export default class Screen extends Component {
 
 var styles = {
     get background() {
-
+        return {
+            flex: 1,
+        }
     },
 }
