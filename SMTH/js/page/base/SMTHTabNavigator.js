@@ -11,7 +11,8 @@ import BoardScreen from '../BoardScreen';
 import FavouriteScreen from '../FavouriteScreen';
 import MyScreen from '../MyScreen';
 
-import NewHotScreen from '../NewHotScreen';
+import NewHotScreen from '../../NewPage/NewHotScreen';
+import NewBoardScreen from '../../NewPage/NewBoardScreen';
 
 import {
     Color
@@ -31,7 +32,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     BoardScreen: {
-        screen: BoardScreen,
+        screen: NewBoardScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '板块',
             tabBarIcon: ({ tintColor, focused }) => (

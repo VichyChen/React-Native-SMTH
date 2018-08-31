@@ -4,6 +4,7 @@ import {
 
 import NetworkUtil from './NetworkUtil';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import RNFetchBlob from "react-native-fetch-blob";
 
 const base_url = "http://open.newsmth.net/";
 
@@ -956,9 +957,28 @@ export default class NetworkManager {
 
     //**************************************** https://exp.newsmth.net/ ****************************************/
 
+    static getNew(url, params, success, failure, netError) {
+        NetworkUtil.get(url, params
+        ).then(result => {
+            success(result);
+        }).catch(error => {
+            console.log(error);
+            failure(error.message);
+        });
+    }
+
+    static async postNew(url, params, success, failure, netError) {
+        NetworkUtil.post(url, params
+        ).then(async result => {
+            success(result);
+        }).catch(error => {
+            failure(error.message);
+        });
+    }
+
     //全部、社区管理！@#¥%……&*（）
     static getNewHot(section_id, page, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global'), null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global'), null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -969,7 +989,7 @@ export default class NetworkManager {
 
     //版面列表
     static getNewSections(section_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/section/' + section_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/section/' + section_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -980,7 +1000,7 @@ export default class NetworkManager {
 
     //版面主题
     static getNewBoardTopics(board_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/board/topics/' + board_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/board/topics/' + board_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -991,7 +1011,7 @@ export default class NetworkManager {
 
     //版面热点
     static getNewBoardHot(board_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/board/hot/' + board_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/board/hot/' + board_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1002,7 +1022,7 @@ export default class NetworkManager {
 
     //版面体验
     static getNewBoardExperience(board_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/board/experience/' + board_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/board/experience/' + board_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1012,8 +1032,8 @@ export default class NetworkManager {
     }
 
     //帖子详情页
-    static getNewTopic(topic_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/topic/' + topic_id, null, result => {
+    static getNewTopic(topic_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/topic/' + topic_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1028,7 +1048,7 @@ export default class NetworkManager {
     https://exp.newsmth.net/search?mode=account&keyword=%E6%88%BF%E5%9C%B0%E4%BA%A7 搜索用户
     */
     static getNewSearch(keyword, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/topic/', null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/topic/', null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1039,7 +1059,7 @@ export default class NetworkManager {
 
     //个人信息页+主题列表
     static getNewAccount(account_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/account/' + account_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/account/' + account_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1050,7 +1070,7 @@ export default class NetworkManager {
 
     //个人信息页 驻版
     static getNewAccountMembers(account_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/account/members/' + account_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/account/members/' + account_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1061,7 +1081,7 @@ export default class NetworkManager {
 
     //个人信息页 关注
     static getNewAccountFriends(account_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/account/friends/' + account_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/account/friends/' + account_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1072,7 +1092,7 @@ export default class NetworkManager {
 
     //个人信息页 粉丝
     static getNewAccountFans(account_id, success, failure, netError) {
-        NetworkManager.get('https://exp.newsmth.net/account/fans/' + account_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/account/fans/' + account_id, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1082,11 +1102,86 @@ export default class NetworkManager {
     }
 
     //获取登陆页面
+    static getNewAuthorize(success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/authorize', null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //获取登陆验证码
+    static getNewCaptcha(success, failure, netError) {
+        // NetworkManager.getNew('https://exp.newsmth.net/authorize/captcha', null, result => {
+        //     success(result.blob());
+        // }, error => {
+        //     failure(error);
+        // }, errorMessage => {
+        //     netError(errorMessage);
+        // });
+
+        // NetworkUtil.getImage('https://exp.newsmth.net/authorize/captcha', null
+        // ).then(result => {
+        //     success(result);
+        // }).catch(error => {
+        //     console.log(error);
+        //     failure(error.message);
+        // });
+
+        // var xmlRequest = new XMLHttpRequest();
+        // xmlRequest.open("GET", 'https://exp.newsmth.net/authorize/captcha', true);
+        // xmlRequest.responseType = "blob";//这里是关键，它指明返回的数据的类型是二进制
+        // xmlRequest.onreadystatechange = function (e) {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         console.log(this._response)
+        //         success(this._response);
+
+        //     }
+        //     console.log('this.status ' + this.status + ' this.readyState ' + this.readyState)
+        // }
+        // xmlRequest.send(null);
+
+        const fs = RNFetchBlob.fs;
+        let imagePath = null;
+        RNFetchBlob.config({
+            fileCache: true
+        })
+            .fetch("GET", "https://exp.newsmth.net/authorize/captcha")
+            // the image is now dowloaded to device's storage
+            .then(resp => {
+                // the image path you can use it directly with Image component
+                imagePath = resp.path();
+                return resp.readFile("base64");
+            })
+            .then(base64Data => {
+                // here's base64 encoded image
+                console.log('base64Data'+base64Data);
+                // remove the file from storage
+                // success(fs.unlink(imagePath));
+                success(base64Data);
+            });
+
+
+
+    }
 
     //登陆
-
+    static postNewSignIn(username, password, captcha, success, failure, netError) {
+        NetworkManager.postNew('https://exp.newsmth.net/authorize/sign-in', {
+            username: username,
+            password: password,
+            captcha: captcha,
+            url: ''
+        }, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //获取发帖页面
 

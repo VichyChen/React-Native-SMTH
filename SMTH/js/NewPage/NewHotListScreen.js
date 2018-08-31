@@ -69,6 +69,7 @@ export default class NewHotListScreen extends Component {
             this.$('li').each(function (i, elem) {
                 this.$ = cio.load(elem);
                 array.push({
+                    key: this.$('a[class=article-subject]').attr('href').split('/')[2],
                     title: this.$('a[class=article-subject]').text(),
                 });
             });
@@ -90,9 +91,6 @@ export default class NewHotListScreen extends Component {
                 }
             }
             else {
-                for (var i = 0; i < array.length; i++) {
-                    array[i].key = i;
-                }
                 this.setState({
                     dataArray: array,
                     pullLoading: false,
@@ -114,7 +112,9 @@ export default class NewHotListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    console.log('item.key:' + item.key);
+
+                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.key });
                 }}
             >
                 <View style={styles.container}>

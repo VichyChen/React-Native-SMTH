@@ -154,6 +154,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
     compile project(':realm')
     compile project(':react-native-picker')
     compile project(':react-native-code-push')

@@ -12,7 +12,8 @@ import {
     Dimensions,
     Linking,
     DeviceEventEmitter,
-    ActivityIndicator
+    ActivityIndicator,
+    URL
 } from 'react-native';
 
 import {
@@ -27,6 +28,7 @@ import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 var _username;
 var _password;
+var _captcha;
 
 export default class LoginView extends Component {
     constructor(props) {
@@ -37,6 +39,7 @@ export default class LoginView extends Component {
             loadingType: 'clear',
             username: '',
             password: '',
+            captcha: '',
         }
 
         this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
@@ -45,6 +48,27 @@ export default class LoginView extends Component {
 
         this.getUsername();
         this.getPassword();
+
+
+        NetworkManager.getNewAuthorize((result) => {
+
+            NetworkManager.getNewCaptcha((result1) => {
+
+                this.setState({
+                    image: 'data:image/png;base64,' + result1
+                });
+            }, (error) => {
+    
+            }, (errorMessage) => {
+    
+            });    
+
+        }, (error) => {
+
+        }, (errorMessage) => {
+
+        });
+
     }
 
     componentWillUnmount() {
@@ -110,7 +134,32 @@ export default class LoginView extends Component {
                             placeholder={'密码'}
                         />
                         <HorizontalSeperatorLine />
+                        <TextInput
+                            style={styles.textInput}
+                            secureTextEntry={true}
+                            underlineColorAndroid={'transparent'}
+                            clearButtonMode={'while-editing'}
+                            autoCorrect={false}
+                            spellCheck={false}
+                            autoCapitalize={'none'}
+                            onChangeText={(text) => {
+                                this.setState({
+                                    captcha: text
+                                });
+                                _captcha = text;
+                            }}
+                            value={this.state.captcha}
+                            placeholder={'验证码'}
+                        />
+                        <HorizontalSeperatorLine />
                         <Text style={styles.text}>{this.state.text}</Text>
+
+                        <Image style={{ width: 100, height: 100, resizeMode: Image.resizeMode.contain, backgroundColor: 'red' }}
+                            source={{
+                                uri:
+                                  this.state.image,
+                              }} />
+
                         <Button style={styles.login}
                             text={'登陆'}
                             fontColor={global.colors.whiteColor}
@@ -125,28 +174,40 @@ export default class LoginView extends Component {
                                     loadingType: 'clear',
                                     text: null
                                 });
-                                NetworkManager.login(_username, _password, () => {
-                                    global.current.username = _username;
-                                    DeviceEventEmitter.emit('LoginSuccessNotification', _username);
+                                // NetworkManager.login(_username, _password, () => {
+                                //     global.current.username = _username;
+                                //     DeviceEventEmitter.emit('LoginSuccessNotification', _username);
+                                //     this.props.success();
+                                //     this.setState({
+                                //         isLoading: false,
+                                //         loadingType: 'none',
+                                //         text: null
+                                //     });
+                                // }, (error) => {
+                                //     this.setState({
+                                //         isLoading: false,
+                                //         loadingType: 'none',
+                                //         text: error
+                                //     });
+                                // }, (errorMessage) => {
+                                //     this.setState({
+                                //         isLoading: false,
+                                //         loadingType: 'none',
+                                //         text: errorMessage
+                                //     });
+                                // });
+
+                                NetworkManager.postNewSignIn(_username, _password, _captcha, () => {
+                                    console.log('this.props.success();');
                                     this.props.success();
-                                    this.setState({
-                                        isLoading: false,
-                                        loadingType: 'none',
-                                        text: null
-                                    });
                                 }, (error) => {
-                                    this.setState({
-                                        isLoading: false,
-                                        loadingType: 'none',
-                                        text: error
-                                    });
+
                                 }, (errorMessage) => {
-                                    this.setState({
-                                        isLoading: false,
-                                        loadingType: 'none',
-                                        text: errorMessage
-                                    });
+
                                 });
+
+
+
                             }} />
                         <ActivityIndicator
                             animating={this.state.isLoading}

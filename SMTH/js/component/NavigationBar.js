@@ -29,7 +29,7 @@ export default class NavigationBar extends Component {
 
                 <View style={styles.navigation} >
 
-                    <ImageButton
+                    {/* <ImageButton
                         style={styles.backButton}
                         color={global.colors.fontColor}
                         width={44}
@@ -38,13 +38,13 @@ export default class NavigationBar extends Component {
                         source={global.images.ic_return_b_90x90}
                         onPress={() => {
 
-                        }} />
+                        }} /> */}
 
                     <Text style={styles.title} >
                         {this.props.title}
                     </Text>
 
-                    <ImageButton
+                    {/* <ImageButton
                         style={styles.rightButton1}
                         color={global.colors.fontColor}
                         width={44}
@@ -53,7 +53,7 @@ export default class NavigationBar extends Component {
                         source={global.images.icon_search}
                         onPress={() => {
 
-                        }} />
+                        }} /> */}
 
                 </View>
             </View>
@@ -78,7 +78,7 @@ var styles = {
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
         }
     },
     get backButton() {

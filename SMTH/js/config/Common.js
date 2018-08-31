@@ -38,7 +38,7 @@ import PickerSelectView from '../component/PickerSelectView';
 import NavigationBar from '../component/NavigationBar';
 import TabPageView from '../component/TabPageView';
 
-import NewHotListScreen from '../page/NewHotListScreen';
+import NewHotListScreen from '../NewPage/NewHotListScreen';
 
 export {
     NetworkManager,

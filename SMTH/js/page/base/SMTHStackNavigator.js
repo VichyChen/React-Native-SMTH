@@ -21,6 +21,12 @@ import ScanRecordScreen from '../ScanRecordScreen';
 
 import SMTHTabNavigator from './SMTHTabNavigator';
 
+import NewBoardListScreen from '../../NewPage/NewBoardListScreen';
+import NewThreadDetailScreen from '../../NewPage/NewThreadDetailScreen';
+import NewSearchScreen from '../../NewPage/NewSearchScreen';
+
+
+
 import {
     Color
 } from '../../config/Common';
@@ -46,6 +52,9 @@ const SMTHStackNavigator = StackNavigator({
     reportScreen: { screen: ReportScreen },
     updateListScreen: { screen: UpdateListScreen },
     scanRecordScreen: { screen: ScanRecordScreen },
+    newBoardListScreen: { screen: NewBoardListScreen },
+    newThreadDetailScreen: { screen: NewThreadDetailScreen },
+    newSearchScreen: { screen: NewSearchScreen },
 },
     {
         navigationOptions: {
