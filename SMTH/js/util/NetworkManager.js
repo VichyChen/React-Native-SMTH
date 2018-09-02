@@ -958,7 +958,7 @@ export default class NetworkManager {
     //**************************************** https://exp.newsmth.net/ ****************************************/
 
     static getNew(url, params, success, failure, netError) {
-        NetworkUtil.get(url, params
+        NetworkUtil.getNew(url, params
         ).then(result => {
             success(result);
         }).catch(error => {
@@ -968,7 +968,7 @@ export default class NetworkManager {
     }
 
     static async postNew(url, params, success, failure, netError) {
-        NetworkUtil.post(url, params
+        NetworkUtil.postNew(url, params
         ).then(async result => {
             success(result);
         }).catch(error => {
@@ -1114,57 +1114,17 @@ export default class NetworkManager {
 
     //获取登陆验证码
     static getNewCaptcha(success, failure, netError) {
-        // NetworkManager.getNew('https://exp.newsmth.net/authorize/captcha', null, result => {
-        //     success(result.blob());
-        // }, error => {
-        //     failure(error);
-        // }, errorMessage => {
-        //     netError(errorMessage);
-        // });
-
-        // NetworkUtil.getImage('https://exp.newsmth.net/authorize/captcha', null
-        // ).then(result => {
-        //     success(result);
-        // }).catch(error => {
-        //     console.log(error);
-        //     failure(error.message);
-        // });
-
-        // var xmlRequest = new XMLHttpRequest();
-        // xmlRequest.open("GET", 'https://exp.newsmth.net/authorize/captcha', true);
-        // xmlRequest.responseType = "blob";//这里是关键，它指明返回的数据的类型是二进制
-        // xmlRequest.onreadystatechange = function (e) {
-        //     if (this.readyState == 4 && this.status == 200) {
-        //         console.log(this._response)
-        //         success(this._response);
-
-        //     }
-        //     console.log('this.status ' + this.status + ' this.readyState ' + this.readyState)
-        // }
-        // xmlRequest.send(null);
-
-        const fs = RNFetchBlob.fs;
-        let imagePath = null;
         RNFetchBlob.config({
-            fileCache: true
+            fileCache: false
         })
             .fetch("GET", "https://exp.newsmth.net/authorize/captcha")
-            // the image is now dowloaded to device's storage
             .then(resp => {
-                // the image path you can use it directly with Image component
-                imagePath = resp.path();
                 return resp.readFile("base64");
             })
             .then(base64Data => {
-                // here's base64 encoded image
-                console.log('base64Data'+base64Data);
-                // remove the file from storage
-                // success(fs.unlink(imagePath));
+                console.log('base64Data' + base64Data);
                 success(base64Data);
             });
-
-
-
     }
 
     //登陆
