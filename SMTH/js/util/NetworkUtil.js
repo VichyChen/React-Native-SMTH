@@ -1,3 +1,6 @@
+
+const _pcUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36";
+
 export default class NetworkUtil {
 
   static get(url, params) {
@@ -65,7 +68,7 @@ export default class NetworkUtil {
       }
       NetworkUtil.timeout(fetch(url, {
         method: 'GET',
-        headers: { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" },
+        headers: { "user-agent": _pcUserAgent },
         credentials: 'include'
       }))
         .then((responseData) => {
@@ -82,18 +85,9 @@ export default class NetworkUtil {
   static getImage(url, params) {
     console.log('NetworkUtil getImage');
     return new Promise(function (resolve, reject) {
-      if (params) {
-        let paramsArray = [];
-        Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
-        if (url.search(/\?/) === -1) {
-          url += '?' + paramsArray.join('&')
-        } else {
-          url += '&' + paramsArray.join('&')
-        }
-      }
       NetworkUtil.timeout(fetch(url, {
         method: 'GET',
-        headers: { "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" },
+        headers: { "user-agent": _pcUserAgent },
         credentials: 'include'
       }))
         .then((response) => response.arrayBuffer())
@@ -109,18 +103,14 @@ export default class NetworkUtil {
   }
 
   static postNew(url, params) {
+    let paramsArray = [];
+    Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
+
     console.log('\n\n');
     console.log('*****************************************************************');
     console.log('Post:\n' + url);
-    console.log('Params:\n' + JSON.stringify(params));
-    let paramsArray = [];
-    Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
-    // if (url.search(/\?/) === -1) {
-    //   url += '?' + paramsArray.join('&')
-    // } else {
-    //   url += '&' + paramsArray.join('&')
-    // }
     console.log('paramsArray.join(): ' + paramsArray.join('&'))
+
     return new Promise(function (resolve, reject) {
       NetworkUtil.timeout(fetch(url, {
         method: 'POST',
@@ -128,7 +118,7 @@ export default class NetworkUtil {
           "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
           "origin": "https://exp.newsmth.net",
           "referer": "https://exp.newsmth.net/authorize",
-          "user-agent": " Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36",
+          "user-agent": _pcUserAgent,
           "x-requested-with": " XMLHttpRequest",
         },
         credentials: 'include',
@@ -148,22 +138,6 @@ export default class NetworkUtil {
     });
   }
 
-  // return new Promise(function (resolve, reject) {
-  //   fetch(url, {
-  //     method: 'POST',
-  //     headers: { "content-type": "application/json" },
-  //     body: JSON.stringify(params)
-  //   }).then((response) => response.json())
-  //     .then((responseData) => {
-  //       console.log('ResponseJson:\n' + JSON.stringify(responseData));
-  //       resolve(responseData);
-  //     })
-  //     .catch((error) => {
-  //       console.log('error:' + error);
-  //       reject(error);
-  //     });
-  // });
-
   static timeout(promise) {
     return new Promise(function (resolve, reject) {
       const timeoutId = setTimeout(function () {
@@ -181,4 +155,5 @@ export default class NetworkUtil {
       );
     })
   }
+
 }
