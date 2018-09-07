@@ -28,6 +28,8 @@ global.constants = {
     BottomMargin: 15,
     LeftMargin: 15,
     RightMargin: 15,
+    Margin: 15,
+    Padding: 15,
 };
 
 global.colors = {
@@ -35,6 +37,7 @@ global.colors = {
     clearColor: '#00000000',
     themeColor: '#6495ED', //167efb、4788c7、6495ED
     blueColor: '#337ab7',
+    redColor: '#ea6f5a',
     fontColor: '#333333',
     gray1Color: '#666666',
     gray2Color: '#999999',

@@ -23,7 +23,8 @@ var styles = {
     },
     get line() {
         return {
-            marginLeft: 13,
+            marginLeft: 15,
+            marginRight: 15,
             height: 1,
         }
     },

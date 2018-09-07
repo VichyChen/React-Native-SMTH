@@ -41,7 +41,7 @@ export default class NewHotScreen extends Component {
       viewLoading: true,
       screenText: null,
       dataArray: [],
-      showLogin: true,
+      showLogin: false,
     }
 
     DeviceEventEmitter.emit('LoginNotification', null);
@@ -66,16 +66,16 @@ export default class NewHotScreen extends Component {
           pages={
             [
               (<NewHotListScreen navigation={this.props.navigation} section='' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='a0de82aa57b9c9d0eed752f60e8e215c' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='ad014fa45379dcd4c5d543dee2ffcb9e' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='710c5f8e5a5cb9825a7ba42431503290' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='725cba31613e9a65167c4c1bcea10995' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='01f3dd2e7d1c9c451282e382c29bc4ef' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='e884890123997afb871785804f801738' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='a0b1f3baa1d74b0a790e906a03c50067' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='7c9bc21c8bd8b0b4639a63000d7e9087' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='9a280091d78540fa4071f620dfa9652b' />),
-              (<NewHotListScreen navigation={this.props.navigation} section='452bf2314855e55815c805d7c1995cae' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='7fba65e45f678eb8c605d4107de04185' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='4fcab28694a0be93d9297d8cede052d9' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='3497e48bb537373d0f738b41fe53a41b' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='353fdfda1dfe7a714e592bab99c762cd' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='c8d614e56acb8a192ec4af8b375a5eea' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='5b634fdc9ecddf6042561c959176c077' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='1c455a5dccf4242008d188f9676e3f4e' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='12af235486fde6684e4b9e83f5d2b779' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='4ed7f0d8b621c8ccf9e11eca9991d6dc' />),
+              (<NewHotListScreen navigation={this.props.navigation} section='4dda79c64b3ffb61f8048d745292ff5d' />),
             ]}
         />
         <LoginView visible={this.state.showLogin} success={() => {

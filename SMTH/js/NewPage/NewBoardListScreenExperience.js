@@ -60,7 +60,14 @@ export default class NewBoardListScreenExperience extends Component {
                 this.$ = cio.load(elem);
                 dataArray.push({
                     key: this.$('a[class=article-subject]').attr('href').split('/')[2],
+                    avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
+                    name: this.$('div[class=article-account-name]').children().first().text(),
+                    time: this.$('div[class=article-account-name]').children().last().text(),
                     title: this.$('a[class=article-subject]').text(),
+                    content: this.$('p[class=article-brief]').text(),
+                    comment: this.$('span[class*=glyphicon-comment]').parent().text(),
+                    heart: this.$('span[class*=glyphicon-heart]').parent().text(),
+                    picture: this.$('span[class*=glyphicon-picture]').parent().text(),
                 });
             });
 

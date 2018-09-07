@@ -26,6 +26,8 @@ export default class AvatorImage extends Component {
                             width: this.props.widthAndHeight,
                             zIndex: 0,
                             borderRadius: this.props.borderRadius == null ? 0 : this.props.borderRadius,
+                            borderWidth: 0.5,
+                            borderColor: global.colors.gray4Color,
                         }}
                         source={global.images.face_default_m} />
                     <Image
@@ -35,6 +37,8 @@ export default class AvatorImage extends Component {
                             width: this.props.widthAndHeight,
                             zIndex: 1,
                             borderRadius: this.props.borderRadius == null ? 0 : this.props.borderRadius,
+                            borderWidth: 0.5,
+                            borderColor: global.colors.gray4Color,
                         }}
                         source={{ uri: this.props.uri }} />
                 </View>

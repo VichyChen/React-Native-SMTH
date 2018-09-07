@@ -56,6 +56,8 @@ import {
   BoardModel
 } from 'ModelModule';
 
+import HTMLView from 'react-native-htmlview';
+
 var webURL;
 var historyURL;
 var from = 0;
@@ -168,11 +170,25 @@ export default class NewThreadDetailScreen extends Component {
 
       var array = [];
       this.$('div[class=reply]').each(function (i, elem) {
-          this.$ = cio.load(elem);
-          array.push({
-              key: this.$('div[class=reply-wrap]').text(),
-              title: this.$('div[class=reply-wrap]').text(),
-          });
+        this.$ = cio.load(elem, { decodeEntities: false });
+        // this.$ = this.$('.tool-group').remove()
+
+        this.$('.tool-group').remove();
+        this.$('.article-quote').prev().remove();
+        this.$('.article-quote').children().last().remove();
+        
+        console.log('123:', this.$('div[class=reply-wrap]').html().trim());
+
+        array.push({
+          key: this.$('div[class=reply-wrap]').text(),
+          index: '',
+          avatar: this.$('a[class=avatar]').children().attr('src'),
+          name: this.$('a[class=name]').text(),
+          meta: this.$('div[class=meta]').children().first().text(),
+          time: this.$('div[class=meta]').children().last().text(),
+          reply: this.$('div[class=reply-wrap]').html().trim(),
+          // reply: this.$('.tool-group').prevAll().html(),
+        });
       });
 
       // if (from == 0 && result['articles'].length == 0) {
@@ -183,20 +199,20 @@ export default class NewThreadDetailScreen extends Component {
       //   });
       // }
       // else {
-        this.setState({
-          dataArray: array,
-          totalPage: threadCount % size == 0 ? parseInt(threadCount / size) : parseInt(threadCount / size) + 1,
-          currentPage: parseInt(from / size) + 1,
-          selectedValue: (parseInt(from / size) + 1).toString(),
-          firstLoading: false,
-          viewLoading: false,
-          screenText: null,
-        });
+      this.setState({
+        dataArray: array,
+        totalPage: threadCount % size == 0 ? parseInt(threadCount / size) : parseInt(threadCount / size) + 1,
+        currentPage: parseInt(from / size) + 1,
+        selectedValue: (parseInt(from / size) + 1).toString(),
+        firstLoading: false,
+        viewLoading: false,
+        screenText: null,
+      });
 
-        this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
-        setTimeout(() => {
-          this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
-        }, 50);
+      this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
+      setTimeout(() => {
+        this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
+      }, 50);
       // }
 
     }, (error) => {
@@ -211,8 +227,19 @@ export default class NewThreadDetailScreen extends Component {
     <View style={styles.container}>
       {/* <WebView source={'<a>Here I am</a>'} /> */}
 
-      <Text>{item.title}</Text>
-     
+      {/* <Text>{item.reply}</Text> */}
+      {/* <WebView bounces={false}
+        // scalesPageToFit={true}
+        source={{ html: "<h1 style='color:#ff0000'>欢迎访问 hangge.com</h1>" }}
+        style={{ width: 100, height: 100 }}
+      /> */}
+
+      <HTMLView
+        value={item.reply}
+        stylesheet={styles.reply}
+      />
+
+
       <SeperatorLine />
     </View>
   );
@@ -483,6 +510,17 @@ var styles = {
       fontSize: global.configures.fontSize19,
       fontWeight: 'bold',
       color: global.colors.fontColor,
+    }
+  },
+  get reply() {
+    return {
+      p: {
+        margin: 0,
+        padding: 0,
+      },
+      div: {
+        
+      },
     }
   },
   get replyCount() {
