@@ -50,7 +50,7 @@ var styles = {
     get background() {
         return {
             backgroundColor: global.colors.whiteColor,
-            height: 40,
+            height: 40 + global.constants.BottomSaveArea,
         }
     },
     get container() {

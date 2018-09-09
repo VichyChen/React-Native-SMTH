@@ -132,20 +132,6 @@ export default class NewBoardScreen extends Component {
         )
     };
 
-    _rightRenderItem = ({ item }) => {
-        return (
-            <CellBackground
-                onPress={() => {
-                    this.props.navigation.navigate('newBoardListScreen', { id: item.key, title: item.title });
-                }}
-            >
-                <View style={styles.rightItemContainer} >
-                    <Text style={styles.rightItemTitle} >{item.name}</Text>
-                </View>
-            </CellBackground>
-        )
-    };
-
     render() {
         return (
             <View style={styles.container} >
@@ -182,7 +168,7 @@ export default class NewBoardScreen extends Component {
                                         <CellBackground
                                             showSelect={false}
                                             onPress={() => {
-                                                this.props.navigation.navigate('newBoardListScreen', { id: item.key, title: item.title });
+                                                this.props.navigation.navigate('newBoardListScreen', { id: item.key, title: item.name });
                                             }}
                                         >
                                             <View style={styles.rightItemContainer} >

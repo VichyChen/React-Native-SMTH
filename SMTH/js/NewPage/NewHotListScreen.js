@@ -144,8 +144,8 @@ export default class NewHotListScreen extends Component {
                         <Text style={styles.itemTitle} >{item.title}</Text>
                         {item.content.length > 0 ? <Text style={styles.itemContent} >{item.content}</Text> : null}
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                            <Text style={styles.itemBoard} >{item.boardName}</Text>
-                            <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
+                            <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.boardName}</Text>
+                            <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
                             <Text style={styles.itemDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
                         </View>
 
@@ -257,8 +257,6 @@ var styles = {
     get itemBoard() {
         return {
             marginTop: 10,
-            paddingTop: 2,
-            paddingBottom: 0,
             paddingLeft: 4,
             paddingRight: 4,
             alignItems: 'center',
@@ -267,7 +265,8 @@ var styles = {
             borderColor: global.colors.redColor,
             borderWidth: 1,
             borderRadius: 2,
-            height: 16,
+            height: 18,
+            textAlign: 'center'
         }
     },
     get itemDescript() {

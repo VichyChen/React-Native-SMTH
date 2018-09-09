@@ -63,8 +63,8 @@ export default class NewBoardListScreenExperience extends Component {
                     avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                     name: this.$('div[class=article-account-name]').children().first().text(),
                     time: this.$('div[class=article-account-name]').children().last().text(),
-                    title: this.$('a[class=article-subject]').text(),
-                    content: this.$('p[class=article-brief]').text(),
+                    title: this.$('a[class=article-subject]').text().trim(),
+                    content: this.$('p[class=article-brief]').text().trim(),
                     comment: this.$('span[class*=glyphicon-comment]').parent().text(),
                     heart: this.$('span[class*=glyphicon-heart]').parent().text(),
                     picture: this.$('span[class*=glyphicon-picture]').parent().text(),
@@ -89,50 +89,28 @@ export default class NewBoardListScreenExperience extends Component {
                     this.props.navigation.navigate('newThreadDetailScreen', { id: item.key });
                 }}
             >
-                <View style={styles.container}>
-                <Text >{item.title}</Text>
+                <View>
+                    <View style={styles.itemContainer}>
 
-                    {/* <View style={{ flexDirection: 'row', padding: 13 }}>
-                        <AvatorImage
-                            style={styles.avator}
-                            borderRadius={20}
-                            widthAndHeight={40}
-                            onPressClick={() => {
-                                this.props.navigation.navigate('userScreen', { id: item.author_id });
-                            }}
-                            uri={NetworkManager.net_getFace(item.author_id)} />
-                        <View style={{ height: 42 }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                <Text style={styles.author}>{item.author_id}</Text>
-                            </View>
-                            <Text style={styles.time}>
-                                {DateUtil.formatTimeStamp(item.time) + '     ' + item.count + '回复'}
-                            </Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <AvatorImage
+                                borderRadius={15}
+                                widthAndHeight={30}
+                                onPressClick={() => {
+                                    // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                                }}
+                                uri={'https://exp.newsmth.net/' + item.avatar} />
+
+                            <Text style={styles.itemName} >{item.name}</Text>
                         </View>
+                        <Text style={styles.itemTime} >{item.time}</Text>
+                        <Text style={styles.itemTitle} >{item.title}</Text>
+                        {item.content.length > 0 ? <Text style={styles.itemContent} >{item.content}</Text> : null}
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                            <Text style={styles.itemDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
+                        </View>
+
                     </View>
-                    <Text style={[styles.subject, {
-                        color: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'red' : global.colors.fontColor,
-                        fontWeight: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'bold' : 'normal'
-                    }]}>{item.subject}</Text>
-
-                    {/* <Text style={[styles.subject, {
-                        color: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'red' : global.colors.fontColor,
-                        fontWeight: item.flags.toUpperCase() == 'DNN D' ||
-                            item.flags.toUpperCase() == 'DNY D' ||
-                            item.flags.toUpperCase() == 'DNN@D' ? 'bold' : 'normal'
-                    }]}>{item.subject + '(' + item.count + ')'}</Text>
-                    <View style={styles.other}>
-                        <Text style={styles.author}>{item.author_id}</Text>
-                        <Text style={styles.dot}>•</Text>
-                        <Text style={styles.time}>{DateUtil.formatTimeStamp(item.time)}</Text>
-                    </View> */} 
-
                     <SeperatorLine />
                 </View>
             </CellBackground>
@@ -155,8 +133,6 @@ export default class NewBoardListScreenExperience extends Component {
     }
 }
 
-
-
 var styles = {
     get container() {
         return {
@@ -164,86 +140,49 @@ var styles = {
             backgroundColor: global.colors.whiteColor
         }
     },
-    get avator() {
+    get itemContainer() {
         return {
-            width: 40,
-            height: 40,
-        }
-    },
-    get subject() {
-        return {
-            paddingLeft: 13,
-            paddingRight: 13,
-            paddingBottom: 13,
-            fontSize: global.configures.fontSize17,
-            color: global.colors.fontColor,
+            flex: 1,
+            flexDirection: 'column',
+            padding: global.constants.Padding,
             backgroundColor: global.colors.whiteColor
         }
     },
-    get other() {
-        return {
-            flexDirection: 'row',
-            padding: 13,
-            backgroundColor: global.colors.whiteColor
-        }
-    },
-    get board() {
-        return {
-            paddingTop: 2,
-            paddingBottom: 2,
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.gray2Color,
-            backgroundColor: global.colors.backgroundGrayColor,
-            borderRadius: 10,
-        }
-    },
-    get author() {
+    get itemName() {
         return {
             marginLeft: 10,
+            fontSize: global.configures.fontSize15,
+            color: global.colors.fontColor
+        }
+    },
+    get itemTime() {
+        return {
+            marginTop: 10,
+            fontSize: global.configures.fontSize13,
+            color: global.colors.gray2Color
+        }
+    },
+    get itemTitle() {
+        return {
+            marginTop: 10,
             fontSize: global.configures.fontSize17,
-            color: global.colors.fontColor,
+            fontWeight: 'bold',
+            color: global.colors.fontColor
         }
     },
-    get time() {
+    get itemContent() {
         return {
-            marginLeft: 10,
-            height: 19,
+            marginTop: 10,
             fontSize: global.configures.fontSize15,
-            color: global.colors.gray2Color,
+            color: global.colors.fontColor
         }
     },
-    get countView() {
+    get itemDescript() {
         return {
-            flexDirection: 'row',
-            position: 'absolute',
-            top: 13,
-            right: 13
-        }
-    },
-    get countImage() {
-        return {
-            width: 14,
-            height: 14,
-            marginTop: 2,
-            marginRight: 3,
-            tintColor: global.colors.gray2Color
-        }
-    },
-    get count() {
-        return {
-            fontSize: global.configures.fontSize15,
-            color: global.colors.gray2Color,
-        }
-    },
-    get dot() {
-        return {
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: global.configures.fontSize14,
-            color: global.colors.gray2Color,
-            backgroundColor: global.colors.whiteColor
+            marginTop: 10,
+            marginLeft: -2,
+            fontSize: global.configures.fontSize13,
+            color: global.colors.gray2Color
         }
     },
 }

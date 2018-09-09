@@ -82,7 +82,7 @@ const SMTHTabNavigator = TabNavigator({
             activeTintColor: global.colors.themeColor,
             inactiveTintColor: global.colors.gray1Color,
             labelStyle: [{
-                fontSize: 12,
+                fontSize: 11,
             }, global.bool.iOS ? {} : { marginTop: 2 }],
             iconStyle: [{
             }, global.bool.iOS ? {} : { marginTop: -3 }],

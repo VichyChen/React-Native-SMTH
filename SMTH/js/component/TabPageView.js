@@ -8,12 +8,15 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  View,
+  Text
 } from 'react-native';
 
 import { TabView, TabBar, SceneMap, PagerPan } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
 
 var _array;
+var routes;
 
 export default class TabPageView extends Component {
   constructor(props) {
@@ -22,7 +25,7 @@ export default class TabPageView extends Component {
     _array = new Array();
     _array.push('0');
 
-    var routes = new Array();
+    routes = new Array();
     props.titles.map((title, index) => {
       routes[index] = { key: index.toString(), title: title };
     });
@@ -34,27 +37,51 @@ export default class TabPageView extends Component {
   }
 
   _renderScene = ({ route }) => {
-    for ( var i = 0; i <this.props.pages.length; i++){
+    for (var i = 0; i < this.props.pages.length; i++) {
       if (route.key == i && (_array.indexOf(route.key) != -1)) {
         return this.props.pages[i];
       }
     }
   };
 
-  _renderTabBar = props => (
-    <TabBar scrollEnabled {...props}
-      tabStyle={{ width: 86, height: 40 }}
-      indicatorStyle={{ width: 20, marginLeft: 33 }}
-      labelStyle={{ fontSize: global.configures.fontSize15 }} />
-  );
+  _renderTabBar = props => {
+    var tabWidth = this.props.titles.length > 4 ? 88 : global.constants.ScreenWidth / this.props.titles.length;
+    var tabHeight = 40;
+    var indicatorWidth = 16;
+    var indicatorHeight = 2;
+    var indicatorMarginLeft = (tabWidth - indicatorWidth) / 2;
+    return (
+      <TabBar scrollEnabled {...props}
+        tabStyle={{ width: tabWidth, height: tabHeight }}
+        indicatorStyle={{ width: indicatorWidth, height: indicatorHeight, marginLeft: indicatorMarginLeft, backgroundColor: global.colors.themeColor }}
+        style={{ backgroundColor: 'white', }}
+        renderLabel={this._renderLabel}
+      />
+    )
+  };
 
-  _onIndexChange = index => { 
+  _renderLabel = ({ route }) => {
+    var selected = route.key == this.state.index ? true : false;
+    return (
+      <View>
+        <Text style={{
+          fontSize: global.configures.fontSize15,
+          fontWeight: selected ? 'bold' : 'normal',
+          color: selected ? global.colors.themeColor : global.colors.gray1Color,
+        }}>
+          {route.title}
+        </Text>
+      </View>
+    );
+  };
+
+  _onIndexChange = index => {
     if (_array.indexOf(index) == -1) {
       _array.push(index.toString());
     }
 
     this.setState({ index })
-   };
+  };
 
   render() {
     return (
