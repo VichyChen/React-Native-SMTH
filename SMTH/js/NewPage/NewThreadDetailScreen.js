@@ -61,20 +61,31 @@ import {
 import HTMLView from 'react-native-htmlview';
 
 var webURL;
-var historyURL;
-var from = 0;
-var size;
 var threadCount;
 var totalPage;
 var hostID;     //楼主ID
-var hostTime;
 var hostBody;
-var board;
+var boardID;
 var boardName;
-var boardObject;
+var boardTitle;
+
+
+/*
+from
+size
+抓
+threadCount
+totalPage
+hostID
+hostBody
+boardName
+boardTitle
+*/
 
 var scanRecord;
 var page;
+
+var likeCount;
 
 export default class NewThreadDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -98,14 +109,10 @@ export default class NewThreadDetailScreen extends Component {
       totalPage: 1,
       // selectedValue: '1',
     }
-    size = global.configures.pageSize;
-    board = unescape(this.props.navigation.state.params.board);
-    boardName = global.configures.boards[unescape(this.props.navigation.state.params.board)];
+
     scanRecord = false;
 
-    webURL = 'http://m.newsmth.net/article/' + board + '/' + this.props.navigation.state.params.id;
-    historyURL = 'http://jinghuasoft.com/smthview.jsp?board=' + board + '&id=' + this.props.navigation.state.params.id;
-    from = 0;
+    webURL = 'https://exp.newsmth.net/topic/' + this.props.navigation.state.params.id;
 
     page = 1;
     this.getNewTopic(page);
@@ -116,10 +123,25 @@ export default class NewThreadDetailScreen extends Component {
     NetworkManager.getNewTopic(this.props.navigation.state.params.id, page, (result) => {
       var array = [];
 
+      this.$ = cio.load(result, { decodeEntities: false });
+      likeCount = this.$('.article-likes').children().first().children().first().text();
+
       //第一页
       if (page == 1) {
+        //帖子总数
+        threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
+        totalPage = this.$('.pagination').children().last().children().attr('href').split('/')[3];
+        // totalPage = this.$('.pagination').children().last().children().html();
+        hostID = this.$('.avatar').children().first().attr('title');
+        hostBody = this.$('.show-content').html().trim();
+        boardID = this.$('.notebook').attr('href').split('/')[2];
+        boardName = this.$('.notebook').children().first().next().text();
+        boardTitle = this.$('.notebook').children().last().text();
+        console.log('totalPage:' + totalPage)
+
         this.$ = cio.load(result, { decodeEntities: false });
         this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
+
         //标题
         array.push({
           section: 0,
@@ -142,6 +164,13 @@ export default class NewThreadDetailScreen extends Component {
           this.$ = cio.load(this.$('div[class=like-list]').html(), { decodeEntities: false });
           this.$('div[class=like]').each(function (i, elem) {
             this.$ = cio.load(elem, { decodeEntities: false });
+
+            var score = this.$('div[class*=score-bad]').text();
+            if (score.length == 0) {
+              score = this.$('div[class*=score-good]').text();
+            }
+            console.log('score:' + score);
+
             array.push({
               section: 2,
               avatar: this.$('.avatar').children().attr('src'),
@@ -149,13 +178,14 @@ export default class NewThreadDetailScreen extends Component {
               meta: this.$('.name').next().text(),
               time: this.$('.name').next().next().text(),
               reply: this.$('.text').html().trim(),
+              score: score.trim(),
             });
           });
         }
         //
         array.push({
           section: 4,
-        });  
+        });
       }
 
       //回复
@@ -183,19 +213,20 @@ export default class NewThreadDetailScreen extends Component {
         });
       });
 
-      // if (from == 0 && result['articles'].length == 0) {
-      //   this.setState({
-      //     firstLoading: false,
-      //     viewLoading: false,
-      //     screenText: '帖子不存在，可以尝试从浏览器打开或查看快照',
-      //   });
-      // }
+      if (page == 1 && array.length == 0) {
+        this.setState({
+          firstLoading: false,
+          viewLoading: false,
+          screenText: '帖子不存在，可以尝试从浏览器打开或查看快照',
+        });
+      }
+
       // else {
       this.setState({
         dataArray: array,
-        totalPage: threadCount % size == 0 ? parseInt(threadCount / size) : parseInt(threadCount / size) + 1,
-        currentPage: parseInt(from / size) + 1,
-        selectedValue: (parseInt(from / size) + 1).toString(),
+        totalPage: totalPage, //抓取,
+        currentPage: page,
+        selectedValue: page.toString(),
         firstLoading: false,
         viewLoading: false,
         screenText: null,
@@ -227,39 +258,53 @@ export default class NewThreadDetailScreen extends Component {
     else if (item.section == 1) {
       return (
         <View>
-          <View style={styles.container} >
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <AvatorImage
-                borderRadius={15}
-                widthAndHeight={30}
-                onPressClick={() => {
-                  // this.props.navigation.navigate('userScreen', { id: item.author_id });
-                }}
-                uri={'https://exp.newsmth.net/' + item.avatar} />
+          <View>
+            <View style={styles.container} >
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <AvatorImage
+                  borderRadius={15}
+                  widthAndHeight={30}
+                  onPressClick={() => {
+                    // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                  }}
+                  uri={'https://exp.newsmth.net/' + item.avatar} />
 
-              <Text style={styles.itemName} >{item.name}</Text>
-              <Text style={styles.itemMeta} >{item.meta}</Text>
+                <Text style={styles.itemName} >{item.name}</Text>
+                <Text style={styles.itemMeta} >{item.meta}</Text>
+              </View>
+              <Text style={styles.itemTime} >{item.time}</Text>
+              <View style={[styles.itemReplyView, styles.itemReplyViewNoQuote]} >
+                <HTMLView value={item.reply} stylesheet={styles.itemReply} />
+              </View>
             </View>
-            <Text style={styles.itemTime} >{item.time}</Text>
-            <View style={[styles.itemReplyView, styles.itemReplyViewNoQuote]} >
-              <HTMLView value={item.reply} stylesheet={styles.itemReply} />
-            </View>
+            <ImageButton
+              style={styles.itemMore}
+              color={global.colors.themeColor}
+              width={44}
+              height={44}
+              margin={24}
+              source={global.images.icon_more}
+              onPress={() => {
+                this.setState({
+                  floorItem: item,
+                  floorActionViewHidden: false,
+                });
+              }} />
+            <SeperatorLine />
+
+
           </View>
-          <ImageButton
-            style={styles.itemMore}
-            color={global.colors.themeColor}
-            width={44}
-            height={44}
-            margin={24}
-            source={global.images.icon_more}
-            onPress={() => {
-              this.setState({
-                floorItem: item,
-                floorActionViewHidden: false,
-              });
-            }} />
-          <SeperatorLine />
+          {
+            likeCount.length > 0
+              ?
+              <View style={{ backgroundColor: global.colors.whiteColor, padding: global.constants.Padding }}>
+                <Text style={styles.title} >{likeCount}</Text>
+              </View>
+              :
+              null
+          }
         </View>
+
       );
     }
     //like
@@ -293,7 +338,17 @@ export default class NewThreadDetailScreen extends Component {
                 <Text style={styles.likeItemMeta} >{item.meta}</Text>
                 <Text style={styles.likeItemTime} >{item.time.trim()}</Text>
               </View>
-              <Text style={styles.likeItemReply} >{item.reply}</Text>
+              <Text style={styles.likeItemReply} >
+                {
+                  item.score.length > 0
+                    ?
+                    <Text style={[styles.likeItemReply, { fontWeight: 'bold', color: (item.score > 0 ? 'red' : 'green') }]} >
+                      {(item.score > 0 ? '+' + item.score : item.score) + ' '}
+                    </Text>
+                    : null
+                }
+                {item.reply}
+              </Text>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                 <View style={{ flex: 1, marginTop: 5, height: 1, backgroundColor: global.colors.seperatorColor }} />
               </View>
@@ -397,12 +452,12 @@ export default class NewThreadDetailScreen extends Component {
             currentPage={this.state.currentPage}
             totalPage={this.state.totalPage}
             onPreviousClick={() => {
-              if (from == 0) return;
+              if (page == 1) return;
               this.setState({
                 viewLoading: true,
                 loadingType: 'none',
               });
-              from = from - size;
+              page = page - 1;
               this.getNewTopic(page);
             }}
             onSelectClick={() => {
@@ -412,12 +467,12 @@ export default class NewThreadDetailScreen extends Component {
               });
             }}
             onNextClick={() => {
-              if (from + size > threadCount) return;
+              if (page + 1 > totalPage) return;
               this.setState({
                 viewLoading: true,
                 loadingType: 'none',
               });
-              from = from + size;
+              page = page + 1;
               this.getNewTopic(page);
             }}
             onReplyClick={() => {
@@ -476,7 +531,7 @@ export default class NewThreadDetailScreen extends Component {
 
             }}
             onHistoryClick={() => {
-              Linking.openURL(historyURL).catch(err => console.error('An error occurred', err));
+              // Linking.openURL(historyURL).catch(err => console.error('An error occurred', err));
               this.setState({
                 backgroundMaskViewHidden: true,
                 moreViewHidden: true,
@@ -507,7 +562,7 @@ export default class NewThreadDetailScreen extends Component {
               this.setState({
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
-                currentPage: (parseInt(from / size) + 1).toString(),
+                currentPage: page.toString(),
               });
             }}
             onFirstClick={() => {
@@ -517,7 +572,7 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              from = 0;
+              page = 1;
               this.getNewTopic(page);
             }}
             onLastClick={() => {
@@ -527,11 +582,11 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              from = (this.state.totalPage - 1) * size;
+              page = totalPage;
               this.getNewTopic(page);
             }}
-            onCompleteClick={(page) => {
-              if (page == (parseInt(from / size) + 1).toString()) {
+            onCompleteClick={(p) => {
+              if (p == page.toString()) {
                 this.setState({
                   selectPageViewHidden: true,
                   backgroundMaskViewHidden: true,
@@ -544,7 +599,7 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              from = (page - 1) * size;
+              page = p;
               this.getNewTopic(page);
             }}
             onValueChange={(page) => {

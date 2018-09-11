@@ -868,6 +868,7 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = VJ9XJ78H9K;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					047099561FF726C300676CC8 = {
@@ -876,7 +877,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = VJ9XJ78H9K;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1480,6 +1481,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = VJ9XJ78H9K;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1513,6 +1515,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = VJ9XJ78H9K;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
@@ -1706,8 +1709,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VJ9XJ78H9K;
 				ENABLE_BITCODE = NO;
@@ -1732,8 +1735,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.newsmth.sm;
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "8b663e64-98e9-488f-8f3d-a315b1279028";
-				PROVISIONING_PROFILE_SPECIFIER = SMTH_AdHoc_Profile;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1744,6 +1747,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = VJ9XJ78H9K;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
@@ -1842,7 +1846,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = VJ9XJ78H9K;
@@ -1873,8 +1878,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.newsmth.sm;
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "c1d16477-00f2-4127-8d35-2a7f7b12c1fe";
-				PROVISIONING_PROFILE_SPECIFIER = SMTH_Development_Profile;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1886,8 +1891,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VJ9XJ78H9K;
 				ENABLE_BITCODE = NO;
@@ -1913,8 +1918,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.newsmth.sm;
 				PRODUCT_NAME = SMTH;
-				PROVISIONING_PROFILE = "9aeee001-ec38-40cb-b30f-38ec5dda66cb";
-				PROVISIONING_PROFILE_SPECIFIER = SMTH_Distribution_Profile;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

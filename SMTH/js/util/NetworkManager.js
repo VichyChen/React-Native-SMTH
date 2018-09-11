@@ -1033,7 +1033,7 @@ export default class NetworkManager {
 
     //帖子详情页
     static getNewTopic(topic_id, page, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/topic/' + topic_id, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/topic/' + topic_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
