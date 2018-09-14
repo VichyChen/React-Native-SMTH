@@ -24,8 +24,8 @@ import SMTHTabNavigator from './SMTHTabNavigator';
 import NewBoardListScreen from '../../NewPage/NewBoardListScreen';
 import NewThreadDetailScreen from '../../NewPage/NewThreadDetailScreen';
 import NewSearchScreen from '../../NewPage/NewSearchScreen';
-
-
+import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
+import NewMyScreen from '../../NewPage/NewMyScreen';
 
 import {
     Color
@@ -55,6 +55,8 @@ const SMTHStackNavigator = StackNavigator({
     newBoardListScreen: { screen: NewBoardListScreen },
     newThreadDetailScreen: { screen: NewThreadDetailScreen },
     newSearchScreen: { screen: NewSearchScreen },
+    newFavouriteScreen: { screen: NewFavouriteScreen },
+    newMyScreen: { screen: NewMyScreen },
 },
     {
         navigationOptions: {

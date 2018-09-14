@@ -2,7 +2,7 @@ import { AsyncStorage } from 'react-native';
 import AsyncStorageKit from './AsyncStorageKit';
 
 export default class AsyncStorageManger {
-    
+
     static set(key, value) {
         AsyncStorageKit.set(key, value);
     }
@@ -10,6 +10,7 @@ export default class AsyncStorageManger {
     static get(key) {
         return AsyncStorageKit.get(key);
     }
+
 
     static setAccessToken(token) {
         AsyncStorageKit.set('access_token', token);
@@ -50,7 +51,45 @@ export default class AsyncStorageManger {
         var dic = new Array();
         dic["username"] = username;
         dic["password"] = password;
-        
+
         return dic;
+    }
+
+    static setSectionArray(sectionArray) {
+        var array = JSON.stringify(sectionArray);
+        AsyncStorageKit.set('sectionArray', array);
+    }
+
+    static getSectionArray() {
+        return AsyncStorage.getItem('sectionArray')
+            .then(req => JSON.parse(req))
+            .then((json) => {
+                return json;
+            });
+    }
+
+    static setFavouriteArray(favouriteArray) {
+        var array = JSON.stringify(favouriteArray);
+        AsyncStorageKit.set('favouriteArray', array);
+    }
+
+    static getFavouriteArray() {
+        return AsyncStorage.getItem('favouriteArray')
+            .then(req => JSON.parse(req))
+            .then((json) => {
+                return json;
+            });
+    }
+
+
+    static setLogin(login) {
+        AsyncStorageKit.set('Login', login == true ? '1' : '0');
+        global.login = login;
+        console.log('global.login:' + global.login);
+    }
+
+    static getLogin() {
+        var login = AsyncStorageKit.get('Login');
+        return login == '1' ? true : false;
     }
 }    

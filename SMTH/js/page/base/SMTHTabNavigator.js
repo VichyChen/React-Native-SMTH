@@ -13,6 +13,8 @@ import MyScreen from '../MyScreen';
 
 import NewHotScreen from '../../NewPage/NewHotScreen';
 import NewBoardScreen from '../../NewPage/NewBoardScreen';
+import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
+import NewMyScreen from '../../NewPage/NewMyScreen';
 
 import {
     Color
@@ -44,7 +46,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     FavouriteScreen: {
-        screen: FavouriteScreen,
+        screen: NewFavouriteScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '收藏',
             tabBarIcon: ({ tintColor, focused }) => (
@@ -56,7 +58,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     MyScreen: {
-        screen: MyScreen,
+        screen: NewMyScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '我的',
             tabBarOnPress: () => {

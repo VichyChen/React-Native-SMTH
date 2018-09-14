@@ -40,6 +40,7 @@ import {
     AvatorImage,
     NavigationBar
 } from '../config/Common';
+import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 
 var _page = 1;
@@ -62,6 +63,7 @@ export default class NewHotListScreen extends Component {
 
     getNewHot(page) {
         NetworkManager.getNewHot(this.props.section, page, (result) => {
+            //帖子
             this.$ = cio.load(result);
             this.$ = cio.load(this.$('ul[class=article-list]').html());
 
@@ -82,6 +84,44 @@ export default class NewHotListScreen extends Component {
                     picture: this.$('span[class*=glyphicon-picture]').parent().text(),
                 });
             });
+
+            //分区
+            this.$ = cio.load(result);
+            var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
+            //有登陆
+            if (second.indexOf("成员") != -1) {
+                AsyncStorageManger.setLogin(true);
+                this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
+            }
+            //没登陆
+            else {
+                AsyncStorageManger.setLogin(false);
+                this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
+            }
+            this.$ = cio.load(this.$('.dropdown-menu').html());
+            this.$('li[class=divider]').next().remove();
+            this.$('li[class=divider]').remove();
+
+            var sectionArray = new Array();
+            this.$('li').each(function (i, elem) {
+                this.$ = cio.load(elem);
+                sectionArray.push({
+                    key: this.$('a').attr('href').split('/')[2],
+                    title: this.$('a').text(),
+                });
+            });
+            AsyncStorageManger.setSectionArray(sectionArray);
+
+            //收藏
+            this.$ = cio.load(result);
+            this.$ = cio.load(this.$('body').html());
+            var srcipt = this.$('script').text();
+            if (srcipt.length > 0) {
+                var favouriteArray = JSON.parse(this.$('script').text()
+                    .replace("\n        $(function () {\n            build_favorites($(\'#__favorites\'), ", '')
+                    .replace(");\n        });\n    ", ''));
+            }
+            AsyncStorageManger.setFavouriteArray(favouriteArray);
 
             if (array.length == 0) {
                 if (this.state.viewLoading == true) {

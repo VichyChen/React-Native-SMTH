@@ -39,6 +39,7 @@ import NavigationBar from '../component/NavigationBar';
 import TabPageView from '../component/TabPageView';
 
 import NewHotListScreen from '../NewPage/NewHotListScreen';
+import NewLoginView from '../NewPage/NewLoginView';
 
 export {
     NetworkManager,
@@ -73,4 +74,5 @@ export {
     NavigationBar,
     TabPageView,
     NewHotListScreen,
+    NewLoginView,
 }

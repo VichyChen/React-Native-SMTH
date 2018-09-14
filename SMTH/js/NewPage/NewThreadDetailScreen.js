@@ -59,6 +59,7 @@ import {
 } from 'ModelModule';
 
 import HTMLView from 'react-native-htmlview';
+import ActionSheet from 'react-native-actionsheet'
 
 var webURL;
 var threadCount;
@@ -130,14 +131,12 @@ export default class NewThreadDetailScreen extends Component {
       if (page == 1) {
         //帖子总数
         threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
-        totalPage = this.$('.pagination').children().last().children().attr('href').split('/')[3];
-        // totalPage = this.$('.pagination').children().last().children().html();
+        totalPage = this.$('.pagination').children().last().children().attr('href') != null ? this.$('.pagination').children().last().children().attr('href').split('/')[3] : 1;
         hostID = this.$('.avatar').children().first().attr('title');
         hostBody = this.$('.show-content').html().trim();
         boardID = this.$('.notebook').attr('href').split('/')[2];
         boardName = this.$('.notebook').children().first().next().text();
         boardTitle = this.$('.notebook').children().last().text();
-        console.log('totalPage:' + totalPage)
 
         this.$ = cio.load(result, { decodeEntities: false });
         this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
@@ -147,6 +146,23 @@ export default class NewThreadDetailScreen extends Component {
           section: 0,
           title: this.$('.title').text(),
         });
+
+        //楼主图片
+        var images = this.$('div[class=image-package]').html();
+        var attachment_list = [];
+        if (images != null) {
+          this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
+          this.$('a').each(function (i, elem) {
+            this.$ = cio.load(elem, { decodeEntities: false });
+            attachment_list.push(this.$('img').attr('src'));
+          });
+        }
+
+        this.$ = cio.load(result, { decodeEntities: false });
+        this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
+        this.$('.image-package').remove();
+        this.$('.image-caption').remove();
+
         //楼主
         array.push({
           section: 1,
@@ -155,6 +171,7 @@ export default class NewThreadDetailScreen extends Component {
           meta: this.$('.meta').children().first().text(),
           time: this.$('.publish-time').text(),
           wordage: this.$('.wordage').text(),
+          attachment_list: attachment_list,
           reply: this.$('.show-content').html().trim(),
         });
         //like
@@ -169,7 +186,6 @@ export default class NewThreadDetailScreen extends Component {
             if (score.length == 0) {
               score = this.$('div[class*=score-good]').text();
             }
-            console.log('score:' + score);
 
             array.push({
               section: 2,
@@ -190,28 +206,44 @@ export default class NewThreadDetailScreen extends Component {
 
       //回复
       this.$ = cio.load(result);
-      this.$ = cio.load(this.$('div[class=reply-list]').html());
-      this.$('div[class=reply]').each(function (i, elem) {
-        this.$ = cio.load(elem, { decodeEntities: false });
-        this.$('.tool-group').remove();
-        this.$('.article-quote').prev().remove();
-        this.$('.article-quote').children().last().remove();
-        var quote = this.$('div[class=article-quote]').html();
-        this.$('.article-quote').remove();
-        console.log('reply:' + this.$('div[class=reply-wrap]').html().trim());
-        console.log('quote:' + quote);
-        array.push({
-          section: 3,
-          key: this.$('div[class=reply-wrap]').text(),
-          index: '',
-          avatar: this.$('a[class=avatar]').children().attr('src'),
-          name: this.$('a[class=name]').text(),
-          meta: this.$('div[class=meta]').children().first().text(),
-          time: this.$('div[class=meta]').children().last().text(),
-          reply: this.$('div[class=reply-wrap]').html().trim(),
-          quote: quote,
+      var reply = this.$('div[class=reply-list]').html();
+      if (reply != null) {
+        this.$ = cio.load(this.$('div[class=reply-list]').html());
+        this.$('div[class=reply]').each(function (i, elem) {
+          this.$ = cio.load(elem, { decodeEntities: false });
+          var images = this.$('div[class=image-package]').html();
+          var attachment_list = [];
+          if (images != null) {
+            this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
+            this.$('a').each(function (i, elem) {
+              this.$ = cio.load(elem, { decodeEntities: false });
+              attachment_list.push(this.$('img').attr('src'));
+            });
+          }
+
+          this.$ = cio.load(elem, { decodeEntities: false });
+          this.$('.tool-group').remove();
+          this.$('.article-quote').prev().remove();
+          this.$('.article-quote').children().last().remove();
+          var quote = this.$('div[class=article-quote]').html();
+          this.$('.article-quote').remove();
+          this.$('.image-package').remove();
+          this.$('.image-caption').remove();
+
+          array.push({
+            section: 3,
+            key: this.$('div[class=reply-wrap]').text(),
+            index: '',
+            avatar: this.$('a[class=avatar]').children().attr('src'),
+            name: this.$('a[class=name]').text(),
+            meta: this.$('div[class=meta]').children().first().text(),
+            time: this.$('div[class=meta]').children().last().text(),
+            attachment_list: attachment_list,
+            reply: this.$('div[class=reply-wrap]').html().trim(),
+            quote: quote,
+          });
         });
-      });
+      }
 
       if (page == 1 && array.length == 0) {
         this.setState({
@@ -273,6 +305,10 @@ export default class NewThreadDetailScreen extends Component {
                 <Text style={styles.itemMeta} >{item.meta}</Text>
               </View>
               <Text style={styles.itemTime} >{item.time}</Text>
+              <FlatList
+                data={item.attachment_list}
+                renderItem={this._attachmentImageItem}
+              />
               <View style={[styles.itemReplyView, styles.itemReplyViewNoQuote]} >
                 <HTMLView value={item.reply} stylesheet={styles.itemReply} />
               </View>
@@ -291,7 +327,6 @@ export default class NewThreadDetailScreen extends Component {
                 });
               }} />
             <SeperatorLine />
-
 
           </View>
           {
@@ -376,6 +411,10 @@ export default class NewThreadDetailScreen extends Component {
               <Text style={styles.itemMeta} >{item.meta}</Text>
             </View>
             <Text style={styles.itemTime} >{item.time}</Text>
+            <FlatList
+              data={item.attachment_list}
+              renderItem={this._attachmentImageItem}
+            />
             <View style={[styles.itemReplyView, (item.quote == null ? styles.itemReplyViewNoQuote : null)]} >
               <HTMLView value={item.reply} stylesheet={styles.itemReply} />
             </View>
@@ -386,7 +425,7 @@ export default class NewThreadDetailScreen extends Component {
                   <HTMLView value={item.quote} stylesheet={styles.itemQuote} />
                 </View>
                 :
-                <View></View>
+                null
             )}
           </View>
           <ImageButton
@@ -415,9 +454,9 @@ export default class NewThreadDetailScreen extends Component {
 
   _attachmentImageItem = ({ item }) => (
     <AutoHeightImage
-      style={styles.image}
-      width={global.constants.ScreenWidth - 26}
-      imageURL={NetworkManager.net_getAttachmentImage(board, item.id, item.pos)}
+      style={styles.itemImage}
+      width={global.constants.ScreenWidth - global.constants.Padding * 2}
+      imageURL={'https://exp.newsmth.net/' + item}
     />
   );
 
@@ -476,6 +515,10 @@ export default class NewThreadDetailScreen extends Component {
               this.getNewTopic(page);
             }}
             onReplyClick={() => {
+              DeviceEventEmitter.emit('LoginNotification', null);
+return;
+              this.showActionSheet(); return;
+
               this.props.navigation.navigate('replyThreadScreen',
                 {
                   mid: this.props.navigation.state.params.id,
@@ -654,11 +697,36 @@ export default class NewThreadDetailScreen extends Component {
               });
             }}
           /> */}
+          <ActionSheet
+            ref={o => this.moreActionSheet = o}
+            title={'Which one do you like ?'}
+            options={['分享', '复制链接', '从浏览器打开', '查看快照', '举报', '取消']}
+            cancelButtonIndex={2}
+            destructiveButtonIndex={1}
+            onPress={(index) => { /* do something */ }}
+          />
+
+          <ActionSheet
+            ref={o => this.itemMoreActionSheet = o}
+            title={'Which one do you like ?'}
+            options={['回复', '举报', '取消']}
+            cancelButtonIndex={2}
+            destructiveButtonIndex={1}
+            onPress={(index) => { /* do something */ }}
+          />
+
+
+
         </Screen>
       </View>
 
     )
   }
+
+  showActionSheet = () => {
+    this.ActionSheet.show()
+  }
+
 }
 
 var styles = {
@@ -735,7 +803,6 @@ var styles = {
   get itemTime() {
     return {
       marginTop: 10,
-      marginBottom: 20,
       fontSize: global.configures.fontSize13,
       color: global.colors.gray2Color
     }
@@ -748,10 +815,16 @@ var styles = {
       color: global.colors.fontColor
     }
   },
+  get itemImage() {
+    return {
+      marginTop: 15,
+    }
+  },
   get itemReplyView() {
     return {
+      marginTop: 15,
       paddingBottom: 15,
-      // backgroundColor: 'red'
+      backgroundColor: global.colors.clearColor
     }
   },
   get itemReplyViewNoQuote() {

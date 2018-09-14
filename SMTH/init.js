@@ -10,6 +10,8 @@ import {
     BoardModel
 } from 'ModelModule';
 
+global.login = false;
+
 global.bool = {
     iOS: Platform.OS === 'ios',
     Android: Platform.OS === 'android',
@@ -104,10 +106,24 @@ global.configures = {
     fontSize14: 14,
     fontSize13: 13,
     boards: new Array(), //板块
+    sections: [
+        { key: '7fba65e45f678eb8c605d4107de04185', title: '社区管理' },
+        { key: '4fcab28694a0be93d9297d8cede052d9', title: '国内院校' },
+        { key: '3497e48bb537373d0f738b41fe53a41b', title: '休闲娱乐' },
+        { key: '353fdfda1dfe7a714e592bab99c762cd', title: '五湖四海' },
+        { key: 'c8d614e56acb8a192ec4af8b375a5eea', title: '游戏运动' },
+        { key: '5b634fdc9ecddf6042561c959176c077', title: '社会信息' },
+        { key: '1c455a5dccf4242008d188f9676e3f4e', title: '知性感性' },
+        { key: '12af235486fde6684e4b9e83f5d2b779', title: '文化人文' },
+        { key: '4ed7f0d8b621c8ccf9e11eca9991d6dc', title: '学术科学' },
+        { key: '4dda79c64b3ffb61f8048d745292ff5d', title: '电脑技术' },
+    ],
 };
 
 global.current = {
     username: '',
+    sectionArray: [],
+    favouriteArray: [],
 };
 
 function init() {
@@ -120,6 +136,14 @@ function init() {
         for (var i = 0; i < array.length; i++) {
             global.configures.boards[array[i].id] = array[i].name
         }
+    });
+    //新板块
+    AsyncStorageManger.getSectionArray().then((sectionArray) => {
+        global.current.sectionArray = sectionArray;
+    });
+    //收藏
+    AsyncStorageManger.getFavouriteArray().then((favouriteArray) => {
+        global.current.favouriteArray = favouriteArray;
     });
 
     configure();
