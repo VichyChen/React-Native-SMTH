@@ -35,7 +35,7 @@ export default class Button extends Component {
                 disabled={this.props.disabled}
             >
                 <View style={styles.container}>
-                    <Text style={[styles.text, { color: (this.props.disabled ? global.colors.gray3Color : (this.state.press == false ? (this.props.fontColor != null ? this.props.fontColor : global.colors.blueColor) : global.colors.gray3Color)) }]}>
+                    <Text style={[styles.text, { color: (this.props.disabled ? global.colors.gray3Color : (this.state.press == false ? (this.props.fontColor != null ? this.props.fontColor : global.colors.themeColor) : global.colors.gray3Color)) }]}>
                         {this.props.text}
                     </Text>
                 </View>

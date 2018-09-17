@@ -29,32 +29,59 @@ export default class NavigationBar extends Component {
 
                 <View style={styles.navigation} >
 
-                    {/* <ImageButton
-                        style={styles.backButton}
-                        color={global.colors.fontColor}
-                        width={44}
-                        height={44}
-                        margin={10}
-                        source={global.images.ic_return_b_90x90}
-                        onPress={() => {
+                    {
+                        this.props.showBackButton == true
+                            ?
+                            <ImageButton
+                                style={styles.backButton}
+                                color={global.colors.fontColor}
+                                width={44}
+                                height={44}
+                                margin={12}
+                                source={global.images.ic_return_b_90x90}
+                                onPress={() => {
+                                    this.props.navigation.goBack();
+                                }} />
+                            :
+                            null
+                    }
 
-                        }} /> */}
+                    {
+                        this.props.title != null
+                            ?
+                            <Text style={styles.title} >
+                                {this.props.title}
+                            </Text>
+                            :
+                            null
+                    }
 
-                    <Text style={styles.title} >
-                        {this.props.title}
-                    </Text>
+                    {
+                        this.props.rightButtonImage != null
+                            ?
+                            <ImageButton
+                                style={styles.rightButton}
+                                color={global.colors.fontColor}
+                                width={44}
+                                height={44}
+                                margin={12}
+                                source={this.props.rightButtonImage}
+                                onPress={() => {
+                                    if (this.props.rightButtonOnPress != null) {
+                                        this.props.rightButtonOnPress();
+                                    }
+                                }} />
+                            :
+                            null
+                    }
 
-                    {/* <ImageButton
-                        style={styles.rightButton1}
-                        color={global.colors.fontColor}
-                        width={44}
-                        height={44}
-                        margin={20}
-                        source={global.images.icon_search}
-                        onPress={() => {
-
-                        }} /> */}
-
+                    {
+                        this.props.showBottomLine == true || this.props.showBottomLine == null
+                            ?
+                            <View style={styles.bottomLine} />
+                            :
+                            null
+                    }
                 </View>
             </View>
         )
@@ -79,13 +106,27 @@ var styles = {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
+            // backgroundColor: 'green',
         }
     },
+    get bottomLine() {
+        return {
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: 1,
+            backgroundColor: global.colors.seperatorColor,
+        }
+    },
+
     get backButton() {
         return {
-            marginLeft: 10,
+            position: 'absolute',
+            left: 5,
+            top: 0,
+            bottom: 0,
             width: 44,
-            height: 44,
         }
     },
     get title() {
@@ -94,11 +135,13 @@ var styles = {
             color: global.colors.fontColor,
         }
     },
-    get rightButton1() {
+    get rightButton() {
         return {
-            marginRight: 10,
+            position: 'absolute',
+            right: 5,
+            top: 0,
+            bottom: 0,
             width: 44,
-            height: 44,
         }
     },
     get rightButton2() {
@@ -108,5 +151,5 @@ var styles = {
             height: 44,
         }
     },
-    
+
 }

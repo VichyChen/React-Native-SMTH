@@ -79,7 +79,7 @@ export default class NewHotScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <NavigationBar title='热点' />
+        <NavigationBar title='热点' showBottomLine={false} />
         <TabPageView titles={titles} pages={pages} />
         <NewLoginView visible={this.state.showLogin} success={() => {
           this.setState({

@@ -60,28 +60,19 @@ import {
 
 import HTMLView from 'react-native-htmlview';
 import ActionSheet from 'react-native-actionsheet'
+import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 var webURL;
 var threadCount;
 var totalPage;
+var currentPage;
 var hostID;     //楼主ID
 var hostBody;
+var hostArticleId;
+var wordage;
 var boardID;
 var boardName;
 var boardTitle;
-
-
-/*
-from
-size
-抓
-threadCount
-totalPage
-hostID
-hostBody
-boardName
-boardTitle
-*/
 
 var scanRecord;
 var page;
@@ -109,8 +100,8 @@ export default class NewThreadDetailScreen extends Component {
       currentPage: 1,
       totalPage: 1,
       // selectedValue: '1',
+      showMoreLike: false,
     }
-
     scanRecord = false;
 
     webURL = 'https://exp.newsmth.net/topic/' + this.props.navigation.state.params.id;
@@ -125,15 +116,18 @@ export default class NewThreadDetailScreen extends Component {
       var array = [];
 
       this.$ = cio.load(result, { decodeEntities: false });
+      currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
+      // totalPage = this.$('.pagination').children().last().children().attr('href') == 'javascript:void(0);' ? (this.$('.pagination').children().last().attr('class') == 'disabled' ? 1 : 1) : this.$('.pagination').children().last().children().attr('href').split('/')[3];
+      totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
       likeCount = this.$('.article-likes').children().first().children().first().text();
 
       //第一页
       if (page == 1) {
         //帖子总数
         threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
-        totalPage = this.$('.pagination').children().last().children().attr('href') != null ? this.$('.pagination').children().last().children().attr('href').split('/')[3] : 1;
         hostID = this.$('.avatar').children().first().attr('title');
         hostBody = this.$('.show-content').html().trim();
+        hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
         boardID = this.$('.notebook').attr('href').split('/')[2];
         boardName = this.$('.notebook').children().first().next().text();
         boardTitle = this.$('.notebook').children().last().text();
@@ -143,6 +137,7 @@ export default class NewThreadDetailScreen extends Component {
 
         //标题
         array.push({
+          key: array.length,
           section: 0,
           title: this.$('.title').text(),
         });
@@ -154,7 +149,10 @@ export default class NewThreadDetailScreen extends Component {
           this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
           this.$('a').each(function (i, elem) {
             this.$ = cio.load(elem, { decodeEntities: false });
-            attachment_list.push(this.$('img').attr('src'));
+            attachment_list.push({
+              key: attachment_list.length,
+              url: this.$('img').attr('src')
+            });
           });
         }
 
@@ -163,8 +161,10 @@ export default class NewThreadDetailScreen extends Component {
         this.$('.image-package').remove();
         this.$('.image-caption').remove();
 
+        wordage = this.$('.wordage').text();
         //楼主
         array.push({
+          key: array.length,
           section: 1,
           avatar: this.$('.avatar').children().first().attr('src'),
           name: this.$('.avatar').children().first().attr('title'),
@@ -188,6 +188,8 @@ export default class NewThreadDetailScreen extends Component {
             }
 
             array.push({
+              key: array.length,
+              index: i,
               section: 2,
               avatar: this.$('.avatar').children().attr('src'),
               name: this.$('.name').children().first().text(),
@@ -200,6 +202,7 @@ export default class NewThreadDetailScreen extends Component {
         }
         //
         array.push({
+          key: array.length,
           section: 4,
         });
       }
@@ -217,7 +220,10 @@ export default class NewThreadDetailScreen extends Component {
             this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
             this.$('a').each(function (i, elem) {
               this.$ = cio.load(elem, { decodeEntities: false });
-              attachment_list.push(this.$('img').attr('src'));
+              attachment_list.push({
+                key: attachment_list.length,
+                url: this.$('img').attr('src')
+              });
             });
           }
 
@@ -231,9 +237,9 @@ export default class NewThreadDetailScreen extends Component {
           this.$('.image-caption').remove();
 
           array.push({
+            key: array.length,
+            index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
             section: 3,
-            key: this.$('div[class=reply-wrap]').text(),
-            index: '',
             avatar: this.$('a[class=avatar]').children().attr('src'),
             name: this.$('a[class=name]').text(),
             meta: this.$('div[class=meta]').children().first().text(),
@@ -244,6 +250,34 @@ export default class NewThreadDetailScreen extends Component {
           });
         });
       }
+
+      //分区
+      this.$ = cio.load(result);
+      var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
+      //有登陆
+      if (second.indexOf("成员") != -1) {
+        AsyncStorageManger.setLogin(true);
+        this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
+      }
+      //没登陆
+      else {
+        AsyncStorageManger.setLogin(false);
+        this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
+      }
+      this.$ = cio.load(this.$('.dropdown-menu').html());
+      this.$('li[class=divider]').next().remove();
+      this.$('li[class=divider]').remove();
+
+      var sectionArray = new Array();
+      this.$('li').each(function (i, elem) {
+        this.$ = cio.load(elem);
+        sectionArray.push({
+          key: this.$('a').attr('href').split('/')[2],
+          title: this.$('a').text(),
+        });
+      });
+      AsyncStorageManger.setSectionArray(sectionArray);
+
 
       if (page == 1 && array.length == 0) {
         this.setState({
@@ -281,8 +315,21 @@ export default class NewThreadDetailScreen extends Component {
     //标题
     if (item.section == 0) {
       return (
-        <View style={[styles.container, { paddingBottom: -global.constants.Padding, }]} >
-          <Text style={styles.title} >{item.title}</Text>
+        <View>
+          <View style={[styles.container, {}]} >
+            <Text style={styles.title} >{item.title}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+              <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{boardName}</Text>
+              <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{boardTitle}</Text>
+              <Text style={styles.wordage} >
+                {
+                  (wordage.length > 0 ? (wordage.split(' ')[1] + '字数 ') : '') +
+                  (threadCount.length > 0 ? (threadCount.split(' ')[0] + '回复 ') : '')
+                }
+              </Text>
+            </View>
+          </View>
+          <HorizontalSeperatorLine />
         </View>
       );
     }
@@ -303,6 +350,13 @@ export default class NewThreadDetailScreen extends Component {
 
                 <Text style={styles.itemName} >{item.name}</Text>
                 <Text style={styles.itemMeta} >{item.meta}</Text>
+                {
+                  item.name == hostID
+                    ?
+                    <Text style={styles.itemHost} >{'楼主'}</Text>
+                    :
+                    null
+                }
               </View>
               <Text style={styles.itemTime} >{item.time}</Text>
               <FlatList
@@ -313,19 +367,6 @@ export default class NewThreadDetailScreen extends Component {
                 <HTMLView value={item.reply} stylesheet={styles.itemReply} />
               </View>
             </View>
-            <ImageButton
-              style={styles.itemMore}
-              color={global.colors.themeColor}
-              width={44}
-              height={44}
-              margin={24}
-              source={global.images.icon_more}
-              onPress={() => {
-                this.setState({
-                  floorItem: item,
-                  floorActionViewHidden: false,
-                });
-              }} />
             <SeperatorLine />
 
           </View>
@@ -333,7 +374,7 @@ export default class NewThreadDetailScreen extends Component {
             likeCount.length > 0
               ?
               <View style={{ backgroundColor: global.colors.whiteColor, padding: global.constants.Padding }}>
-                <Text style={styles.title} >{likeCount}</Text>
+                <Text style={styles.title} >{likeCount.split(' ')[0] + '个赞'}</Text>
               </View>
               :
               null
@@ -344,54 +385,77 @@ export default class NewThreadDetailScreen extends Component {
     }
     //like
     else if (item.section == 2) {
-      return (
-        <View style={{
-          flex: 1,
-          paddingTop: 10,
-          paddingBottom: 0,
-          paddingLeft: global.constants.Padding * 2,
-          paddingRight: global.constants.Padding * 2,
-          backgroundColor: global.colors.whiteColor
-        }} >
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-            <AvatorImage
-              borderRadius={8}
-              widthAndHeight={16}
-              onPressClick={() => {
-                // this.props.navigation.navigate('userScreen', { id: item.author_id });
-              }}
-              uri={'https://exp.newsmth.net/' + item.avatar} />
-            <View style={{
-              flex: 1,
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginLeft: 10,
-              marginRight: 10,
-            }}>
-              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Text style={styles.likeItemName} >{item.name.trim()}</Text>
-                <Text style={styles.likeItemMeta} >{item.meta}</Text>
-                <Text style={styles.likeItemTime} >{item.time.trim()}</Text>
-              </View>
-              <Text style={styles.likeItemReply} >
-                {
-                  item.score.length > 0
-                    ?
-                    <Text style={[styles.likeItemReply, { fontWeight: 'bold', color: (item.score > 0 ? 'red' : 'green') }]} >
-                      {(item.score > 0 ? '+' + item.score : item.score) + ' '}
-                    </Text>
-                    : null
-                }
-                {item.reply}
-              </Text>
-              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <View style={{ flex: 1, marginTop: 5, height: 1, backgroundColor: global.colors.seperatorColor }} />
+      if (this.state.showMoreLike == false && item.index == 5) {
+        return (
+          <Button
+            style={styles.moreLikeButton}
+            onPress={() => {
+              this.setState({
+                showMoreLike: true,
+              });
+            }}
+            text='点击显示更多的赞'
+          />
+        );
+      }
+      else if (this.state.showMoreLike == false && item.index > 5) {
+        return null;
+      }
+      else {
+        return (
+          <View style={{
+            flex: 1,
+            paddingTop: 10,
+            paddingBottom: 0,
+            paddingLeft: global.constants.Padding * 2,
+            paddingRight: global.constants.Padding * 2,
+            backgroundColor: global.colors.whiteColor
+          }} >
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+              <AvatorImage
+                borderRadius={8}
+                widthAndHeight={16}
+                onPressClick={() => {
+                  // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                }}
+                uri={'https://exp.newsmth.net/' + item.avatar} />
+              <View style={{
+                flex: 1,
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                marginLeft: 10,
+                marginRight: 10,
+              }}>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                  <Text style={styles.likeItemName} >{item.name.trim()}</Text>
+                  {/* {item.meta.length > 0 ? <Text style={styles.likeItemMeta} >{item.meta}</Text> : null}
+                  {item.time.trim().length > 0 ? <Text style={styles.likeItemTime} >{item.time.trim()}</Text> : null} */}
+
+                  <Text style={styles.likeItemMeta} >
+                    {(item.meta.trim().length > 0 ? (item.meta.trim() + ' ') : '') + item.time.trim()}
+                  </Text>
+
+                </View>
+                <Text style={styles.likeItemReply} >
+                  {
+                    item.score.length > 0
+                      ?
+                      <Text style={[styles.likeItemReply, { fontWeight: 'bold', color: (item.score > 0 ? 'red' : 'green') }]} >
+                        {(item.score > 0 ? '+' + item.score : item.score) + ' '}
+                      </Text>
+                      : null
+                  }
+                  {item.reply}
+                </Text>
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                  <View style={{ flex: 1, marginTop: 5, height: 1, backgroundColor: global.colors.seperatorColor }} />
+                </View>
               </View>
             </View>
-          </View>
 
-        </View>
-      );
+          </View>
+        );
+      }
     }
     //回复
     else if (item.section == 3) {
@@ -409,8 +473,15 @@ export default class NewThreadDetailScreen extends Component {
 
               <Text style={styles.itemName} >{item.name}</Text>
               <Text style={styles.itemMeta} >{item.meta}</Text>
+              {
+                item.name == hostID
+                  ?
+                  <Text style={styles.itemHost} >{'楼主'}</Text>
+                  :
+                  null
+              }
             </View>
-            <Text style={styles.itemTime} >{item.time}</Text>
+            <Text style={styles.itemTime} >{(item.index + '楼') + '  ' + item.time}</Text>
             <FlatList
               data={item.attachment_list}
               renderItem={this._attachmentImageItem}
@@ -430,12 +501,13 @@ export default class NewThreadDetailScreen extends Component {
           </View>
           <ImageButton
             style={styles.itemMore}
-            color={global.colors.themeColor}
+            color={global.colors.gray2Color}
             width={44}
             height={44}
             margin={24}
             source={global.images.icon_more}
             onPress={() => {
+              this.itemMoreActionSheet.show()
               this.setState({
                 floorItem: item,
                 floorActionViewHidden: false,
@@ -456,14 +528,23 @@ export default class NewThreadDetailScreen extends Component {
     <AutoHeightImage
       style={styles.itemImage}
       width={global.constants.ScreenWidth - global.constants.Padding * 2}
-      imageURL={'https://exp.newsmth.net/' + item}
+      imageURL={'https://exp.newsmth.net/' + item.url}
     />
   );
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <NavigationBar title='' />
+
+        <NavigationBar
+          title='帖子详情'
+          showBackButton={true}
+          navigation={this.props.navigation}
+          rightButtonImage={global.images.icon_more}
+          rightButtonOnPress={() => {
+            this.moreActionSheet.show()
+          }}
+        />
 
         <Screen
           showLoading={this.state.viewLoading}
@@ -515,18 +596,18 @@ export default class NewThreadDetailScreen extends Component {
               this.getNewTopic(page);
             }}
             onReplyClick={() => {
-              DeviceEventEmitter.emit('LoginNotification', null);
-return;
-              this.showActionSheet(); return;
+              if (global.login == true) {
+                this.props.navigation.navigate('newReplyThreadScreen',
+                  {
+                    id: hostArticleId,
+                    body: '',
+                  });
+              }
+              else {
+                DeviceEventEmitter.emit('LoginNotification', null);
+              }
+              // this.showActionSheet(); return;
 
-              this.props.navigation.navigate('replyThreadScreen',
-                {
-                  mid: this.props.navigation.state.params.id,
-                  id: this.props.navigation.state.params.id,
-                  board: board,
-                  subject: this.props.navigation.state.params.subject,
-                  body: '',
-                });
             }}
           />
           {/*
@@ -697,25 +778,28 @@ return;
               });
             }}
           /> */}
+
           <ActionSheet
             ref={o => this.moreActionSheet = o}
             title={'Which one do you like ?'}
             options={['分享', '复制链接', '从浏览器打开', '查看快照', '举报', '取消']}
-            cancelButtonIndex={2}
-            destructiveButtonIndex={1}
-            onPress={(index) => { /* do something */ }}
+            cancelButtonIndex={5}
+            onPress={(index) => {
+
+            }}
           />
 
           <ActionSheet
             ref={o => this.itemMoreActionSheet = o}
             title={'Which one do you like ?'}
+            message={'xixi xixixxi'}
             options={['回复', '举报', '取消']}
             cancelButtonIndex={2}
             destructiveButtonIndex={1}
-            onPress={(index) => { /* do something */ }}
+            onPress={(index) => {
+
+            }}
           />
-
-
 
         </Screen>
       </View>
@@ -733,7 +817,7 @@ var styles = {
   get flatList() {
     return {
       height: global.constants.ScreenHeight - 40 - global.constants.BottomSaveArea - global.constants.NavigationBarHeight,
-      backgroundColor: global.colors.backgroundGrayColor,
+      backgroundColor: global.colors.whiteColor,
     }
   },
   get container() {
@@ -750,6 +834,28 @@ var styles = {
       color: global.colors.fontColor
     }
   },
+  get itemBoard() {
+    return {
+      marginTop: 10,
+      paddingLeft: 4,
+      paddingRight: 4,
+      alignItems: 'center',
+      fontSize: global.configures.fontSize14,
+      color: global.colors.redColor,
+      borderColor: global.colors.redColor,
+      borderWidth: 1,
+      borderRadius: 2,
+      height: 18,
+      textAlign: 'center'
+    }
+  },
+  get wordage() {
+    return {
+      marginTop: 10,
+      fontSize: global.configures.fontSize13,
+      color: global.colors.gray2Color
+    }
+  },
   get likeItemName() {
     return {
       fontSize: global.configures.fontSize15,
@@ -760,7 +866,7 @@ var styles = {
     return {
       marginLeft: 5,
       fontSize: global.configures.fontSize13,
-      color: global.colors.gray1Color
+      color: global.colors.gray2Color
     }
   },
   get likeItemTime() {
@@ -776,6 +882,12 @@ var styles = {
       marginBottom: 5,
       fontSize: global.configures.fontSize15,
       color: global.colors.fontColor
+    }
+  },
+  get moreLikeButton() {
+    return {
+      marginTop: 10,
+      marginBottom: 10,
     }
   },
   get itemContainer() {
@@ -800,6 +912,21 @@ var styles = {
       color: global.colors.gray1Color
     }
   },
+  get itemHost() {
+    return {
+      marginLeft: 6,
+      paddingLeft: 3,
+      paddingRight: 3,
+      paddingTop: 3,
+      paddingBottom: 2,
+      fontSize: global.configures.fontSize10,
+      color: global.colors.redColor,
+      borderColor: global.colors.redColor,
+      borderWidth: 1,
+      borderRadius: 2,
+      textAlign: 'center'
+    }
+  },
   get itemTime() {
     return {
       marginTop: 10,
@@ -818,6 +945,7 @@ var styles = {
   get itemImage() {
     return {
       marginTop: 15,
+      backgroundColor: global.colors.backgroundColor
     }
   },
   get itemReplyView() {
@@ -848,7 +976,6 @@ var styles = {
       paddingBottom: 25,
       borderLeftWidth: 2,
       borderLeftColor: global.colors.gray4Color,
-      // backgroundColor: 'green'
     }
   },
   get itemQuote() {

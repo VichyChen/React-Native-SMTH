@@ -978,7 +978,7 @@ export default class NetworkManager {
 
     //全部、社区管理！@#¥%……&*（）
     static getNewHot(section_id, page, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global'), null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global') + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1144,8 +1144,29 @@ export default class NetworkManager {
     }
 
     //获取发帖页面
+    static getNewReply(articleId, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/compose/reply/' + articleId, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //发帖
+    static postReplSave(articleId, body, captcha, success, failure, netError) {
+        NetworkManager.postNew('https://exp.newsmth.net/compose/save', {
+            articleId: articleId,
+            body: body,
+        }, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //获取回帖页面
 

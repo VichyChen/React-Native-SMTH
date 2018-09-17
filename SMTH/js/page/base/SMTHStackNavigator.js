@@ -26,6 +26,8 @@ import NewThreadDetailScreen from '../../NewPage/NewThreadDetailScreen';
 import NewSearchScreen from '../../NewPage/NewSearchScreen';
 import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
 import NewMyScreen from '../../NewPage/NewMyScreen';
+import NewReplyThreadScreen from '../../NewPage/NewReplyThreadScreen';
+import NewPostThreadScreen from '../../NewPage/NewPostThreadScreen';
 
 import {
     Color
@@ -57,6 +59,8 @@ const SMTHStackNavigator = StackNavigator({
     newSearchScreen: { screen: NewSearchScreen },
     newFavouriteScreen: { screen: NewFavouriteScreen },
     newMyScreen: { screen: NewMyScreen },
+    newReplyThreadScreen: { screen: NewReplyThreadScreen },
+    newPostThreadScreen: { screen: NewPostThreadScreen },
 },
     {
         navigationOptions: {

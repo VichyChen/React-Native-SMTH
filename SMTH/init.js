@@ -105,6 +105,11 @@ global.configures = {
     fontSize15: 15,
     fontSize14: 14,
     fontSize13: 13,
+    fontSize12: 12,
+    fontSize11: 11,
+    fontSize10: 10,
+    fontSize9: 9,
+    fontSize8: 8,
     boards: new Array(), //板块
     sections: [
         { key: '7fba65e45f678eb8c605d4107de04185', title: '社区管理' },

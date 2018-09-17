@@ -43,9 +43,10 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 
-var _page = 1;
 
 export default class NewHotListScreen extends Component {
+    _page = 1;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -58,7 +59,7 @@ export default class NewHotListScreen extends Component {
 
         console.log('NewHotListScreen constructor');
 
-        this.getNewHot(_page);
+        this.getNewHot(this._page);
     }
 
     getNewHot(page) {
@@ -68,10 +69,14 @@ export default class NewHotListScreen extends Component {
             this.$ = cio.load(this.$('ul[class=article-list]').html());
 
             var array = [];
+            if (page != 1) {
+                array = array.concat(this.state.dataArray);
+            }
             this.$('div[class=article-content]').each(function (i, elem) {
                 this.$ = cio.load(elem);
                 array.push({
-                    key: this.$('a[class=article-subject]').attr('href').split('/')[2],
+                    key: i + ((page - 1) * 20),
+                    id: this.$('a[class=article-subject]').attr('href').split('/')[2],
                     avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                     name: this.$('div[class=article-account-name]').children().first().text(),
                     time: this.$('div[class=article-account-name]').children().last().text(),
@@ -127,6 +132,7 @@ export default class NewHotListScreen extends Component {
                 if (this.state.viewLoading == true) {
                     this.setState({
                         pullLoading: false,
+                        pullMoreLoading: false,
                         viewLoading: false,
                         screenText: '网络请求出错，请点击重试',
                     });
@@ -134,6 +140,7 @@ export default class NewHotListScreen extends Component {
                 else {
                     this.setState({
                         pullLoading: false,
+                        pullMoreLoading: false,
                         viewLoading: false,
                         screenText: null
                     });
@@ -143,6 +150,7 @@ export default class NewHotListScreen extends Component {
                 this.setState({
                     dataArray: array,
                     pullLoading: false,
+                    pullMoreLoading: false,
                     viewLoading: false,
                     screenText: null
                 });
@@ -161,9 +169,7 @@ export default class NewHotListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    console.log('item.key:' + item.key);
-
-                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.key });
+                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
                 }}
             >
                 <View>
@@ -222,8 +228,8 @@ export default class NewHotListScreen extends Component {
                         this.setState({
                             pullLoading: true
                         });
-                        page = 1;
-                        this.getNewHot(_page);
+                        this._page = 1;
+                        this.getNewHot(this._page);
                     }
                     }
                     onEndReached={() => {
@@ -231,12 +237,12 @@ export default class NewHotListScreen extends Component {
                             this.setState({
                                 pullMoreLoading: true
                             });
-                            _page++;
-                            this.getNewHot(_page);
+                            this._page = this._page + 1;
+                            this.getNewHot(this._page);
                         }
                     }
                     }
-                    onEndReachedThreshold={0.2}
+                    onEndReachedThreshold={4}
                     refreshing={this.state.pullLoading}
                 />
             </View>
