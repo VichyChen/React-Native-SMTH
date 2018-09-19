@@ -1010,8 +1010,8 @@ export default class NetworkManager {
     }
 
     //版面热点
-    static getNewBoardHot(board_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/board/hot/' + board_id, null, result => {
+    static getNewBoardHot(board_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/board/hot/' + board_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1021,8 +1021,8 @@ export default class NetworkManager {
     }
 
     //版面体验
-    static getNewBoardExperience(board_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/board/experience/' + board_id, null, result => {
+    static getNewBoardExperience(board_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/board/experience/' + board_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);

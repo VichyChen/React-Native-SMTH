@@ -67,13 +67,13 @@ export default class NewHotScreen extends Component {
     if (global.current.sectionArray != null) {
       global.current.sectionArray.map((item) => {
         titles.push(item.title);
-        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.key} />));
+        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} />));
       });
     }
     else {
       global.configures.sections.map((item) => {
         titles.push(item.title);
-        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.key} />));
+        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} />));
       });
     }
 

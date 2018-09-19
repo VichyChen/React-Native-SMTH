@@ -28,12 +28,11 @@ import {
     AvatorImage
 } from '../config/Common';
 
-var from = 0;
-var size = 20;
-
 import cio from 'cheerio-without-node-native';
 
 export default class NewBoardListScreenHot extends Component {
+
+    _page = 1;
 
     constructor(props) {
         super(props);
@@ -45,21 +44,24 @@ export default class NewBoardListScreenHot extends Component {
             isAdding: false,
             dataArray: [],
         }
-        from = 0;
 
-        this.getNewBoardExperience(1);
+        this.getNewBoardHot(this._page);
     }
 
-    getNewBoardExperience(page) {
-        NetworkManager.getNewBoardHot(this.props.board, (result) => {
+    getNewBoardHot(page) {
+        NetworkManager.getNewBoardHot(this.props.board, page, (result) => {
             this.$ = cio.load(result);
             this.$ = cio.load(this.$('ul[class=article-list]').html());
 
             var dataArray = [];
+            if (page != 1) {
+                dataArray = dataArray.concat(this.state.dataArray);
+            }
             this.$('li').each(function (i, elem) {
                 this.$ = cio.load(elem);
                 if (this.$('a[class=article-subject]').attr('href') != null) {
                     dataArray.push({
+                        key: i + ((page - 1) * 20),
                         key: this.$('a[class=article-subject]').attr('href').split('/')[2],
                         avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                         name: this.$('div[class=article-account-name]').children().first().text(),
@@ -75,6 +77,10 @@ export default class NewBoardListScreenHot extends Component {
 
             this.setState({
                 dataArray: dataArray,
+                pullLoading: false,
+                pullMoreLoading: false,
+                viewLoading: false,
+                screenText: null
             });
 
         }, (error) => {
@@ -121,16 +127,49 @@ export default class NewBoardListScreenHot extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <Screen
+                showLoading={this.state.viewLoading}
+                loadingType={'background'}
+                text={this.state.screenText}
+                onPress={() => {
+                    this.setState({
+                        viewLoading: true,
+                        screenText: null
+                    });
+                    this._page = 1;
+                    this.getNewBoardHot(this._page);
+                }}
+            >
 
                 <FlatList
                     removeClippedSubviews={false}
                     extraData={this.state}
                     data={this.state.dataArray}
                     renderItem={this._renderItem}
+                    style={styles.flatList}
+                    onRefresh={() => {
+                        this.setState({
+                            pullLoading: true
+                        });
+                        this._page = 1;
+                        this.getNewBoardHot(this._page);
+                    }
+                    }
+                    onEndReached={() => {
+                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < 5) {
+                            this.setState({
+                                pullMoreLoading: true
+                            });
+                            this._page = this._page + 1;
+                            this.getNewBoardHot(this._page);
+                        }
+                    }
+                    }
+                    onEndReachedThreshold={2}
+                    refreshing={this.state.pullLoading}
                 />
 
-            </View>
+            </Screen>
         )
     }
 }
@@ -142,6 +181,11 @@ var styles = {
         return {
             flex: 1,
             backgroundColor: global.colors.whiteColor
+        }
+    },
+    get flatList() {
+        return {
+            // flex: 1,
         }
     },
     get itemContainer() {

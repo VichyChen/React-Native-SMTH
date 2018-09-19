@@ -22,6 +22,7 @@ import {
     NetworkManager,
     NavigatorTitleButton,
     SeperatorLine,
+    HorizontalSeperatorLine,
     BoardItems,
     ImageButton,
     LoadingView,
@@ -31,25 +32,10 @@ import {
     CellBackground
 } from '../config/Common';
 
-_rightDataArray = [];
+var _rightDataArray = [];
+var _leftSelectedItem = 0;
 
 export default class NewBoardScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: `${navigation.state.params == undefined ? '版块' : navigation.state.params.text}`,
-        headerRight: (
-            <View style={{ flexDirection: 'row' }}>
-                <ImageButton
-                    color={global.colors.whiteColor}
-                    width={44}
-                    height={44}
-                    margin={22}
-                    source={global.images.icon_search}
-                    onPress={() => {
-                        navigation.navigate('searchBoardScreen', { id: '' })
-                    }} />
-            </View>
-        ),
-    });
 
     constructor(props) {
         super(props);
@@ -67,7 +53,7 @@ export default class NewBoardScreen extends Component {
             this.setState({});
         });
 
-        this.getSections(this.state.leftDataArray[0].key);
+        this.getSections(this.state.leftDataArray[0].id);
     }
 
     componentWillUnmount() {
@@ -85,7 +71,8 @@ export default class NewBoardScreen extends Component {
                 this.$ = cio.load(this.$('div[class=board-data-summary-name]').html());
 
                 _rightDataArray.push({
-                    key: this.$('a').attr('href').split('/')[2],
+                    key: i,
+                    id: this.$('a').attr('href').split('/')[2],
                     name: this.$('span').text(),
                     title: this.$('a').text(),
                     thread: this.$('span[class*=glyphicon-th-list]').parent().text(),
@@ -108,13 +95,18 @@ export default class NewBoardScreen extends Component {
     _leftRenderItem = ({ item }) => {
         return (
             <CellBackground
+                showSelect={false}
                 onPress={() => {
-                    this.getSections(item.key);
+                    _leftSelectedItem = item.key;
+                    this.setState({});
+                    this.getSections(item.id);
                 }}
             >
-                <View style={styles.leftItemContainer}>
-                    <Text style={styles.leftItemTitle} >{item.title}</Text>
-                    <SeperatorLine />
+                <View>
+                    <View style={item.key == _leftSelectedItem ? styles.leftItemContainerSelected : styles.leftItemContainer}>
+                        <Text style={item.key == _leftSelectedItem ? styles.leftItemTitleSelected : styles.leftItemTitle} >{item.title}</Text>
+                        {item.key == _leftSelectedItem ? <View style={styles.leftItemVerticalLine} /> : null}
+                    </View>
                 </View>
             </CellBackground>
         )
@@ -137,17 +129,6 @@ export default class NewBoardScreen extends Component {
                         />
                     </View>
 
-                    {/* <View style={styles.rightView} >
-                        <FlatList
-                            removeClippedSubviews={false}
-                            extraData={this.state}
-                            data={this.state.rightDataArray}
-                            renderItem={this._rightRenderItem}
-                            horizontal={false}
-                            numColumns={3}
-                        />
-                    </View> */}
-
                     <ScrollView>
                         <View style={styles.rightView} >
                             {
@@ -156,7 +137,7 @@ export default class NewBoardScreen extends Component {
                                         <CellBackground
                                             showSelect={false}
                                             onPress={() => {
-                                                this.props.navigation.navigate('newBoardListScreen', { id: item.key, title: item.name });
+                                                this.props.navigation.navigate('newBoardListScreen', { id: item.id, title: item.name });
                                             }}
                                         >
                                             <View style={styles.rightItemContainer} >
@@ -189,10 +170,16 @@ var styles = {
             backgroundColor: global.colors.whiteColor
         }
     },
+    get verticalLine() {
+        return {
+            width: 1,
+            backgroundColor: global.colors.seperatorColor,
+        }
+    },
     get leftView() {
         return {
             width: 80,
-            backgroundColor: '#F5F5F5'
+            backgroundColor: '#f9f9f9',
         }
     },
     get leftItemContainer() {
@@ -200,13 +187,36 @@ var styles = {
             height: 44,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#F5F5F5'
+        }
+    },
+    get leftItemContainerSelected() {
+        return {
+            height: 44,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: global.colors.whiteColor,
         }
     },
     get leftItemTitle() {
         return {
             fontSize: global.configures.fontSize15,
             color: global.colors.fontColor
+        }
+    },
+    get leftItemTitleSelected() {
+        return {
+            fontSize: global.configures.fontSize15,
+            color: global.colors.themeColor
+        }
+    },
+    get leftItemVerticalLine() {
+        return {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 3,
+            backgroundColor: global.colors.themeColor,
         }
     },
     get rightView() {
@@ -230,7 +240,9 @@ var styles = {
             marginTop: 10,
             paddingLeft: 10,
             paddingRight: 10,
-            backgroundColor: '#F5F5F5',
+            backgroundColor: global.colors.whiteColor,
+            borderColor: '#EBEBEB',
+            borderWidth: 1,
             borderRadius: 4,
         }
     },

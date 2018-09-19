@@ -48,11 +48,10 @@ export default class NewBoardListScreen extends Component {
     }
 
     render() {
-        console.log('this.props.navigation.state.params.id : ' + this.props.navigation.state.params.id);
         return (
             <View style={styles.container}>
 
-            <NavigationBar title={this.props.navigation.state.params.title} />
+            <NavigationBar title={this.props.navigation.state.params.title} navigation={this.props.navigation} showBackButton={true} showBottomLine={false} />
     
             <TabPageView
               titles={['体验', '热点']}

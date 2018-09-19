@@ -111,7 +111,8 @@ export default class NewHotListScreen extends Component {
             this.$('li').each(function (i, elem) {
                 this.$ = cio.load(elem);
                 sectionArray.push({
-                    key: this.$('a').attr('href').split('/')[2],
+                    key: i,
+                    id: this.$('a').attr('href').split('/')[2],
                     title: this.$('a').text(),
                 });
             });
@@ -233,7 +234,7 @@ export default class NewHotListScreen extends Component {
                     }
                     }
                     onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < 5) {
                             this.setState({
                                 pullMoreLoading: true
                             });
