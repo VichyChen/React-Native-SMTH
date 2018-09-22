@@ -30,11 +30,13 @@ import {
     TabPageView
 } from '../config/Common';
 
+import ActionSheet from 'react-native-actionsheet'
+
 import NewBoardListScreenExperience from './NewBoardListScreenExperience';
 import NewBoardListScreenHot from './NewBoardListScreenHot';
 
 export default class NewBoardListScreen extends Component {
-   
+
     constructor(props) {
         super(props);
         this.state = {
@@ -51,17 +53,78 @@ export default class NewBoardListScreen extends Component {
         return (
             <View style={styles.container}>
 
-            <NavigationBar title={this.props.navigation.state.params.title} navigation={this.props.navigation} showBackButton={true} showBottomLine={false} />
-    
-            <TabPageView
-              titles={['体验', '热点']}
-              pages={
-                [
-                (<NewBoardListScreenExperience navigation={this.props.navigation} board={this.props.navigation.state.params.id} />),
-                (<NewBoardListScreenHot navigation={this.props.navigation} board={this.props.navigation.state.params.id}  />),
-              ]}
-            />
-          </View>
+                <NavigationBar
+                    title={this.props.navigation.state.params.name}
+                    navigation={this.props.navigation}
+                    showBackButton={true}
+                    showBottomLine={false}
+                    rightButtonImage={global.images.icon_more}
+                    rightButtonOnPress={() => {
+                        this.moreActionSheet.show()
+                    }}
+                />
+
+                <TabPageView
+                    titles={['体验', '热点']}
+                    pages={
+                        [
+                            (<NewBoardListScreenExperience navigation={this.props.navigation} board={this.props.navigation.state.params.id} />),
+                            (<NewBoardListScreenHot navigation={this.props.navigation} board={this.props.navigation.state.params.id} />),
+                        ]}
+                />
+
+                <ActionSheet
+                    ref={o => this.moreActionSheet = o}
+                    title={this.props.navigation.state.params.title}
+                    options={['发帖', '收藏', '驻版', '分享', '取消']}
+                    cancelButtonIndex={4}
+                    onPress={(index) => {
+                        //发帖
+                        if (index == 0) {
+                            if (global.login == true) {
+                                this.props.navigation.navigate('newPostThreadScreen',
+                                  {
+                                    id: this.props.navigation.state.params.id,
+                                    name: this.props.navigation.state.params.name,
+                                    title: this.props.navigation.state.params.title,
+                                  });
+                              }
+                              else {
+                                DeviceEventEmitter.emit('LoginNotification', null);
+                              }                
+                        }
+                        //收藏
+                        else if (index == 1) {
+                            NetworkManager.net_AddFav(this.props.navigation.state.params.title, (result) => {
+                                ToastUtil.info('收藏成功');
+                            }, (error) => {
+                                ToastUtil.error('收藏失败');
+                            }, (errorMessage) => {
+                                ToastUtil.error(errorMessage);
+                            });    
+                        }
+                        //驻版
+                        else if (index == 2) {
+                            NetworkManager.net_JoinMember(this.props.navigation.state.params.title, (result) => {
+                                ToastUtil.info('驻版成功');
+                            }, (error) => {
+                                ToastUtil.error('驻版失败');
+                            }, (errorMessage) => {
+                                ToastUtil.error(errorMessage);
+                            });    
+                        }
+                        //分享
+                        else if (index == 3) {
+
+                        }
+                        else {
+
+                        }
+
+                    }}
+                />
+
+            </View>
         )
     }
 }

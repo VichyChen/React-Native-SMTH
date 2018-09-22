@@ -61,8 +61,8 @@ export default class NewBoardListScreenHot extends Component {
                 this.$ = cio.load(elem);
                 if (this.$('a[class=article-subject]').attr('href') != null) {
                     dataArray.push({
-                        key: i + ((page - 1) * 20),
-                        key: this.$('a[class=article-subject]').attr('href').split('/')[2],
+                        key: dataArray.length,
+                        id: this.$('a[class=article-subject]').attr('href').split('/')[2],
                         avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                         name: this.$('div[class=article-account-name]').children().first().text(),
                         time: this.$('div[class=article-account-name]').children().last().text(),
@@ -94,7 +94,7 @@ export default class NewBoardListScreenHot extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.key });
+                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
                 }}
             >
                 <View>
@@ -156,7 +156,7 @@ export default class NewBoardListScreenHot extends Component {
                     }
                     }
                     onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < 5) {
+                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
                             this.setState({
                                 pullMoreLoading: true
                             });

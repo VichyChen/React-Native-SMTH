@@ -1143,7 +1143,7 @@ export default class NetworkManager {
         });
     }
 
-    //获取发帖页面
+    //获取回帖页面
     static getNewReply(articleId, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/compose/reply/' + articleId, null, result => {
             success(result._bodyInit);
@@ -1154,8 +1154,8 @@ export default class NetworkManager {
         });
     }
 
-    //发帖
-    static postReplSave(articleId, body, captcha, success, failure, netError) {
+    //回帖
+    static postReplSave(articleId, body, success, failure, netError) {
         NetworkManager.postNew('https://exp.newsmth.net/compose/save', {
             articleId: articleId,
             body: body,
@@ -1168,9 +1168,31 @@ export default class NetworkManager {
         });
     }
 
-    //获取回帖页面
+    //获取发帖页面
+    static getNewPost(boardId, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/compose/publish/' + boardId, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
-    //回帖
+    //发帖
+    static postPostSave(boardId, subject, body, success, failure, netError) {
+        NetworkManager.postNew('https://exp.newsmth.net/compose/save', {
+            boardId: boardId,
+            subject: subject,
+            body: body,
+        }, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //上传图片
 }

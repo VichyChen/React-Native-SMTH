@@ -74,7 +74,8 @@ export default class NewBoardScreen extends Component {
                     key: i,
                     id: this.$('a').attr('href').split('/')[2],
                     name: this.$('span').text(),
-                    title: this.$('a').text(),
+                    title: this.$('a').first().text(),
+                    // title: this.$().children().first().text(),
                     thread: this.$('span[class*=glyphicon-th-list]').parent().text(),
                     reply: this.$('span[class*=glyphicon-align-justify]').parent().text(),
                     user: this.$('span[class*=glyphicon-user]').parent().text(),
@@ -137,7 +138,11 @@ export default class NewBoardScreen extends Component {
                                         <CellBackground
                                             showSelect={false}
                                             onPress={() => {
-                                                this.props.navigation.navigate('newBoardListScreen', { id: item.id, title: item.name });
+                                                this.props.navigation.navigate('newBoardListScreen', {
+                                                    id: item.id,
+                                                    name: item.name,
+                                                    title: item.title
+                                                });
                                             }}
                                         >
                                             <View style={styles.rightItemContainer} >

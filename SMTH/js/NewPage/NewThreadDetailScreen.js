@@ -302,7 +302,6 @@ export default class NewThreadDetailScreen extends Component {
       setTimeout(() => {
         this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
       }, 50);
-      // }
 
     }, (error) => {
 

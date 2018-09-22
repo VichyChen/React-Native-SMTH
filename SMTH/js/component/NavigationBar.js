@@ -11,6 +11,7 @@ import {
 
 import {
     ImageButton,
+    Button
 } from '../config/Common';
 
 export default class NavigationBar extends Component {
@@ -66,6 +67,22 @@ export default class NavigationBar extends Component {
                                 height={44}
                                 margin={12}
                                 source={this.props.rightButtonImage}
+                                onPress={() => {
+                                    if (this.props.rightButtonOnPress != null) {
+                                        this.props.rightButtonOnPress();
+                                    }
+                                }} />
+                            :
+                            null
+                    }
+
+                    {
+                        this.props.rightButtonTitle != null
+                            ?
+                            <Button
+                                style={styles.rightTitleButton}
+                                height={44}
+                                text={this.props.rightButtonTitle}
                                 onPress={() => {
                                     if (this.props.rightButtonOnPress != null) {
                                         this.props.rightButtonOnPress();
@@ -151,5 +168,13 @@ var styles = {
             height: 44,
         }
     },
-
+    get rightTitleButton() {
+        return {
+            position: 'absolute',
+            right: 10,
+            top: 0,
+            bottom: 0,
+            width: 44,
+        }
+    },
 }
