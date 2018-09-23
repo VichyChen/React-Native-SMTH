@@ -24,8 +24,10 @@ export default class NavigationBar extends Component {
 
     render() {
         return (
-            <View style={styles.container} >
-
+            <View style={[
+                styles.container,
+                { backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor }
+            ]} >
                 <View style={styles.status} ></View>
 
                 <View style={styles.navigation} >
@@ -50,7 +52,10 @@ export default class NavigationBar extends Component {
                     {
                         this.props.title != null
                             ?
-                            <Text style={styles.title} >
+                            <Text style={[
+                                styles.title,
+                                { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
+                            ]} >
                                 {this.props.title}
                             </Text>
                             :
