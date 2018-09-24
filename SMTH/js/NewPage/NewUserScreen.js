@@ -27,7 +27,12 @@ import {
     Screen,
     NavigatorTitleButton,
     CellBackground,
-    NavigationBar
+    NavigationBar,
+    NewUserArticleScreen,
+    NewUserMemberScreen,
+    NewUserFriendsScreen,
+    NewUserfansScreen,
+    TabPageView
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -102,44 +107,59 @@ export default class NewUserScreen extends Component {
 
     render() {
         return (
-            <Screen showLoading={this.state.isLoading} loadingType={'background'} text={this.state.screenText}>
-                <NavigationBar navigation={this.props.navigation} showBackButton={true} />
-                <ScrollView style={{ height: Dimensions.get('window').height - 64, backgroundColor: global.colors.backgroundGrayColor }}>
+            <View style={styles.container} >
+                <NavigationBar
+                    navigation={this.props.navigation}
+                    showBackButton={true}
+                    showBottomLine={false}
+                />
+                <View style={styles.header} >
+                    <AvatorImage
+                        style={styles.avator}
+                        borderRadius={35}
+                        widthAndHeight={70}
+                        onPressClick={() => { }}
+                        uri={NetworkManager.net_getFace(this.props.navigation.state.params.name)} />
+                    <View style={styles.headerRight} >
+                        <View>
+                            <Text style={styles.headerRightName}>{this.props.navigation.state.params.name}</Text>
+                            <Text style={styles.headerRightMeta}>{this.state.id == this.state.nick ? '未设置昵称' : this.state.nick}</Text>
+                        </View>
+                        <View>
+                            <CellBackground
+                                                                        showSelect={false}
+                                onPress={() => {
 
-                    <SectionBlankHeader />
+                                }}
+                            >
+                                <View style={styles.buttonView} >
+                                    <Text style={styles.buttonViewTitle} >私信</Text>
+                                </View>
+                            </CellBackground>
+                            <CellBackground
+                                                                        showSelect={false}
+                                onPress={() => {
 
-                    <View style={{ flexDirection: 'row', padding: 13, height: 80, backgroundColor: global.colors.whiteColor }}>
-                        <AvatorImage style={{ marginLeft: 13, }}
-                            widthAndHeight={60}
-                            uri={NetworkManager.net_getFace(this.props.navigation.state.params.id)} />
-                        <View style={{ marginLeft: 13 }}>
-                            <Text style={styles.name}>{this.state.id}</Text>
-                            <Text style={styles.nick}>{'昵称：' + this.state.nick}</Text>
+                                }}
+                            >
+                                <View style={[styles.buttonView, { marginTop: 10 }]} >
+                                    <Text style={styles.buttonViewTitle} >关注</Text>
+                                </View>
+                            </CellBackground>
+
                         </View>
                     </View>
-
-                    <SectionBlankHeader />
-
-                    <TitleValueItem title={'性别'} value={this.state.gender == 0 ? '男生' : '女生'} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'年龄'} value={this.state.age + '岁'} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'论坛身份'} value={this.state.title} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'帖子总数'} value={this.state.posts + '篇'} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'登陆次数'} value={this.state.logins} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'论坛等级'} value={this.state.level} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'用户积分'} value={this.state.score} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'首次登陆'} value={DateUtil.formatTimeStamp(this.state.first_login)} />
-                    <SeperatorLine />
-                    <TitleValueItem title={'上次登录'} value={DateUtil.formatTimeStamp(this.state.last_login)} />
-
-                </ScrollView>
-            </Screen>
+                </View>
+                <TabPageView
+                    style={{}}
+                    titles={['文章', '版面', '关注', '粉丝']}
+                    pages={[
+                        (<NewUserArticleScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
+                        (<NewUserMemberScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
+                        (<NewUserFriendsScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
+                        (<NewUserfansScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
+                    ]} />
+            </View>
         )
     }
 }
@@ -161,25 +181,64 @@ var styles = {
     },
     get container() {
         return {
-            flexDirection: 'column',
+            flex: 1,
             backgroundColor: global.colors.whiteColor
         }
     },
-    get content() {
+    get header() {
         return {
-            flexDirection: 'column',
-            paddingLeft: 34,
+            height: 100,
+            padding: global.constants.Padding + 5,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             alignItems: 'center',
-            height: 44,
         }
     },
-    get arrow() {
+    get headerRight() {
         return {
-            marginRight: 13,
-            width: 10,
-            height: 17,
+            paddingLeft: global.constants.Padding,
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start'
+        }
+    },
+    get headerRightName() {
+        return {
+            marginTop: 5,
+            fontSize: global.configures.fontSize18,
+            fontWeight: 'bold',
+            color: global.colors.fontColor,
+        }
+    },
+    get headerRightMeta() {
+        return {
+            marginTop: 5,
+            fontSize: global.configures.fontSize16,
+            color: global.colors.gray2Color,
+        }
+    },
+    get avator() {
+        return {
+            // marginLeft: global.constants.Margin,
+        }
+    },
+    get buttonView() {
+        return {
+            height: 30,
+            width: 60,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: global.colors.whiteColor,
+            borderColor: global.colors.gray1Color,
+            borderWidth: 1,
+            borderRadius: 4,
+        }
+    },
+    get buttonViewTitle() {
+        return {
+            fontSize: global.configures.fontSize15,
+            color: global.colors.gray1Color,
         }
     },
 }

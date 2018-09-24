@@ -41,6 +41,11 @@ import TabPageView from '../component/TabPageView';
 import NewHotListScreen from '../NewPage/NewHotListScreen';
 import NewLoginView from '../NewPage/NewLoginView';
 
+import NewUserArticleScreen from '../NewPage/NewUserArticleScreen';
+import NewUserMemberScreen from '../NewPage/NewUserMemberScreen';
+import NewUserFriendsScreen from '../NewPage/NewUserFriendsScreen';
+import NewUserfansScreen from '../NewPage/NewUserfansScreen';
+
 export {
     NetworkManager,
     DateUtil,
@@ -75,4 +80,8 @@ export {
     TabPageView,
     NewHotListScreen,
     NewLoginView,
+    NewUserArticleScreen,
+    NewUserMemberScreen,
+    NewUserFriendsScreen,
+    NewUserfansScreen,
 }

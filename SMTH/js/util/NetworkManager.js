@@ -1058,8 +1058,8 @@ export default class NetworkManager {
     }
 
     //个人信息页+主题列表
-    static getNewAccount(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/' + account_id, null, result => {
+    static getNewAccountArticles(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/articles/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1069,8 +1069,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 驻版
-    static getNewAccountMembers(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/members/' + account_id, null, result => {
+    static getNewAccountMembers(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/members/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1080,8 +1080,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 关注
-    static getNewAccountFriends(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/friends/' + account_id, null, result => {
+    static getNewAccountFriends(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/friends/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1091,8 +1091,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 粉丝
-    static getNewAccountFans(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/fans/' + account_id, null, result => {
+    static getNewAccountFans(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/fans/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
