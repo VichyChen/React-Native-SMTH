@@ -1,7 +1,8 @@
 import React from 'react';
 import {
     Image,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 
 import { TabNavigator } from "react-navigation";
@@ -31,6 +32,10 @@ const SMTHTabNavigator = TabNavigator({
                     style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
                 />
             ),
+            tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
+                StatusBar.setBarStyle('dark-content');
+                navigation.navigate('HotScreen')
+            },
         })
     },
     BoardScreen: {
@@ -43,6 +48,10 @@ const SMTHTabNavigator = TabNavigator({
                     style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
                 />
             ),
+            tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
+                StatusBar.setBarStyle('dark-content');
+                navigation.navigate('BoardScreen')
+            },
         })
     },
     FavouriteScreen: {
@@ -55,6 +64,10 @@ const SMTHTabNavigator = TabNavigator({
                     style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
                 />
             ),
+            tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
+                StatusBar.setBarStyle('dark-content');
+                navigation.navigate('FavouriteScreen')
+            },
         })
     },
     MyScreen: {
@@ -62,6 +75,7 @@ const SMTHTabNavigator = TabNavigator({
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '我的',
             tabBarOnPress: () => {
+                StatusBar.setBarStyle('dark-content');
                 DeviceEventEmitter.emit('ClickMyScreenNotification', null);
                 navigation.navigate('MyScreen')
             },

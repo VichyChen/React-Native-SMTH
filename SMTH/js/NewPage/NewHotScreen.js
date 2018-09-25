@@ -55,6 +55,10 @@ export default class NewHotScreen extends Component {
     // codePush.sync();
   }
 
+  componentWillUpdate(){
+    StatusBar.setBarStyle('dark-content');
+  }  
+
   componentWillUnmount() {
 
   }

@@ -13,7 +13,8 @@ import {
   SectionList,
   TouchableWithoutFeedback,
   Slider,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  StatusBar
 } from 'react-native';
 
 import {
@@ -22,7 +23,8 @@ import {
   SeperatorLine,
   Button,
   CellBackground,
-  PickerSelectView
+  PickerSelectView,
+  NavigationBar,
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -55,125 +57,131 @@ export default class SettingScreen extends Component {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
+      <View>
 
-        <SectionBlankHeader />
+        <NavigationBar title='设置' />
 
-        <CellBackground
-          onPress={() => {
-            this.setState({
-              selectPageSizeViewHidden: false,
-            });
-          }}
-        >
-          <View style={{ flexDirection: 'column', backgroundColor: global.colors.whiteColor }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, }}>
-              <Text
-                style={{
-                  paddingLeft: 13,
-                  paddingRight: 13,
-                  fontSize: global.configures.fontSize17,
-                  color: global.colors.fontColor,
-                }}>
-                帖子详情页每页回复数：
+        {/* <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
+
+          <SectionBlankHeader />
+
+          <CellBackground
+            onPress={() => {
+              this.setState({
+                selectPageSizeViewHidden: false,
+              });
+            }}
+          >
+            <View style={{ flexDirection: 'column', backgroundColor: global.colors.whiteColor }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, }}>
+                <Text
+                  style={{
+                    paddingLeft: 13,
+                    paddingRight: 13,
+                    fontSize: global.configures.fontSize17,
+                    color: global.colors.fontColor,
+                  }}>
+                  帖子详情页每页回复数：
               </Text>
-              <Image
-                style={{
-                  marginRight: 13,
-                  width: 10,
-                  height: 17,
+                <Image
+                  style={{
+                    marginRight: 13,
+                    width: 10,
+                    height: 17,
+                  }}
+                  source={global.images.icon_forward_arrow} />
+                <Text
+                  style={{
+                    position: 'absolute',
+                    top: 13,
+                    right: 30,
+                    fontSize: global.configures.fontSize17,
+                    color: global.colors.fontColor,
+                  }}>
+                  {this.state.pageSize}
+                </Text>
+              </View>
+            </View>
+          </CellBackground>
+
+          <SectionBlankHeader />
+
+          <View style={{ backgroundColor: global.colors.whiteColor }}>
+            <Text style={[{ fontSize: global.configures.fontSize17, color: global.colors.fontColor, marginLeft: 13, marginTop: 13 }]} >字体大小：</Text>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 60, }}>
+              <Text style={[{
+                fontSize: this.state.fontSizeValue,
+                textAlign: 'center',
+                marginLeft: 13,
+                width: global.constants.ScreenWidth - 26,
+                color: global.colors.fontColor
+              }]}>
+                拖动滑动条调整字体大小。
+          </Text>
+            </View>
+
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 44, }}>
+              <Text style={[styles.silderHorizonText, { fontSize: minFontSize, }]} >A</Text>
+              <Slider
+                style={styles.slider}
+                minimumValue={0}
+                maximumValue={1}
+                step={step}
+                minimumTrackTintColor={global.colors.gray3Color}
+                maximumTrackTintColor={global.colors.gray3Color}
+                value={this.state.fontSizeSlideValue}
+                onValueChange={(value) => {
+                  AsyncStorageManger.set(global.storageKeys.fontSize, (parseInt(value / step + minFontSize)).toString());
+                  DeviceEventEmitter.emit('RefreshConfigureNotification', null);
+                  setTimeout(() => {
+                    this.setState({
+                      fontSizeSlideValue: value,
+                      fontSizeValue: parseInt(value / step + minFontSize)
+                    });
+                  }, 50);
                 }}
-                source={global.images.icon_forward_arrow} />
-              <Text
-                style={{
-                  position: 'absolute',
-                  top: 13,
-                  right: 30,
-                  fontSize: global.configures.fontSize17,
-                  color: global.colors.fontColor,
-                }}>
-                {this.state.pageSize}
-              </Text>
+              />
+              <Text style={[styles.silderHorizonText, { fontSize: maxFontSize }]} >A</Text>
             </View>
           </View>
-        </CellBackground>
 
-        <SectionBlankHeader />
+          <SectionBlankHeader />
 
-        <View style={{ backgroundColor: global.colors.whiteColor }}>
-          <Text style={[{ fontSize: global.configures.fontSize17, color: global.colors.fontColor, marginLeft: 13, marginTop: 13 }]} >字体大小：</Text>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 60, }}>
-            <Text style={[{
-              fontSize: this.state.fontSizeValue,
-              textAlign: 'center',
-              marginLeft: 13,
-              width: global.constants.ScreenWidth - 26,
-              color: global.colors.fontColor
-            }]}>
-              拖动滑动条调整字体大小。
-          </Text>
-          </View>
+          <Button onPress={() => {
+            AsyncStorageManger.setAccessToken('');
+            // AsyncStorageManger.setUsernamePassword('', '');
+            this.props.navigation.goBack();
+            global.current.username = '';
+            DeviceEventEmitter.emit('LoginNotification', null);
+          }} text='退出' />
 
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 44, }}>
-            <Text style={[styles.silderHorizonText, { fontSize: minFontSize, }]} >A</Text>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={1}
-              step={step}
-              minimumTrackTintColor={global.colors.gray3Color}
-              maximumTrackTintColor={global.colors.gray3Color}
-              value={this.state.fontSizeSlideValue}
-              onValueChange={(value) => {
-                AsyncStorageManger.set(global.storageKeys.fontSize, (parseInt(value / step + minFontSize)).toString());
-                DeviceEventEmitter.emit('RefreshConfigureNotification', null);
-                setTimeout(() => {
-                  this.setState({
-                    fontSizeSlideValue: value,
-                    fontSizeValue: parseInt(value / step + minFontSize)
-                  });
-                }, 50);
-              }}
-            />
-            <Text style={[styles.silderHorizonText, { fontSize: maxFontSize }]} >A</Text>
-          </View>
-        </View>
+          <PickerSelectView
+            hidden={this.state.selectPageSizeViewHidden}
+            array={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
+            selectedValue={this.state.selectPageSize}
+            onCancelClick={() => {
+              this.setState({
+                selectPageSizeViewHidden: true,
+              });
+            }}
+            onCompleteClick={(pageSize) => {
+              this.setState({
+                selectPageSizeViewHidden: true,
+                pageSize: pageSize,
+              });
 
-        <SectionBlankHeader />
+              AsyncStorageManger.set(global.storageKeys.pageSize, (pageSize));
+              DeviceEventEmitter.emit('RefreshConfigureNotification', null);
+            }}
+            onValueChange={(pageSize) => {
+              this.setState({
+                selectPageSize: pageSize,
+              });
+            }}
+          />
+        </ScrollView>      */}
+      </View>
 
-        <Button onPress={() => {
-          AsyncStorageManger.setAccessToken('');
-          // AsyncStorageManger.setUsernamePassword('', '');
-          this.props.navigation.goBack();
-          global.current.username = '';
-          DeviceEventEmitter.emit('LoginNotification', null);
-        }} text='退出' />
-
-        <PickerSelectView
-          hidden={this.state.selectPageSizeViewHidden}
-          array={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-          selectedValue={this.state.selectPageSize}
-          onCancelClick={() => {
-            this.setState({
-              selectPageSizeViewHidden: true,
-            });
-          }}
-          onCompleteClick={(pageSize) => {
-            this.setState({
-              selectPageSizeViewHidden: true,
-              pageSize: pageSize,
-            });
-
-            AsyncStorageManger.set(global.storageKeys.pageSize, (pageSize));
-            DeviceEventEmitter.emit('RefreshConfigureNotification', null);
-          }}
-          onValueChange={(pageSize) => {
-            this.setState({
-              selectPageSize: pageSize,
-            });
-          }}
-        />
-      </ScrollView>
     );
   }
 }

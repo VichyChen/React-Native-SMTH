@@ -11,6 +11,7 @@ import {
 
 import {
     ImageButton,
+    Button
 } from '../config/Common';
 
 export default class NavigationBar extends Component {
@@ -23,8 +24,10 @@ export default class NavigationBar extends Component {
 
     render() {
         return (
-            <View style={styles.container} >
-
+            <View style={[
+                styles.container,
+                { backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor }
+            ]} >
                 <View style={styles.status} ></View>
 
                 <View style={styles.navigation} >
@@ -49,7 +52,10 @@ export default class NavigationBar extends Component {
                     {
                         this.props.title != null
                             ?
-                            <Text style={styles.title} >
+                            <Text style={[
+                                styles.title,
+                                { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
+                            ]} >
                                 {this.props.title}
                             </Text>
                             :
@@ -66,6 +72,22 @@ export default class NavigationBar extends Component {
                                 height={44}
                                 margin={12}
                                 source={this.props.rightButtonImage}
+                                onPress={() => {
+                                    if (this.props.rightButtonOnPress != null) {
+                                        this.props.rightButtonOnPress();
+                                    }
+                                }} />
+                            :
+                            null
+                    }
+
+                    {
+                        this.props.rightButtonTitle != null
+                            ?
+                            <Button
+                                style={styles.rightTitleButton}
+                                height={44}
+                                text={this.props.rightButtonTitle}
                                 onPress={() => {
                                     if (this.props.rightButtonOnPress != null) {
                                         this.props.rightButtonOnPress();
@@ -151,5 +173,13 @@ var styles = {
             height: 44,
         }
     },
-
+    get rightTitleButton() {
+        return {
+            position: 'absolute',
+            right: 10,
+            top: 0,
+            bottom: 0,
+            width: 44,
+        }
+    },
 }

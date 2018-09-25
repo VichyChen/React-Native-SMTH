@@ -43,6 +43,11 @@ import NewLoginView from '../NewPage/NewLoginView';
 import NewFavouriteBoardScreen from '../NewPage/NewFavouriteBoardScreen';
 import NewFavouriteThreadScreen from '../NewPage/NewFavouriteThreadScreen';
 
+import NewUserArticleScreen from '../NewPage/NewUserArticleScreen';
+import NewUserMemberScreen from '../NewPage/NewUserMemberScreen';
+import NewUserFriendsScreen from '../NewPage/NewUserFriendsScreen';
+import NewUserfansScreen from '../NewPage/NewUserfansScreen';
+
 export {
     NetworkManager,
     DateUtil,
@@ -78,5 +83,9 @@ export {
     NewHotListScreen,
     NewLoginView,
     NewFavouriteBoardScreen,
-    NewFavouriteThreadScreen
+    NewFavouriteThreadScreen,
+    NewUserArticleScreen,
+    NewUserMemberScreen,
+    NewUserFriendsScreen,
+    NewUserfansScreen,
 }

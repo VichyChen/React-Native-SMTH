@@ -49,6 +49,7 @@ var styles = {
         return {
             justifyContent: 'center',
             alignItems: 'center',
+            // flexDirection: 'row',
             flex: 1,
         }
     },

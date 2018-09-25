@@ -174,6 +174,7 @@ export default class NewThreadDetailScreen extends Component {
           key: array.length,
           section: 1,
           avatar: this.$('.avatar').children().first().attr('src'),
+          avatarID: this.$('.avatar').attr('href').split('/')[2],
           name: this.$('.avatar').children().first().attr('title'),
           meta: this.$('.meta').children().first().text(),
           time: this.$('.publish-time').text(),
@@ -199,6 +200,7 @@ export default class NewThreadDetailScreen extends Component {
               index: i,
               section: 2,
               avatar: this.$('.avatar').children().attr('src'),
+              avatarID: this.$('.name').children().first().attr('href').split('/')[2],
               name: this.$('.name').children().first().text(),
               meta: this.$('.name').next().text(),
               time: this.$('.name').next().next().text(),
@@ -248,6 +250,7 @@ export default class NewThreadDetailScreen extends Component {
             index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
             section: 3,
             avatar: this.$('a[class=avatar]').children().attr('src'),
+            avatarID: this.$('.avatar').attr('href').split('/')[2],
             name: this.$('a[class=name]').text(),
             meta: this.$('div[class=meta]').children().first().text(),
             time: this.$('div[class=meta]').children().last().text(),
@@ -309,7 +312,6 @@ export default class NewThreadDetailScreen extends Component {
       setTimeout(() => {
         this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
       }, 50);
-      // }
 
     }, (error) => {
 
@@ -351,7 +353,7 @@ export default class NewThreadDetailScreen extends Component {
                   borderRadius={15}
                   widthAndHeight={30}
                   onPressClick={() => {
-                    // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                    this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                   }}
                   uri={'https://exp.newsmth.net/' + item.avatar} />
 
@@ -420,10 +422,10 @@ export default class NewThreadDetailScreen extends Component {
           }} >
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
               <AvatorImage
-                borderRadius={8}
-                widthAndHeight={16}
+                borderRadius={15}
+                widthAndHeight={30}
                 onPressClick={() => {
-                  // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                  this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
                 uri={'https://exp.newsmth.net/' + item.avatar} />
               <View style={{
@@ -474,7 +476,7 @@ export default class NewThreadDetailScreen extends Component {
                 borderRadius={15}
                 widthAndHeight={30}
                 onPressClick={() => {
-                  // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                  this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
                 uri={'https://exp.newsmth.net/' + item.avatar} />
 

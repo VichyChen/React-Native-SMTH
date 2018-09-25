@@ -13,7 +13,8 @@ import {
   SectionList,
   TouchableWithoutFeedback,
   DeviceEventEmitter,
-  Dimensions
+  Dimensions,
+  StatusBar
 } from 'react-native';
 
 import {
@@ -34,9 +35,6 @@ var replyMeCount;
 var atMeCount;
 
 export default class NewMyScreen extends Component {
-  static navigationOptions = {
-    title: '我的',
-  };
 
   constructor(props) {
     super(props);
@@ -142,10 +140,19 @@ export default class NewMyScreen extends Component {
     this.refreshViewNotification.remove();
   }
 
+  componentWillUpdate() {
+    // StatusBar.setBarStyle('light-content');
+  }
+
   render() {
     return (
       <View>
-        <NavigationBar title='我的' />
+        <NavigationBar
+          // backgroundColor={global.colors.themeColor}
+          title='我的'
+          // titleColor={global.colors.whiteColor}
+          showBottomLine={true}
+        />
 
         <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor, height: Dimensions.get('window').height - 64, }}>
 
@@ -156,9 +163,25 @@ export default class NewMyScreen extends Component {
               this.props.navigation.navigate('userScreen', { id: this.state.username });
             }}
           >
-            <View style={{ flexDirection: 'row', padding: 13, height: 80, backgroundColor: global.colors.whiteColor }}>
-              <AvatorImage style={{ marginLeft: 13, }} widthAndHeight={60} uri={NetworkManager.net_getFace(this.state.username)} />
-              <Text style={{ marginLeft: 13, fontSize: global.configures.fontSize17, color: global.colors.fontColor }}>{this.state.username}</Text>
+            <View style={{
+              flexDirection: 'row',
+              padding: 13,
+              height: 80,
+              backgroundColor: global.colors.whiteColor
+            }}>
+              <AvatorImage
+                style={{ marginLeft: 13, }}
+                borderRadius={30}
+                widthAndHeight={60}
+                uri={NetworkManager.net_getFace(this.state.username)} />
+              <Text style={{
+                marginLeft: 13,
+                fontSize: global.configures.fontSize17,
+                color: global.colors.fontColor
+              }}>
+                {this.state.username}
+              </Text>
+
             </View>
           </CellBackground>
 

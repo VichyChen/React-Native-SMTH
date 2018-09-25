@@ -23,7 +23,9 @@ import {
     ToastUtil,
     Screen,
     Button,
-    NavigationBar
+    NavigationBar,
+    SeperatorLine,
+    HorizontalSeperatorLine
 } from '../config/Common';
 
 var _title;
@@ -121,28 +123,53 @@ export default class NewReplyThreadScreen extends Component {
     render() {
         return (
             <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
-                <NavigationBar title='回复' />
-                <ScrollView style={[styles.container, { height: global.constants.ScreenHeight - global.constants.BottomSaveArea }]} keyboardDismissMode={'on-drag'} >
-                    <Button
-                        onPress={() => { this.save() }}
-                        text='回复'
-                    />
 
-                    <TextInput
-                        style={styles.contentInput}
-                        underlineColorAndroid={'transparent'}
-                        multiline={true}
-                        autoFocus={true}
-                        autoCorrect={false}
-                        spellCheck={false}
-                        autoCapitalize={'none'}
-                        selection={this.state.selection}
-                        onSelectionChange={(event) => this.setState({ selection: event.nativeEvent.selection })}
-                        onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
-                        onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
-                        value={this.state.content}
-                    />
+                <NavigationBar title='回复'
+                    navigation={this.props.navigation}
+                    showBackButton={true}
+                    showBottomLine={true}
+                    rightButtonTitle={'确定'}
+                    rightButtonOnPress={() => {
+                        this.save();
+                    }}
+                />
 
+                <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
+                    <View style={styles.container} >
+
+                        <Text style={styles.title} >Re: 要不要</Text>
+                        <HorizontalSeperatorLine />
+
+                        <TextInput
+                            style={styles.contentInput}
+                            underlineColorAndroid={'transparent'}
+                            multiline={true}
+                            autoFocus={true}
+                            autoCorrect={false}
+                            spellCheck={false}
+                            placeholder={'输入文章正文...'}
+                            placeholderTextColor={global.colors.gray3Color}
+                            autoCapitalize={'none'}
+                            selection={this.state.selection}
+                            onSelectionChange={(event) => {
+                                this.setState({
+                                    selection: event.nativeEvent.selection
+                                })
+                            }}
+                            onFocus={() => {
+                                this.setState({
+                                    selection: { start: 0, end: 0 }
+                                })
+                            }}
+                            onChangeText={(text) => {
+                                this.setState({
+                                    content: text
+                                });
+                                _content = text;
+                            }}
+                            value={this.state.content}
+                        />
+                    </View>
                 </ScrollView>
             </Screen>
         )
@@ -150,26 +177,30 @@ export default class NewReplyThreadScreen extends Component {
 }
 
 var styles = {
+    get scrollView() {
+        return {
+            height: global.constants.ScreenHeight - global.constants.BottomSaveArea,
+        }
+    },
     get container() {
         return {
-            // flex: 1,
-            backgroundColor: global.colors.backgroundGrayColor,
-            padding: 13,
+            flex: 1,
+            paddingTop: global.constants.Padding,
+            paddingLeft: global.constants.Padding + 6,
+            paddingRight: global.constants.Padding + 6,
         }
     },
     get title() {
         return {
-            marginBottom: 10,
+            paddingBottom: global.constants.Padding,
             fontSize: global.configures.fontSize17,
             color: global.colors.gray1Color,
         }
     },
     get contentInput() {
         return {
-            height: 150,
-            padding: 0,
-            backgroundColor: global.colors.whiteColor,
-            borderColor: global.colors.clearColor,
+            height: 200,
+            paddingTop: global.constants.Padding,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
             textAlignVertical: 'top'

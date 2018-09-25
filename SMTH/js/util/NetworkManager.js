@@ -1058,8 +1058,8 @@ export default class NetworkManager {
     }
 
     //个人信息页+主题列表
-    static getNewAccount(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/' + account_id, null, result => {
+    static getNewAccountArticles(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/articles/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1069,8 +1069,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 驻版
-    static getNewAccountMembers(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/members/' + account_id, null, result => {
+    static getNewAccountMembers(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/members/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1080,8 +1080,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 关注
-    static getNewAccountFriends(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/friends/' + account_id, null, result => {
+    static getNewAccountFriends(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/friends/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1091,8 +1091,8 @@ export default class NetworkManager {
     }
 
     //个人信息页 粉丝
-    static getNewAccountFans(account_id, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/account/fans/' + account_id, null, result => {
+    static getNewAccountFans(account_id, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/account/fans/' + account_id + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1143,7 +1143,7 @@ export default class NetworkManager {
         });
     }
 
-    //获取发帖页面
+    //获取回帖页面
     static getNewReply(articleId, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/compose/reply/' + articleId, null, result => {
             success(result._bodyInit);
@@ -1154,8 +1154,8 @@ export default class NetworkManager {
         });
     }
 
-    //发帖
-    static postReplSave(articleId, body, captcha, success, failure, netError) {
+    //回帖
+    static postReplSave(articleId, body, success, failure, netError) {
         NetworkManager.postNew('https://exp.newsmth.net/compose/save', {
             articleId: articleId,
             body: body,
@@ -1168,9 +1168,31 @@ export default class NetworkManager {
         });
     }
 
-    //获取回帖页面
+    //获取发帖页面
+    static getNewPost(boardId, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/compose/publish/' + boardId, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
-    //回帖
+    //发帖
+    static postPostSave(boardId, subject, body, success, failure, netError) {
+        NetworkManager.postNew('https://exp.newsmth.net/compose/save', {
+            boardId: boardId,
+            subject: subject,
+            body: body,
+        }, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
 
     //上传图片
 }
