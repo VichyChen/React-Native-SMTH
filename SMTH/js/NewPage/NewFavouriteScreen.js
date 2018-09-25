@@ -25,7 +25,10 @@ import {
   LoadingView,
   Screen,
   ToastUtil,
-  NavigationBar
+  NavigationBar,
+  TabPageView,
+  NewFavouriteBoardScreen,
+  NewFavouriteThreadScreen,
 } from '../config/Common';
 
 var _dataArray;
@@ -53,7 +56,7 @@ export default class NewFavouriteScreen extends Component {
       this.setState({});
     });
 
-    this.net_LoadFavorites();
+    // this.net_LoadFavorites();
   }
 
   componentDidMount() {
@@ -200,60 +203,14 @@ export default class NewFavouriteScreen extends Component {
 
   render() {
     return (
-      <Screen
-        showLoading={this.state.viewLoading || this.state.isDeleting}
-        loadingType={this.state.loadingType}
-        text={this.state.screenText}
-        onPress={() => {
-          this.setState({
-            viewLoading: true,
-            loadingType: 'background',
-            screenText: null
-          });
-          this.net_LoadFavorites();
-        }}
-      >
-        <NavigationBar title='收藏' />
-        {/* <FlatList
-          data={this.state.dataArray}
-          renderItem={this._renderItem}
-          removeClippedSubviews={false}
-          extraData={this.state}
-          style={{
-            backgroundColor: global.colors.backgroundGrayColor,
-            height: global.constants.ScreenHeight - 64 - 48
-          }}
-          onRefresh={() => {
-            this.setState({
-              pullLoading: true
-            });
-            this.net_LoadFavorites();
-          }
-          }
-          refreshing={this.state.pullLoading}
-        /> */}
-        <ScrollView>
-          <View style={styles.rightView} >
-            {
-              global.current.favouriteArray.map((item) => {
-                return (
-                  <CellBackground
-                    showSelect={false}
-                    onPress={() => {
-                      this.props.navigation.navigate('newBoardListScreen', { id: item.id, title: item.title });
-                    }}
-                  >
-                    <View style={styles.rightItemContainer} >
-                      <Text style={styles.rightItemTitle} >{item.title}</Text>
-                    </View>
-                  </CellBackground>
-                );
-              })
-            }
-          </View>
-        </ScrollView>
-
-      </Screen >
+      <View style={styles.container}>
+        <NavigationBar title='收藏' showBottomLine={false} />
+        <TabPageView titles={['板块', '帖子']}
+          pages={[
+            (<NewFavouriteBoardScreen navigation={this.props.navigation} />),
+            (<NewFavouriteThreadScreen navigation={this.props.navigation} />)]}
+        />
+      </View>
     )
   }
 }
@@ -261,8 +218,8 @@ export default class NewFavouriteScreen extends Component {
 var styles = {
   get container() {
     return {
-      flexDirection: 'column',
-      backgroundColor: global.colors.clearColor
+      flex: 1,
+      backgroundColor: global.colors.whiteColor
     }
   },
   get content() {

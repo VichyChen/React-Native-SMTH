@@ -71,6 +71,8 @@ export default class AsyncStorageManger {
     static setFavouriteArray(favouriteArray) {
         var array = JSON.stringify(favouriteArray);
         AsyncStorageKit.set('favouriteArray', array);
+
+        global.current.favouriteArray = favouriteArray;
     }
 
     static getFavouriteArray() {

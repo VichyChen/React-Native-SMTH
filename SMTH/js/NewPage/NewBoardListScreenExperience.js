@@ -155,7 +155,7 @@ export default class NewBoardListScreenExperience extends Component {
                     }
                     }
                     onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < 5) {
+                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
                             this.setState({
                                 pullMoreLoading: true
                             });

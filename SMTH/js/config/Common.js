@@ -40,6 +40,8 @@ import TabPageView from '../component/TabPageView';
 
 import NewHotListScreen from '../NewPage/NewHotListScreen';
 import NewLoginView from '../NewPage/NewLoginView';
+import NewFavouriteBoardScreen from '../NewPage/NewFavouriteBoardScreen';
+import NewFavouriteThreadScreen from '../NewPage/NewFavouriteThreadScreen';
 
 export {
     NetworkManager,
@@ -75,4 +77,6 @@ export {
     TabPageView,
     NewHotListScreen,
     NewLoginView,
+    NewFavouriteBoardScreen,
+    NewFavouriteThreadScreen
 }

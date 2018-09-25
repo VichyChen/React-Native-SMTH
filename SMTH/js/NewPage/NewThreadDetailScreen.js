@@ -66,6 +66,7 @@ var webURL;
 var threadCount;
 var totalPage;
 var currentPage;
+var title;
 var hostID;     //楼主ID
 var hostBody;
 var hostArticleId;
@@ -73,6 +74,11 @@ var wordage;
 var boardID;
 var boardName;
 var boardTitle;
+
+var selectMoreItemIndex;
+var selectMoreItemName;
+var selectMoreItemMeta;
+var selectMoreItemReply;
 
 var scanRecord;
 var page;
@@ -135,11 +141,12 @@ export default class NewThreadDetailScreen extends Component {
         this.$ = cio.load(result, { decodeEntities: false });
         this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
 
+        title = this.$('.title').text();
         //标题
         array.push({
           key: array.length,
           section: 0,
-          title: this.$('.title').text(),
+          title: title,
         });
 
         //楼主图片
@@ -507,11 +514,14 @@ export default class NewThreadDetailScreen extends Component {
             margin={24}
             source={global.images.icon_more}
             onPress={() => {
-              this.itemMoreActionSheet.show()
-              this.setState({
-                floorItem: item,
-                floorActionViewHidden: false,
-              });
+              selectMoreItemIndex = item.index;
+              selectMoreItemName = item.name;
+              selectMoreItemMeta = item.meta;
+              selectMoreItemReply = item.reply;
+              this.setState({});
+              setTimeout(() => {
+                this.itemMoreActionSheet.show()
+              }, 50);
             }} />
           <SeperatorLine />
         </View>
@@ -781,9 +791,10 @@ export default class NewThreadDetailScreen extends Component {
 
           <ActionSheet
             ref={o => this.moreActionSheet = o}
-            title={'Which one do you like ?'}
-            options={['分享', '复制链接', '从浏览器打开', '查看快照', '举报', '取消']}
-            cancelButtonIndex={5}
+            title={title}
+            // message={}
+            options={['分享到...', '复制链接', '从浏览器打开', '给楼主寄信',/*'查看快照',*/ '前往 ' + boardTitle, '举报', '取消']}
+            cancelButtonIndex={6}
             onPress={(index) => {
 
             }}
@@ -791,12 +802,12 @@ export default class NewThreadDetailScreen extends Component {
 
           <ActionSheet
             ref={o => this.itemMoreActionSheet = o}
-            title={'Which one do you like ?'}
-            message={'xixi xixixxi'}
-            options={['回复', '举报', '取消']}
-            cancelButtonIndex={2}
-            destructiveButtonIndex={1}
+            title={selectMoreItemIndex + '楼'}
+            message={selectMoreItemName + ' ' + selectMoreItemMeta}
+            options={['回复', '给 ' + selectMoreItemName + ' 寄信', '举报', '取消']}
+            cancelButtonIndex={3}
             onPress={(index) => {
+
 
             }}
           />
