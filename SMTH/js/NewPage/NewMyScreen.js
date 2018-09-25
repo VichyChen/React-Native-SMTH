@@ -160,7 +160,9 @@ export default class NewMyScreen extends Component {
 
           <CellBackground
             onPress={() => {
-              this.props.navigation.navigate('userScreen', { id: this.state.username });
+              // this.props.navigation.navigate('newUserScreen', { id: this.state.username, name: this.state.username });
+              this.props.navigation.navigate('newUserScreen', { id: 'f8208b9eedb991d5bf925242d1ea80dd', name: this.state.username });
+              
             }}
           >
             <View style={{

@@ -118,7 +118,7 @@ export default class NewThreadDetailScreen extends Component {
 
 
   getNewTopic(page) {
-    NetworkManager.getNewTopic(this.props.navigation.state.params.id, page, (result) => {
+    NetworkManager.getNewTopic(this.props.navigation.state.params.type, this.props.navigation.state.params.id, page, (result) => {
       var array = [];
 
       this.$ = cio.load(result, { decodeEntities: false });

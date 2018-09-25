@@ -1032,8 +1032,15 @@ export default class NetworkManager {
     }
 
     //帖子详情页
-    static getNewTopic(topic_id, page, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/topic/' + topic_id + (page == 1 ? '' : '/' + page), null, result => {
+    static getNewTopic(type, topic_id, page, success, failure, netError) {
+        var url;
+        if (type == null) {
+            url = 'https://exp.newsmth.net/topic/' + topic_id + (page == 1 ? '' : '/' + page);
+        } 
+        else {
+            url = 'https://exp.newsmth.net/topic/article/' + topic_id + (page == 1 ? '' : '/' + page);
+        }
+        NetworkManager.getNew(url, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);

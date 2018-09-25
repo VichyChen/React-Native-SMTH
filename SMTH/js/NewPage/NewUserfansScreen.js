@@ -24,6 +24,7 @@ import {
     CellBackground,
     NavigationBar,
 } from '../config/Common';
+import cio from 'cheerio-without-node-native';
 
 export default class NewUserfansScreen extends Component {
 
@@ -44,38 +45,46 @@ export default class NewUserfansScreen extends Component {
 
     getNewAccountFans(page) {
         NetworkManager.getNewAccountFans(this.props.id, page, (result) => {
-            // this.$ = cio.load(result);
-            // this.$ = cio.load(this.$('ul[class=article-list]').html());
+            this.$ = cio.load(result, { decodeEntities: false });
+            this.$ = cio.load(this.$('ul[class=list-group]').html());
 
-            // var dataArray = [];
-            // if (page != 1) {
-            //     dataArray = dataArray.concat(this.state.dataArray);
-            // }
-            // this.$('li').each(function (i, elem) {
-            //     this.$ = cio.load(elem);
-            //     if (this.$('a[class=article-subject]').attr('href') != null) {
-            //         dataArray.push({
-            //             key: dataArray.length,
-            //             id: this.$('a[class=article-subject]').attr('href').split('/')[2],
-            //             avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
-            //             name: this.$('div[class=article-account-name]').children().first().text(),
-            //             time: this.$('div[class=article-account-name]').children().last().text(),
-            //             title: this.$('a[class=article-subject]').text().trim(),
-            //             content: this.$('p[class=article-brief]').text().trim(),
-            //             comment: this.$('span[class*=glyphicon-comment]').parent().text(),
-            //             heart: this.$('span[class*=glyphicon-heart]').parent().text(),
-            //             picture: this.$('span[class*=glyphicon-picture]').parent().text(),
-            //         });
-            //     }
-            // });
+            var dataArray = [];
+            if (page != 1) {
+                dataArray = dataArray.concat(this.state.dataArray);
+            }
+            this.$('li').each(function (i, elem) {
+                this.$ = cio.load(elem);
 
-            this.setState({
-                dataArray: dataArray,
-                pullLoading: false,
-                pullMoreLoading: false,
-                viewLoading: false,
-                screenText: null
+
+                var object = {
+                    key: dataArray.length,
+                    id: this.$('a[class=avatar]').attr('href').split('/')[2],
+                    name: this.$('a[class=name]').text(),
+                    meta: this.$('div[class=meta]').children().first().text(),
+                    avatar: this.$('a[class=avatar]').children().first().attr('src'),
+                };
+                console.log('object.key:' + object.key);
+                console.log('object.id:' + object.id);
+                console.log('object.name:' + object.name);
+                console.log('object.meta:' + object.meta);
+                console.log('object.avatar:' + object.avatar);
+
+                dataArray.push({
+                    key: dataArray.length,
+                    id: this.$('a[class=avatar]').attr('href').split('/')[2],
+                    name: this.$('a[class=name]').text(),
+                    meta: this.$('div[class=meta]').children().first().text(),
+                    avatar: this.$('a[class=avatar]').children().first().attr('src'),
+                });
             });
+
+            // this.setState({
+            //     dataArray: dataArray,
+            //     pullLoading: false,
+            //     pullMoreLoading: false,
+            //     viewLoading: false,
+            //     screenText: null
+            // });
 
         }, (error) => {
 

@@ -24,6 +24,7 @@ import {
     CellBackground,
     NavigationBar,
 } from '../config/Common';
+import cio from 'cheerio-without-node-native';
 
 export default class NewUserMemberScreen extends Component {
 
@@ -44,38 +45,43 @@ export default class NewUserMemberScreen extends Component {
 
     getNewAccountMembers(page) {
         NetworkManager.getNewAccountMembers(this.props.id, page, (result) => {
-            // this.$ = cio.load(result);
-            // this.$ = cio.load(this.$('ul[class=article-list]').html());
+            this.$ = cio.load(result, { decodeEntities: false });
+            this.$ = cio.load(this.$('ul[class=list-group]').html());
 
-            // var dataArray = [];
-            // if (page != 1) {
-            //     dataArray = dataArray.concat(this.state.dataArray);
-            // }
-            // this.$('li').each(function (i, elem) {
-            //     this.$ = cio.load(elem);
-            //     if (this.$('a[class=article-subject]').attr('href') != null) {
-            //         dataArray.push({
-            //             key: dataArray.length,
-            //             id: this.$('a[class=article-subject]').attr('href').split('/')[2],
-            //             avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
-            //             name: this.$('div[class=article-account-name]').children().first().text(),
-            //             time: this.$('div[class=article-account-name]').children().last().text(),
-            //             title: this.$('a[class=article-subject]').text().trim(),
-            //             content: this.$('p[class=article-brief]').text().trim(),
-            //             comment: this.$('span[class*=glyphicon-comment]').parent().text(),
-            //             heart: this.$('span[class*=glyphicon-heart]').parent().text(),
-            //             picture: this.$('span[class*=glyphicon-picture]').parent().text(),
-            //         });
-            //     }
-            // });
+            var dataArray = [];
+            if (page != 1) {
+                dataArray = dataArray.concat(this.state.dataArray);
+            }
+            this.$('li').each(function (i, elem) {
+                this.$ = cio.load(elem);
 
-            this.setState({
-                dataArray: dataArray,
-                pullLoading: false,
-                pullMoreLoading: false,
-                viewLoading: false,
-                screenText: null
+
+                var object = {
+                    key: dataArray.length,
+                    id: this.$('div[class=board-summary]').children().first().children().first().attr('href').split('/')[2],
+                    boardName: this.$('div[class=board-summary]').children().first().children().first().text(),
+                    boardTitle: this.$('div[class=board-summary]').children().last().children().first().text(),
+                };
+                console.log('object.key:' + object.key);
+                console.log('object.id:' + object.id);
+                console.log('object.boardName:' + object.boardName);
+                console.log('object.boardTitle:' + object.boardTitle);
+
+                dataArray.push({
+                    key: dataArray.length,
+                    id: this.$('div[class=board-summary]').children().first().children().first().attr('href').split('/')[2],
+                    boardName: this.$('div[class=board-summary]').children().first().children().first().text(),
+                    boardTitle: this.$('div[class=board-summary]').children().last().children().first().text(),
+                });
             });
+
+            // this.setState({
+            //     dataArray: dataArray,
+            //     pullLoading: false,
+            //     pullMoreLoading: false,
+            //     viewLoading: false,
+            //     screenText: null
+            // });
 
         }, (error) => {
 
