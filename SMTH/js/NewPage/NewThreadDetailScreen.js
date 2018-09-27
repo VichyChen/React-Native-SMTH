@@ -123,7 +123,6 @@ export default class NewThreadDetailScreen extends Component {
 
       this.$ = cio.load(result, { decodeEntities: false });
       currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
-      // totalPage = this.$('.pagination').children().last().children().attr('href') == 'javascript:void(0);' ? (this.$('.pagination').children().last().attr('class') == 'disabled' ? 1 : 1) : this.$('.pagination').children().last().children().attr('href').split('/')[3];
       totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
       likeCount = this.$('.article-likes').children().first().children().first().text();
 

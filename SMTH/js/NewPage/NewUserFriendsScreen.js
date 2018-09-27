@@ -29,6 +29,8 @@ import cio from 'cheerio-without-node-native';
 export default class NewUserFriendsScreen extends Component {
 
     _page = 1;
+    _currentPage;
+    _totalPage;
 
     constructor(props) {
         super(props);
@@ -46,6 +48,11 @@ export default class NewUserFriendsScreen extends Component {
     getNewAccountFriends(page) {
         NetworkManager.getNewAccountFriends(this.props.id, page, (result) => {
             this.$ = cio.load(result, { decodeEntities: false });
+            this.$ = cio.load(this.$('ul[class=pagination]').html());
+            this._currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
+            this._totalPage = this.$('li').last().attr('class') == 'disabled' ? this._currentPage : this.$('li').last().children().attr('href').split('/')[4];
+
+            this.$ = cio.load(result, { decodeEntities: false });
             this.$ = cio.load(this.$('ul[class=list-group]').html());
 
             var dataArray = [];
@@ -54,8 +61,6 @@ export default class NewUserFriendsScreen extends Component {
             }
             this.$('li').each(function (i, elem) {
                 this.$ = cio.load(elem);
-
-
                 var object = {
                     key: dataArray.length,
                     id: this.$('a[class=avatar]').attr('href').split('/')[2],
@@ -78,13 +83,13 @@ export default class NewUserFriendsScreen extends Component {
                 });
             });
 
-            // this.setState({
-            //     dataArray: dataArray,
-            //     pullLoading: false,
-            //     pullMoreLoading: false,
-            //     viewLoading: false,
-            //     screenText: null
-            // });
+            this.setState({
+                dataArray: dataArray,
+                pullLoading: false,
+                pullMoreLoading: false,
+                viewLoading: false,
+                screenText: null
+            });
 
         }, (error) => {
 
@@ -93,6 +98,29 @@ export default class NewUserFriendsScreen extends Component {
         });
     }
 
+    _renderItem = ({ item }) => {
+        return (
+            <CellBackground
+                onPress={() => {
+                    this.props.navigation.navigate('newUserScreen', { id: item.id, name: item.name });
+                }}
+            >
+                <View>
+                    <View style={styles.container} >
+                        <AvatorImage
+                            borderRadius={20}
+                            widthAndHeight={40}
+                            uri={'https://exp.newsmth.net/' + item.avatar} />
+                        <View style={{ marginLeft: 10, flex: 1, flexDirection: 'column', justifyContent: 'space-around', alignItems: 'flex-start' }} >
+                            <Text style={styles.itemName} >{item.name.trim()}</Text>
+                            <Text style={styles.itemMeta} >{item.meta}</Text>
+                        </View>
+                    </View>
+                    <SeperatorLine />
+                </View>
+            </CellBackground>
+        );
+    };
 
     render() {
         return (
@@ -124,7 +152,7 @@ export default class NewUserFriendsScreen extends Component {
                     }
                     }
                     onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < this._totalPage) {
                             this.setState({
                                 pullMoreLoading: true
                             });
@@ -145,7 +173,25 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            backgroundColor: global.colors.whiteColor
+            flexDirection: 'row',
+            padding: global.constants.Padding
+        }
+    },
+    get flatList() {
+        return {
+            height: global.constants.ScreenHeight - global.constants.NavigationBarHeight - 100 - 40,
+        }
+    },
+    get itemName() {
+        return {
+            fontSize: global.configures.fontSize16,
+            color: global.colors.fontColor,
+        }
+    },
+    get itemMeta() {
+        return {
+            fontSize: global.configures.fontSize14,
+            color: global.colors.gray1Color,
         }
     },
 }

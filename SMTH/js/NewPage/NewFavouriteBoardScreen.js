@@ -239,7 +239,7 @@ export default class NewFavouriteBoardScreen extends Component {
                                     <CellBackground
                                         showSelect={false}
                                         onPress={() => {
-                                            this.props.navigation.navigate('newBoardListScreen', { id: item.id, title: item.title });
+                                            this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.title, title: item.name });
                                         }}
                                     >
                                         <View style={styles.rightItemContainer} >
