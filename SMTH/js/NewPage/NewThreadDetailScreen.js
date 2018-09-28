@@ -26,10 +26,14 @@ import {
   Clipboard,
   WebView
 } from 'react-native';
+
 import { NativeModules } from 'react-native';
 import cio from 'cheerio-without-node-native';
-
 import AutoHeightImage from 'react-native-auto-height-image';
+import HTMLView from 'react-native-htmlview';
+import ActionSheet from 'react-native-actionsheet'
+import AsyncStorageManger from '../storage/AsyncStorageManger';
+
 import {
   NetworkManager,
   DateUtil,
@@ -58,38 +62,28 @@ import {
   BoardModel
 } from 'ModelModule';
 
-import HTMLView from 'react-native-htmlview';
-import ActionSheet from 'react-native-actionsheet'
-import AsyncStorageManger from '../storage/AsyncStorageManger';
-
-var webURL;
-var threadCount;
-var totalPage;
-var currentPage;
-var title;
-var hostID;     //楼主ID
-var hostBody;
-var hostArticleId;
-var wordage;
-var boardID;
-var boardName;
-var boardTitle;
-
-var selectMoreItemIndex;
-var selectMoreItemName;
-var selectMoreItemMeta;
-var selectMoreItemReply;
-
-var scanRecord;
-var page;
-
-var likeCount;
-
 export default class NewThreadDetailScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: '详情',
-    headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-  });
+
+  webURL;
+  threadCount;
+  totalPage;
+  currentPage;
+  title;
+  hostID;     //楼主ID
+  hostBody;
+  hostArticleId;
+  wordage;
+  boardID;
+  boardName;
+  boardTitle;
+  selectMoreItemIndex;
+  selectMoreItemName;
+  selectMoreItemMeta;
+  selectMoreItemReply;
+  selectMoreItemReplyID;
+  scanRecord;
+  page;
+  likeCount;
 
   constructor(props) {
     super(props);
@@ -108,12 +102,12 @@ export default class NewThreadDetailScreen extends Component {
       // selectedValue: '1',
       showMoreLike: false,
     }
-    scanRecord = false;
+    this.scanRecord = false;
 
-    webURL = 'https://exp.newsmth.net/topic/' + this.props.navigation.state.params.id;
+    this.webURL = 'https://exp.newsmth.net/topic/' + (this.props.navigation.state.params.type == null ? '' : 'article/') + this.props.navigation.state.params.id;
 
-    page = 1;
-    this.getNewTopic(page);
+    this.page = 1;
+    this.getNewTopic(this.page);
   }
 
 
@@ -122,30 +116,30 @@ export default class NewThreadDetailScreen extends Component {
       var array = [];
 
       this.$ = cio.load(result, { decodeEntities: false });
-      currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
-      totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
-      likeCount = this.$('.article-likes').children().first().children().first().text();
+      var currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
+      this.totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
+      this.likeCount = this.$('.article-likes').children().first().children().first().text();
 
       //第一页
       if (page == 1) {
         //帖子总数
-        threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
-        hostID = this.$('.avatar').children().first().attr('title');
-        hostBody = this.$('.show-content').html().trim();
-        hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
-        boardID = this.$('.notebook').attr('href').split('/')[2];
-        boardName = this.$('.notebook').children().first().next().text();
-        boardTitle = this.$('.notebook').children().last().text();
+        this.threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
+        this.hostID = this.$('.avatar').children().first().attr('title');
+        this.hostBody = this.$('.show-content').html().trim();
+        this.hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
+        this.boardID = this.$('.notebook').attr('href').split('/')[2];
+        this.boardName = this.$('.notebook').children().first().next().text();
+        this.boardTitle = this.$('.notebook').children().last().text();
 
         this.$ = cio.load(result, { decodeEntities: false });
         this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
 
-        title = this.$('.title').text();
+        this.title = this.$('.title').text();
         //标题
         array.push({
           key: array.length,
           section: 0,
-          title: title,
+          title: this.title,
         });
 
         //楼主图片
@@ -167,7 +161,7 @@ export default class NewThreadDetailScreen extends Component {
         this.$('.image-package').remove();
         this.$('.image-caption').remove();
 
-        wordage = this.$('.wordage').text();
+        this.wordage = this.$('.wordage').text();
         //楼主
         array.push({
           key: array.length,
@@ -236,6 +230,7 @@ export default class NewThreadDetailScreen extends Component {
           }
 
           this.$ = cio.load(elem, { decodeEntities: false });
+          var replyID = this.$('div[class=tool-group]').children().last().attr('href').split('/')[3];
           this.$('.tool-group').remove();
           this.$('.article-quote').prev().remove();
           this.$('.article-quote').children().last().remove();
@@ -244,6 +239,9 @@ export default class NewThreadDetailScreen extends Component {
           this.$('.image-package').remove();
           this.$('.image-caption').remove();
 
+          console.log('this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)):'+this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)));
+          console.log('this.currentPage:'+this.currentPage);
+          console.log('i:'+i);
           array.push({
             key: array.length,
             index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
@@ -254,6 +252,7 @@ export default class NewThreadDetailScreen extends Component {
             meta: this.$('div[class=meta]').children().first().text(),
             time: this.$('div[class=meta]').children().last().text(),
             attachment_list: attachment_list,
+            replyID: replyID,
             reply: this.$('div[class=reply-wrap]').html().trim(),
             quote: quote,
           });
@@ -292,14 +291,14 @@ export default class NewThreadDetailScreen extends Component {
         this.setState({
           firstLoading: false,
           viewLoading: false,
-          screenText: '帖子不存在，可以尝试从浏览器打开或查看快照',
+          screenText: '帖子不存在',
         });
       }
 
       // else {
       this.setState({
         dataArray: array,
-        totalPage: totalPage, //抓取,
+        totalPage: this.totalPage,
         currentPage: page,
         selectedValue: page.toString(),
         firstLoading: false,
@@ -327,12 +326,10 @@ export default class NewThreadDetailScreen extends Component {
           <View style={[styles.container, {}]} >
             <Text style={styles.title} >{item.title}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-              <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{boardName}</Text>
-              <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{boardTitle}</Text>
               <Text style={styles.wordage} >
                 {
-                  (wordage.length > 0 ? (wordage.split(' ')[1] + '字数 ') : '') +
-                  (threadCount.length > 0 ? (threadCount.split(' ')[0] + '回复 ') : '')
+                  (this.wordage.length > 0 ? (this.wordage.split(' ')[1] + '字数 ') : '') +
+                  (this.threadCount.length > 0 ? (this.threadCount.split(' ')[0] + '回复 ') : '')
                 }
               </Text>
             </View>
@@ -359,7 +356,7 @@ export default class NewThreadDetailScreen extends Component {
                 <Text style={styles.itemName} >{item.name}</Text>
                 <Text style={styles.itemMeta} >{item.meta}</Text>
                 {
-                  item.name == hostID
+                  item.name == this.hostID
                     ?
                     <Text style={styles.itemHost} >{'楼主'}</Text>
                     :
@@ -375,14 +372,17 @@ export default class NewThreadDetailScreen extends Component {
                 <HTMLView value={item.reply} stylesheet={styles.itemReply} />
               </View>
             </View>
-            <SeperatorLine />
+            <HorizontalSeperatorLine />
 
           </View>
           {
-            likeCount.length > 0
+            this.likeCount.length > 0
               ?
-              <View style={{ backgroundColor: global.colors.whiteColor, padding: global.constants.Padding }}>
-                <Text style={styles.title} >{likeCount.split(' ')[0] + '个赞'}</Text>
+              <View style={styles.sectionView} >
+                <View style={styles.sectionVerticalLine} />
+                <Text style={styles.sectionTitle} >
+                  {this.likeCount.split(' ')[0] + ' Like'}
+                </Text>
               </View>
               :
               null
@@ -421,8 +421,8 @@ export default class NewThreadDetailScreen extends Component {
           }} >
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
               <AvatorImage
-                borderRadius={15}
-                widthAndHeight={30}
+                borderRadius={10}
+                widthAndHeight={20}
                 onPressClick={() => {
                   this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
@@ -482,7 +482,7 @@ export default class NewThreadDetailScreen extends Component {
               <Text style={styles.itemName} >{item.name}</Text>
               <Text style={styles.itemMeta} >{item.meta}</Text>
               {
-                item.name == hostID
+                item.name == this.hostID
                   ?
                   <Text style={styles.itemHost} >{'楼主'}</Text>
                   :
@@ -515,10 +515,11 @@ export default class NewThreadDetailScreen extends Component {
             margin={24}
             source={global.images.icon_more}
             onPress={() => {
-              selectMoreItemIndex = item.index;
-              selectMoreItemName = item.name;
-              selectMoreItemMeta = item.meta;
-              selectMoreItemReply = item.reply;
+              this.selectMoreItemIndex = item.index;
+              this.selectMoreItemName = item.name;
+              this.selectMoreItemMeta = item.meta;
+              this.selectMoreItemReply = item.reply;
+              this.selectMoreItemReplyID = item.replyID;
               this.setState({});
               setTimeout(() => {
                 this.itemMoreActionSheet.show()
@@ -530,7 +531,29 @@ export default class NewThreadDetailScreen extends Component {
     }
     else if (item.section == 4) {
       return (
-        <SectionBlankHeader height={5} />
+        <View>
+          {
+            this.likeCount.length > 0
+              ?
+              <HorizontalSeperatorLine />
+              :
+              null
+          }
+
+          {
+            this.threadCount.length > 0
+              ?
+              (<View style={styles.sectionView} >
+                <View style={styles.sectionVerticalLine} />
+                <Text style={styles.sectionTitle} >
+                  {this.threadCount.split(' ')[0] + ' 回复 '}
+                </Text>
+              </View>)
+              :
+              null
+          }
+
+        </View>
       );
     }
   };
@@ -548,7 +571,14 @@ export default class NewThreadDetailScreen extends Component {
       <View style={{ flex: 1 }}>
 
         <NavigationBar
-          title='帖子详情'
+          title={this.boardTitle}
+          titleOnPress={() => {
+            this.props.navigation.navigate('newBoardListScreen', {
+              id: this.boardID,
+              name: this.boardTitle,
+              title: this.boardName,
+            });
+          }}
           showBackButton={true}
           navigation={this.props.navigation}
           rightButtonImage={global.images.icon_more}
@@ -567,7 +597,7 @@ export default class NewThreadDetailScreen extends Component {
               loadingType: 'background',
               screenText: null
             });
-            this.getNewTopic(page);
+            this.getNewTopic(this.page);
           }}
         >
           <FlatList
@@ -583,13 +613,13 @@ export default class NewThreadDetailScreen extends Component {
             currentPage={this.state.currentPage}
             totalPage={this.state.totalPage}
             onPreviousClick={() => {
-              if (page == 1) return;
+              if (this.page == 1) return;
               this.setState({
                 viewLoading: true,
                 loadingType: 'none',
               });
-              page = page - 1;
-              this.getNewTopic(page);
+              this.page = this.page - 1;
+              this.getNewTopic(this.page);
             }}
             onSelectClick={() => {
               this.setState({
@@ -598,19 +628,20 @@ export default class NewThreadDetailScreen extends Component {
               });
             }}
             onNextClick={() => {
-              if (page + 1 > totalPage) return;
+              if (this.page + 1 > this.totalPage) return;
               this.setState({
                 viewLoading: true,
                 loadingType: 'none',
               });
-              page = page + 1;
-              this.getNewTopic(page);
+              this.page = this.page + 1;
+              this.getNewTopic(this.page);
             }}
             onReplyClick={() => {
               if (global.login == true) {
                 this.props.navigation.navigate('newReplyThreadScreen',
                   {
-                    id: hostArticleId,
+                    id: this.hostArticleId,
+                    title: this.title,
                     body: '',
                   });
               }
@@ -642,14 +673,14 @@ export default class NewThreadDetailScreen extends Component {
                 moreViewHidden: true,
               });
               var shareManager = NativeModules.ShareManager;
-              shareManager.share(this.props.navigation.state.params.subject, webURL);
+              shareManager.share(this.props.navigation.state.params.subject, this.webURL);
             }}
             onCopyClick={() => {
-              Clipboard.setString(webURL);
+              Clipboard.setString(this.webURL);
               ToastUtil.info('已复制到剪贴板');
             }}
             onSafariClick={() => {
-              // Linking.openURL(webURL).catch(err => console.error('An error occurred', err));
+              // Linking.openURL(this.webURL).catch(err => console.error('An error occurred', err));
               // this.setState({
               //   backgroundMaskViewHidden: true,
               //   moreViewHidden: true,
@@ -679,7 +710,7 @@ export default class NewThreadDetailScreen extends Component {
               this.props.navigation.navigate('sendMessageScreen', {
                 user: array[0],
                 title: '举报 ' + hostID + ' 在 ' + board + ' 版中发表的内容',
-                content: '\n' + webURL + '\n\n【以下为被举报的帖子内容】\n' + hostBody,
+                content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.hostBody,
               });
               this.setState({
                 backgroundMaskViewHidden: true,
@@ -697,7 +728,7 @@ export default class NewThreadDetailScreen extends Component {
               this.setState({
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
-                currentPage: page.toString(),
+                currentPage: this.page.toString(),
               });
             }}
             onFirstClick={() => {
@@ -707,8 +738,8 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              page = 1;
-              this.getNewTopic(page);
+              this.page = 1;
+              this.getNewTopic(this.page);
             }}
             onLastClick={() => {
               this.setState({
@@ -717,11 +748,11 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              page = totalPage;
-              this.getNewTopic(page);
+              this.page = this.totalPage;
+              this.getNewTopic(this.page);
             }}
             onCompleteClick={(p) => {
-              if (p == page.toString()) {
+              if (p == this.page.toString()) {
                 this.setState({
                   selectPageViewHidden: true,
                   backgroundMaskViewHidden: true,
@@ -734,8 +765,8 @@ export default class NewThreadDetailScreen extends Component {
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
-              page = p;
-              this.getNewTopic(page);
+              this.page = p;
+              this.getNewTopic(this.page);
             }}
             onValueChange={(page) => {
               this.setState({
@@ -775,7 +806,7 @@ export default class NewThreadDetailScreen extends Component {
               this.props.navigation.navigate('sendMessageScreen', {
                 user: array[0],
                 title: '举报 ' + floorItem.author_id + ' 在 ' + board + ' 版中发表的内容',
-                content: '\n' + webURL + '\n\n【以下为被举报的帖子内容】\n' + floorItem.body,
+                content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + floorItem.body,
               });
               this.setState({
                 backgroundMaskViewHidden: true,
@@ -792,24 +823,72 @@ export default class NewThreadDetailScreen extends Component {
 
           <ActionSheet
             ref={o => this.moreActionSheet = o}
-            title={title}
+            title={this.title}
             // message={}
-            options={['分享到...', '复制链接', '从浏览器打开', '给楼主寄信',/*'查看快照',*/ '前往 ' + boardTitle, '举报', '取消']}
-            cancelButtonIndex={6}
+            options={['分享', '从浏览器打开', '复制链接', '给楼主寄信',/*'查看快照',*/ '举报', '取消']}
+            cancelButtonIndex={5}
             onPress={(index) => {
+              //分享
+              if (index == 0) {
+                var shareManager = NativeModules.ShareManager;
+                shareManager.share(this.title, this.webURL);
+              }
+              //从浏览器打开
+              else if (index == 1) {
+                Linking.openURL(this.webURL).catch(err => console.error('An error occurred', err));
+              }
+              //复制链接
+              else if (index == 2) {
+                Clipboard.setString(this.webURL);
+                ToastUtil.info('已复制');
+              }
+              //给楼主寄信
+              else if (index == 3) {
 
+              }
+              //举报
+              else if (index == 4) {
+
+              }
+              else {
+
+              }
             }}
           />
 
           <ActionSheet
             ref={o => this.itemMoreActionSheet = o}
-            title={selectMoreItemIndex + '楼'}
-            message={selectMoreItemName + ' ' + selectMoreItemMeta}
-            options={['回复', '给 ' + selectMoreItemName + ' 寄信', '举报', '取消']}
+            title={this.selectMoreItemIndex + '楼'}
+            message={this.selectMoreItemName + ' ' + this.selectMoreItemMeta}
+            options={['回复', '给 ' + this.selectMoreItemName + ' 私信', '举报', '取消']}
             cancelButtonIndex={3}
             onPress={(index) => {
+              //回复
+              if (index == 0) {
+                if (global.login == true) {
+                  this.props.navigation.navigate('newReplyThreadScreen',
+                    {
+                      id: this.selectMoreItemReplyID,
+                      author: this.selectMoreItemName,
+                      title: this.title,
+                      body: this.selectMoreItemReply,
+                    });
+                }
+                else {
+                  DeviceEventEmitter.emit('LoginNotification', null);
+                }  
+              }
+              //私信
+              else if (index == 1) {
 
+              }
+              //举报
+              else if (index == 2) {
 
+              }
+              else {
+
+              }
             }}
           />
 
@@ -841,8 +920,32 @@ var styles = {
   },
   get title() {
     return {
-      fontSize: global.configures.fontSize17,
+      fontSize: global.configures.fontSize18,
       fontWeight: 'bold',
+      color: global.colors.fontColor
+    }
+  },
+  get sectionView() {
+    return {
+      height: 30, flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft: global.constants.Padding
+    }
+  },
+  get sectionVerticalLine() {
+    return {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: 2,
+      backgroundColor: global.colors.themeColor,
+    }
+  },
+  get sectionTitle() {
+    return {
+      fontSize: global.configures.fontSize16,
+      // fontWeight: 'bold',
       color: global.colors.fontColor
     }
   },

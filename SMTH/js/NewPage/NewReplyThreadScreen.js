@@ -36,23 +36,18 @@ export default class NewReplyThreadScreen extends Component {
         super(props);
 
         var content = '';
+        console.log('123asddasdasdasdsad:' + this.props.navigation.state.params.body);
         if (this.props.navigation.state.params.body.length > 0) {
-            var array = this.props.navigation.state.params.body.split('\n');
+            var body = this.props.navigation.state.params.body.replace('<p></p>', '');
+            var array = body.split('</p>');
             console.log(array);
-            for (var i = 0; i < array.length - 2; i++) {
+            for (var i = 0; i < array.length - 1; i++) {
+                array[i] = array[i].replace('<p>', '').replace('</p>', '');
                 if (i == 1) {
-                    if (array.length == 4 && array[1] == '--' && array[2].length == 0 && array[3].length == 0) {
-
-                    } else {
-                        content += '\n: ' + array[i];
-                    }
+                    content += '\n: ' + array[i];
                 }
                 else if (i == 2) {
-                    if (array.length == 5 && array[2] == '--' && array[3].length == 0 && array[4].length == 0) {
-
-                    } else {
-                        content += '\n: ' + array[i];
-                    }
+                    content += '\n: ' + array[i];
                 }
                 else if (i == 3) {
                     if (array.length > 4) {
@@ -69,11 +64,13 @@ export default class NewReplyThreadScreen extends Component {
                     content += (i == 0 ? ': ' : '\n: ') + array[i];
                 }
             }
+            // content = content.replace('<p>', '').replace('</p>', '');
         }
+        console.log('content:' + content);
 
         this.state = {
             isLoading: false,
-            content: content.length > 0 ? '\r【 在 ' + this.props.navigation.state.params.author + ' 的大作中提到: 】\r' + '' + content : '',
+            content: content.length > 0 ? '\n【 在 ' + this.props.navigation.state.params.author + ' 的大作中提到: 】\n' + '' + content : '',
         }
         _content = this.state.content;
     }
@@ -137,7 +134,7 @@ export default class NewReplyThreadScreen extends Component {
                 <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
                     <View style={styles.container} >
 
-                        <Text style={styles.title} >Re: 要不要</Text>
+                        <Text style={styles.title} >{'Re: ' + this.props.navigation.state.params.title}</Text>
                         <HorizontalSeperatorLine />
 
                         <TextInput

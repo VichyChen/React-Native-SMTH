@@ -55,7 +55,9 @@ export default class NavigationBar extends Component {
                             <Text style={[
                                 styles.title,
                                 { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
-                            ]} >
+                            ]}
+                            onPress={this.props.titleOnPress}
+                            >
                                 {this.props.title}
                             </Text>
                             :
@@ -153,7 +155,7 @@ var styles = {
     },
     get title() {
         return {
-            fontSize: 17,
+            fontSize: 18,
             color: global.colors.fontColor,
         }
     },
