@@ -118,7 +118,7 @@ export default class NewPostThreadScreen extends Component {
 
                 <NavigationBar title='发帖'
                     navigation={this.props.navigation}
-                    showBackButton={true}
+                    showCancelButton={true}
                     showBottomLine={true}
                     rightButtonTitle={'确定'}
                     rightButtonOnPress={() => {

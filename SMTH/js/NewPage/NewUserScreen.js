@@ -71,38 +71,6 @@ export default class NewUserScreen extends Component {
                 screenText: errorMessage,
             });
         });
-
-        this.setTitle();
-    }
-
-    componentDidMount() {
-        this.setBarItemButton();
-    }
-
-    setBarItemButton() {
-        this.props.navigation.setParams({
-            headerRight: (
-                <NavigatorTitleButton
-                    color={global.colors.whiteColor}
-                    fontSize={16}
-                    onPressClick={() => {
-                        this.props.navigation.navigate('sendMessageScreen', {
-                            user: this.props.navigation.state.params.name,
-                            title: '',
-                            content: '',
-                        });
-                    }}
-                    title='发送短信' />
-            )
-        })
-    }
-
-    async setTitle() {
-        var username = await AsyncStorageManger.getUsername();
-
-        this.props.navigation.setParams({
-            title: username == this.props.navigation.state.params.name ? '个人信息' : '详细资料'
-        })
     }
 
     render() {
@@ -127,9 +95,9 @@ export default class NewUserScreen extends Component {
                         </View>
                         <View>
                             <CellBackground
-                                                                        showSelect={false}
+                                showSelect={false}
                                 onPress={() => {
-
+                                    this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
                                 }}
                             >
                                 <View style={styles.buttonView} >
@@ -137,7 +105,7 @@ export default class NewUserScreen extends Component {
                                 </View>
                             </CellBackground>
                             <CellBackground
-                                                                        showSelect={false}
+                                showSelect={false}
                                 onPress={() => {
 
                                 }}

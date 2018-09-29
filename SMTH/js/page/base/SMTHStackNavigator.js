@@ -33,6 +33,11 @@ import NewFavouriteThreadScreen from '../../NewPage/NewFavouriteThreadScreen';
 
 import NewUserScreen from '../../NewPage/NewUserScreen';
 
+import NewMessageScreen from '../../NewPage/NewMessageScreen';
+import NewMessageMailDetailScreen from '../../NewPage/NewMessageMailDetailScreen';
+import NewMessageSendMailDetailScreen from '../../NewPage/NewMessageSendMailDetailScreen';
+import NewMessageSendScreen from '../../NewPage/NewMessageSendScreen';
+
 import {
     Color
 } from '../../config/Common';
@@ -68,6 +73,10 @@ const SMTHStackNavigator = StackNavigator({
     newFavouriteBoardScreen: { screen: NewFavouriteBoardScreen },
     newFavouriteThreadScreen: { screen: NewFavouriteThreadScreen },
     newUserScreen: { screen: NewUserScreen },
+    newMessageScreen: { screen: NewMessageScreen },
+    newMessageMailDetailScreen: { screen: NewMessageMailDetailScreen },
+    newMessageSendMailDetailScreen: { screen: NewMessageSendMailDetailScreen },
+    newMessageSendScreen: { screen: NewMessageSendScreen },
 },
     {
         navigationOptions: {

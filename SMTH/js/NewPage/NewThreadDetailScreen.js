@@ -402,7 +402,7 @@ export default class NewThreadDetailScreen extends Component {
                 showMoreLike: true,
               });
             }}
-            text='点击显示更多的赞'
+            text='点击显示更多Like'
           />
         );
       }
@@ -825,7 +825,7 @@ export default class NewThreadDetailScreen extends Component {
             ref={o => this.moreActionSheet = o}
             title={this.title}
             // message={}
-            options={['分享', '从浏览器打开', '复制链接', '给楼主寄信',/*'查看快照',*/ '举报', '取消']}
+            options={['分享', '从浏览器打开', '复制链接', '给楼主私信',/*'查看快照',*/ '举报', '取消']}
             cancelButtonIndex={5}
             onPress={(index) => {
               //分享
@@ -842,9 +842,9 @@ export default class NewThreadDetailScreen extends Component {
                 Clipboard.setString(this.webURL);
                 ToastUtil.info('已复制');
               }
-              //给楼主寄信
+              //给楼主私信
               else if (index == 3) {
-
+                this.props.navigation.navigate('newMessageSendScreen', { user: this.hostID })
               }
               //举报
               else if (index == 4) {
@@ -880,7 +880,7 @@ export default class NewThreadDetailScreen extends Component {
               }
               //私信
               else if (index == 1) {
-
+                this.props.navigation.navigate('newMessageSendScreen', { user: this.selectMoreItemName })
               }
               //举报
               else if (index == 2) {

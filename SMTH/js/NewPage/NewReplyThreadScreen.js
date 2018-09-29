@@ -123,7 +123,7 @@ export default class NewReplyThreadScreen extends Component {
 
                 <NavigationBar title='回复'
                     navigation={this.props.navigation}
-                    showBackButton={true}
+                    showCancelButton={true}
                     showBottomLine={true}
                     rightButtonTitle={'确定'}
                     rightButtonOnPress={() => {

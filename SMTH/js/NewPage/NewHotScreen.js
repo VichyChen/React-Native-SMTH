@@ -103,6 +103,4 @@ var styles = {
       backgroundColor: global.colors.whiteColor
     }
   },
-
-
 }

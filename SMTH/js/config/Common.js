@@ -48,6 +48,11 @@ import NewUserMemberScreen from '../NewPage/NewUserMemberScreen';
 import NewUserFriendsScreen from '../NewPage/NewUserFriendsScreen';
 import NewUserfansScreen from '../NewPage/NewUserfansScreen';
 
+import NewMessageMailListScreen from '../NewPage/NewMessageMailListScreen';
+import NewMessageSendMailListScreen from '../NewPage/NewMessageSendMailListScreen';
+import NewMessageReplyListScreen from '../NewPage/NewMessageReplyListScreen';
+import NewMessageAtListScreen from '../NewPage/NewMessageAtListScreen';
+
 export {
     NetworkManager,
     DateUtil,
@@ -88,4 +93,8 @@ export {
     NewUserMemberScreen,
     NewUserFriendsScreen,
     NewUserfansScreen,
+    NewMessageMailListScreen,
+    NewMessageSendMailListScreen,
+    NewMessageReplyListScreen,
+    NewMessageAtListScreen
 }

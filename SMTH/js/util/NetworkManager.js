@@ -978,7 +978,7 @@ export default class NetworkManager {
 
     //全部、社区管理！@#¥%……&*（）
     static getNewHot(section_id, page, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/statistics/hot/' + (section_id.length > 0 ? ('section/' + section_id) : 'global') + '/' + page, null, result => {
+        NetworkManager.getNew('https://exp.newsmth.net/statistics/hot/' + ((section_id != null && section_id.length > 0) ? ('section/' + section_id) : 'global') + '/' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);

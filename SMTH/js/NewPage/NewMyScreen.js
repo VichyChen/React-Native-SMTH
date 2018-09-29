@@ -223,7 +223,8 @@ export default class NewMyScreen extends Component {
 
           <CellBackground
             onPress={() => {
-              this.props.navigation.navigate('messageScreen')
+              // this.props.navigation.navigate('messageScreen')
+              this.props.navigation.navigate('newMessageScreen')
             }}
           >
             <View style={styles.container}>

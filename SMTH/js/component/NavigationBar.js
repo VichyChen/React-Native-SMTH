@@ -50,13 +50,27 @@ export default class NavigationBar extends Component {
                     }
 
                     {
+                        this.props.showCancelButton == true
+                            ?
+                            <Button
+                                style={styles.cancelButton}
+                                height={44}
+                                text={'取消'}
+                                onPress={() => {
+                                    this.props.navigation.goBack();
+                                }} />
+                            :
+                            null
+                    }
+
+                    {
                         this.props.title != null
                             ?
                             <Text style={[
                                 styles.title,
                                 { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
                             ]}
-                            onPress={this.props.titleOnPress}
+                                onPress={this.props.titleOnPress}
                             >
                                 {this.props.title}
                             </Text>
@@ -143,11 +157,19 @@ var styles = {
             backgroundColor: global.colors.seperatorColor,
         }
     },
-
     get backButton() {
         return {
             position: 'absolute',
-            left: 5,
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 44,
+        }
+    },
+    get cancelButton() {
+        return {
+            position: 'absolute',
+            left: 10,
             top: 0,
             bottom: 0,
             width: 44,
