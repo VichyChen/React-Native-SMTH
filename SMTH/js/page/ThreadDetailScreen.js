@@ -204,6 +204,7 @@ export default class ThreadDetailScreen extends Component {
 
       if (scanRecord == false) {
         ScanRecordModel.create(
+          'old',
           this.props.navigation.state.params.id,
           this.props.navigation.state.params.board,
           this.props.navigation.state.params.subject,

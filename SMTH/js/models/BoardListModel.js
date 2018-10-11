@@ -1,8 +1,8 @@
 
 const Realm = require('realm');
 
-const ScanRecordSchema = {
-    name: 'ScanRecord',
+const BoardListSchema = {
+    name: 'BoardList',
     primaryKey: 'id',
     properties: {
         type: 'string',
@@ -11,18 +11,17 @@ const ScanRecordSchema = {
         board_id: 'string',
         subject: 'string',
         author: 'string',
-        time: 'string',
-        scanTime: 'date',
+        createTime: 'date',
     }
 };
 
-export default class ScanRecordModel {
+export default class BoardListModel {
 
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'scanRecordRealm.realm',
-                schema: [ScanRecordSchema]
+                path: 'boardListRealm.realm',
+                schema: [BoardListSchema]
             })
                 .then(realm => {
                     resolve(realm);
@@ -33,25 +32,24 @@ export default class ScanRecordModel {
         });
     }
 
-    static create(type, id, board_id, subject, author, time) {
+    static create(type, id, board_id, subject, author) {
         return new Promise(function (resolve, reject) {
-            ScanRecordModel.open().then(realm => {
+            BoardListModel.open().then(realm => {
                 realm.write(() => {
-                    realm.create(ScanRecordSchema.name, {
+                    realm.create(BoardListSchema.name, {
                         type: type,
                         username: global.current.username,
                         id: id.toString(),
                         board_id: board_id,
                         subject: subject,
                         author: author,
-                        time: time,
-                        scanTime: new Date(),
+                        createTime: new Date(),
                     }, true);
                 });
-                console.log('ScanRecordModel.create() success');
+                console.log('BoardListModel.create() success');
                 resolve();
             }).catch((error) => {
-                console.log('ScanRecordModel.create() error = ' + error);
+                console.log('BoardListModel.create() error = ' + error);
                 reject(error);
             });
         });
@@ -59,12 +57,12 @@ export default class ScanRecordModel {
 
     static read() {
         return new Promise(function (resolve, reject) {
-            ScanRecordModel.open().then(realm => {
-                let array = realm.objects(ScanRecordSchema.name).sorted('scanTime', true).slice(0, 100);
-                console.log('ScanRecordModel.read() success');
+            BoardListModel.open().then(realm => {
+                let array = realm.objects(BoardListSchema.name).slice(0, 100);
+                console.log('BoardListModel.read() success');
                 resolve(array);
             }).catch((error) => {
-                console.log('ScanRecordModel.read() error = ' + error);
+                console.log('BoardListModel.read() error = ' + error);
                 reject(error);
             });
         });

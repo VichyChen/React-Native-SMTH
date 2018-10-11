@@ -56,7 +56,7 @@ export default class NewHotScreen extends Component {
   }
 
   componentWillUpdate(){
-    StatusBar.setBarStyle('dark-content');
+    // StatusBar.setBarStyle('dark-content');
   }  
 
   componentWillUnmount() {

@@ -1,148 +1,182 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-  ListView,
-  View,
-  Navigator,
-  FlatList,
-  SectionList,
-  Dimensions,
-  TouchableWithoutFeedback,
-  DeviceEventEmitter
+    AppRegistry,
+    StyleSheet,
+    Text,
+    Image,
+    TextInput,
+    ScrollView,
+    ListView,
+    View,
+    Navigator,
+    FlatList,
+    SectionList,
+    TouchableWithoutFeedback,
+    DeviceEventEmitter
 } from 'react-native';
 
 import {
-  NetworkManager,
-  SeperatorLine,
-  CellBackground,
-  NavigatorTitleButton,
-  ImageButton,
-  LoadingView,
-  Screen,
-  ToastUtil,
-  NavigationBar
+    NetworkManager,
+    SeperatorLine,
+    CellBackground,
+    NavigatorTitleButton,
+    ImageButton,
+    LoadingView,
+    Screen,
+    ToastUtil,
+    NavigationBar
 } from '../config/Common';
 
-var _dataArray;
+import FavouriteThreadModel from '../models/FavouriteThreadModel';
 
 export default class NewFavouriteThreadScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: '收藏',
-    headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-  });
 
   constructor(props) {
-    super(props);
-    this.state = {
-      pullLoading: false,
-      viewLoading: true,
-      loadingType: 'background',
-      screenText: null,
-      isDeleting: false,
-      editing: false,
-      dataArray: [],
-      title: '编辑',
+        super(props);
+        this.state = {
+            dataArray: [],
+        }
+
+        this.refreshFavouriteThreadNotification = DeviceEventEmitter.addListener('RefreshFavouriteThreadNotification', () => {
+            this.readrFavouriteThreadModel();
+        });
+
+        this.readrFavouriteThreadModel();
     }
 
-  }
+    componentWillUnmount() {
+        this.refreshFavouriteThreadNotification.remove();
+    }
 
+    readrFavouriteThreadModel() {
+      FavouriteThreadModel.read().then((array) => {
+            this.setState({
+                dataArray: array,
+                screenText: array.length > 0 ? null : '您还没有浏览记录'
+            });
+        });
+    }
 
-  render() {
-    return (
-      <Screen
-        showLoading={this.state.viewLoading || this.state.isDeleting}
-        loadingType={this.state.loadingType}
-        text={this.state.screenText}
-        onPress={() => {
-          this.setState({
-            viewLoading: true,
-            loadingType: 'background',
-            screenText: null
-          });
+    _renderItem = ({ item }) => {
+        return (
+            <CellBackground
+                onPress={() => {
+                    if (item.type == 'new') {
+                        this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                    }
+                    else {
+                        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    }
+                }}
+            >
+                <View style={styles.container}>
+                    <Text style={styles.subject}>{item.subject}</Text>
+                    <View style={styles.other}>
+                        <Text style={styles.board}>{unescape(item.board_id)}</Text>
+                        <Text style={styles.dot}>•</Text>
+                        <Text style={styles.author}>{item.author}</Text>
+                    </View>
+                    <SeperatorLine />
+                </View>
+            </CellBackground>
+        )
+    };
 
-        }}
-      >
-        <NavigationBar title='收藏' />
-       
+    render() {
+        return (
+            <View style={{ flex: 1 }}>
 
-      </Screen >
-    )
-  }
+                <Screen
+                    showLoading={false}
+                    loadingType={'none'}
+                    text={this.state.screenText}
+                >
+                    <FlatList
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        keyExtractor={(item, index) => index}
+                        style={{
+                            backgroundColor: global.colors.whiteColor,
+                            height: global.constants.ScreenHeight - global.constants.NavigationBarHeight,
+                        }}
+                    />
+                </Screen>
+            </View>
+        );
+    }
 }
 
 var styles = {
-  get container() {
-    return {
-      flexDirection: 'column',
-      backgroundColor: global.colors.clearColor
-    }
-  },
-  get content() {
-    return {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: 44,
-      backgroundColor: global.colors.whiteColor
-    }
-  },
-  get deleteButton() {
-    return {
-      marginLeft: 0,
-      marginRight: -13
-    }
-  },
-  get board() {
-    return {
-      marginLeft: 13,
-      fontSize: global.configures.fontSize17,
-      color: global.colors.fontColor,
-      backgroundColor: global.colors.whiteColor,
-    }
-  },
-  get arrow() {
-    return {
-      position: 'absolute',
-      top: 13,
-      right: 13,
-      width: 10,
-      height: 17,
-    }
-  },
-  get rightView() {
-    return {
-      // backgroundColor: 'yellow',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-      paddingLeft: 15,
-      paddingTop: 5,
-      paddingBottom: 15,
-    }
-  },
-  get rightItemContainer() {
-    return {
-      height: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginRight: 10,
-      marginTop: 10,
-      paddingLeft: 10,
-      paddingRight: 10,
-      backgroundColor: '#F5F5F5',
-      borderRadius: 4,
-    }
-  },
-  get rightItemTitle() {
-    return {
-      fontSize: global.configures.fontSize15,
-      color: global.colors.gray1Color,
-    }
-  },
+    get container() {
+        return {
+            flex: 1,
+            padding: 0,
+            backgroundColor: global.colors.clearColor
+        }
+    },
+    get subject() {
+        return {
+            paddingLeft: 13,
+            paddingRight: 13,
+            paddingTop: 13,
+            fontSize: global.configures.fontSize17,
+            color: global.colors.fontColor,
+            backgroundColor: global.colors.whiteColor
+        }
+    },
+    get other() {
+        return {
+            flexDirection: 'row',
+            padding: 13,
+            backgroundColor: global.colors.whiteColor
+        }
+    },
+    get board() {
+        return {
+            paddingTop: 3,
+            paddingBottom: 3,
+            paddingLeft: 5,
+            paddingRight: 5,
+            fontSize: global.configures.fontSize15,
+            color: global.colors.gray2Color,
+            backgroundColor: global.colors.backgroundGrayColor,
+            borderRadius: 10,
+        }
+    },
+    get avator() {
+        return {
+            width: 40,
+            height: 40,
+        }
+    },
+    get author() {
+        return {
+            fontSize: global.configures.fontSize15,
+            paddingTop: 3,
+            height: 20,
+            color: global.colors.gray2Color,
+        }
+    },
+    get time() {
+        return {
+            marginLeft: 10,
+            marginTop: 4,
+            height: 20,
+            fontSize: global.configures.fontSize15,
+            color: global.colors.gray2Color,
+        }
+    },
+    get dot() {
+        return {
+            paddingTop: 3,
+            paddingLeft: 5,
+            paddingRight: 5,
+            fontSize: global.configures.fontSize14,
+            color: global.colors.gray2Color,
+            backgroundColor: global.colors.whiteColor
 
+        }
+    },
 }

@@ -14,7 +14,6 @@ import {
   TouchableWithoutFeedback,
   DeviceEventEmitter,
   Dimensions,
-  StatusBar
 } from 'react-native';
 
 import {

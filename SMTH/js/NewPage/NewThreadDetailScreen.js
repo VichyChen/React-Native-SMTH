@@ -59,7 +59,7 @@ import {
 
 import {
   ScanRecordModel,
-  BoardModel
+  FavouriteThreadModel
 } from 'ModelModule';
 
 export default class NewThreadDetailScreen extends Component {
@@ -70,6 +70,7 @@ export default class NewThreadDetailScreen extends Component {
   currentPage;
   title;
   hostID;     //楼主ID
+  hostTime;
   hostBody;
   hostArticleId;
   wordage;
@@ -110,6 +111,10 @@ export default class NewThreadDetailScreen extends Component {
     this.getNewTopic(this.page);
   }
 
+  componentWillUnmount() {
+    // this.subscription.remove();
+    DeviceEventEmitter.emit('RefreshScanRecordNotification', null);
+  }
 
   getNewTopic(page) {
     NetworkManager.getNewTopic(this.props.navigation.state.params.type, this.props.navigation.state.params.id, page, (result) => {
@@ -125,6 +130,7 @@ export default class NewThreadDetailScreen extends Component {
         //帖子总数
         this.threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
         this.hostID = this.$('.avatar').children().first().attr('title');
+        this.hostTime = this.$('.publish-time').text();
         this.hostBody = this.$('.show-content').html().trim();
         this.hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
         this.boardID = this.$('.notebook').attr('href').split('/')[2];
@@ -239,9 +245,9 @@ export default class NewThreadDetailScreen extends Component {
           this.$('.image-package').remove();
           this.$('.image-caption').remove();
 
-          console.log('this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)):'+this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)));
-          console.log('this.currentPage:'+this.currentPage);
-          console.log('i:'+i);
+          console.log('this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)):' + this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)));
+          console.log('this.currentPage:' + this.currentPage);
+          console.log('i:' + i);
           array.push({
             key: array.length,
             index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
@@ -294,22 +300,37 @@ export default class NewThreadDetailScreen extends Component {
           screenText: '帖子不存在',
         });
       }
+      else {
+        this.setState({
+          dataArray: array,
+          totalPage: this.totalPage,
+          currentPage: page,
+          selectedValue: page.toString(),
+          firstLoading: false,
+          viewLoading: false,
+          screenText: null,
+        });
 
-      // else {
-      this.setState({
-        dataArray: array,
-        totalPage: this.totalPage,
-        currentPage: page,
-        selectedValue: page.toString(),
-        firstLoading: false,
-        viewLoading: false,
-        screenText: null,
-      });
+        this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
+        setTimeout(() => {
+          this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
+        }, 50);
+      }
 
-      this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
-      setTimeout(() => {
-        this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
-      }, 50);
+      if (this.scanRecord == false) {
+        ScanRecordModel.create(
+          'new',
+          this.props.navigation.state.params.id,
+          this.boardName,
+          this.title,
+          this.hostID,
+          this.hostTime
+        ).then(() => {
+          this.scanRecord = true;
+        }).catch((error) => {
+          this.scanRecord == false
+        });
+      }
 
     }, (error) => {
 
@@ -825,7 +846,7 @@ export default class NewThreadDetailScreen extends Component {
             ref={o => this.moreActionSheet = o}
             title={this.title}
             // message={}
-            options={['分享', '从浏览器打开', '复制链接', '给楼主私信',/*'查看快照',*/ '举报', '取消']}
+            options={['分享', '收藏', '从浏览器打开', '复制链接', '给楼主私信',/*'查看快照',*/ '举报', '取消']}
             cancelButtonIndex={5}
             onPress={(index) => {
               //分享
@@ -833,21 +854,36 @@ export default class NewThreadDetailScreen extends Component {
                 var shareManager = NativeModules.ShareManager;
                 shareManager.share(this.title, this.webURL);
               }
-              //从浏览器打开
+              //收藏
               else if (index == 1) {
+                FavouriteThreadModel.create(
+                  'new',
+                  this.props.navigation.state.params.id,
+                  this.boardName,
+                  this.title,
+                  this.hostID,
+                ).then(() => {
+                  ToastUtil.info('已收藏');
+                  DeviceEventEmitter.emit('RefreshFavouriteThreadNotification', null);
+                }).catch((error) => {
+                  ToastUtil.info('收藏失败');
+                });
+              }
+              //从浏览器打开
+              else if (index == 2) {
                 Linking.openURL(this.webURL).catch(err => console.error('An error occurred', err));
               }
               //复制链接
-              else if (index == 2) {
+              else if (index == 3) {
                 Clipboard.setString(this.webURL);
                 ToastUtil.info('已复制');
               }
               //给楼主私信
-              else if (index == 3) {
+              else if (index == 4) {
                 this.props.navigation.navigate('newMessageSendScreen', { user: this.hostID })
               }
               //举报
-              else if (index == 4) {
+              else if (index == 5) {
 
               }
               else {
@@ -876,7 +912,7 @@ export default class NewThreadDetailScreen extends Component {
                 }
                 else {
                   DeviceEventEmitter.emit('LoginNotification', null);
-                }  
+                }
               }
               //私信
               else if (index == 1) {

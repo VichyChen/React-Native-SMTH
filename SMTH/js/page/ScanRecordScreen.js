@@ -23,7 +23,8 @@ import {
     ImageButton,
     LoadingView,
     Screen,
-    ToastUtil
+    ToastUtil,
+    NavigationBar
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -66,7 +67,12 @@ export default class ScanRecordScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    if (item.type == 'new') {
+                        this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                    }
+                    else {
+                        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    }
                 }}
             >
                 <View style={styles.container}>
@@ -84,23 +90,32 @@ export default class ScanRecordScreen extends Component {
 
     render() {
         return (
-            <Screen
-                showLoading={false}
-                loadingType={'none'}
-                text={this.state.screenText}
-            >
-                <FlatList
-                    data={this.state.dataArray}
-                    renderItem={this._renderItem}
-                    removeClippedSubviews={false}
-                    extraData={this.state}
-                    keyExtractor={(item, index) => index}
-                    style={{
-                        backgroundColor: global.colors.backgroundGrayColor,
-                        height: global.constants.ScreenHeight - 64
-                    }}
+            <View style={{ flex: 1 }}>
+
+                <NavigationBar
+                    title={'浏览记录'}
+                    showBackButton={true}
+                    navigation={this.props.navigation}
                 />
-            </Screen>
+
+                <Screen
+                    showLoading={false}
+                    loadingType={'none'}
+                    text={this.state.screenText}
+                >
+                    <FlatList
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        keyExtractor={(item, index) => index}
+                        style={{
+                            backgroundColor: global.colors.whiteColor,
+                            height: global.constants.ScreenHeight - global.constants.NavigationBarHeight,
+                        }}
+                    />
+                </Screen>
+            </View>
         );
     }
 }
