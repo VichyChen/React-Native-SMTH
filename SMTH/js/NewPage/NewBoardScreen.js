@@ -32,8 +32,13 @@ import {
     CellBackground
 } from '../config/Common';
 
+import {
+    BoardListModel
+} from 'ModelModule';
+
 var _rightDataArray = [];
 var _leftSelectedItem = 0;
+var _catchDataArray = [];
 
 export default class NewBoardScreen extends Component {
 
@@ -53,14 +58,27 @@ export default class NewBoardScreen extends Component {
             this.setState({});
         });
 
-        this.getSections(this.state.leftDataArray[0].id);
+        this.getSectionsFromCatch(0, this.state.leftDataArray[0].id);
+        // this.getSections(0, this.state.leftDataArray[0].id);
     }
 
     componentWillUnmount() {
         this.refreshViewNotification.remove();
     }
 
-    getSections(section_id) {
+    getSectionsFromCatch(key, id) {
+        BoardListModel.read(id).then((object) => {
+            this.refs.scrollView.scrollTo({ x: 0, y: 0, animated: false });
+            this.setState({
+                rightDataArray: object == null ? [] : JSON.parse(object.json)
+            });
+            if (_catchDataArray.indexOf(id) == -1) {
+                this.getSections(key, id);
+            }
+        });
+    }
+
+    getSections(index, section_id) {
         NetworkManager.getNewSections(section_id, (result) => {
             this.$ = cio.load(result);
             this.$ = cio.load(this.$('div[class=row]').html());
@@ -82,9 +100,22 @@ export default class NewBoardScreen extends Component {
                 });
             });
 
-            this.setState({
-                rightDataArray: _rightDataArray,
-            });
+            if (_leftSelectedItem == index) {
+                this.setState({
+                    rightDataArray: _rightDataArray,
+                });
+            }
+
+            if (_rightDataArray.length > 0) {
+                BoardListModel.create(
+                    section_id,
+                    JSON.stringify(_rightDataArray)
+                );
+
+                if (_catchDataArray.indexOf(section_id) == -1) {
+                    _catchDataArray.push(section_id);
+                }
+            }
 
         }, (error) => {
 
@@ -99,8 +130,7 @@ export default class NewBoardScreen extends Component {
                 showSelect={false}
                 onPress={() => {
                     _leftSelectedItem = item.key;
-                    this.setState({});
-                    this.getSections(item.id);
+                    this.getSectionsFromCatch(item.key, item.id);
                 }}
             >
                 <View>
@@ -130,10 +160,10 @@ export default class NewBoardScreen extends Component {
                         />
                     </View>
 
-                    <ScrollView>
+                    <ScrollView ref='scrollView' >
                         <View style={styles.rightView} >
                             {
-                                _rightDataArray.map((item) => {
+                                this.state.rightDataArray.map((item) => {
                                     return (
                                         <CellBackground
                                             showSelect={false}
@@ -156,7 +186,7 @@ export default class NewBoardScreen extends Component {
                     </ScrollView>
 
                 </View>
-            </View>
+            </View >
         )
     }
 }

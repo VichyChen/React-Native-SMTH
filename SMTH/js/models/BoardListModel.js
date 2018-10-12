@@ -5,13 +5,8 @@ const BoardListSchema = {
     name: 'BoardList',
     primaryKey: 'id',
     properties: {
-        type: 'string',
-        username: 'string',
         id: 'string',
-        board_id: 'string',
-        subject: 'string',
-        author: 'string',
-        createTime: 'date',
+        json: 'string',
     }
 };
 
@@ -32,18 +27,13 @@ export default class BoardListModel {
         });
     }
 
-    static create(type, id, board_id, subject, author) {
+    static create(id, json) {
         return new Promise(function (resolve, reject) {
             BoardListModel.open().then(realm => {
                 realm.write(() => {
                     realm.create(BoardListSchema.name, {
-                        type: type,
-                        username: global.current.username,
                         id: id.toString(),
-                        board_id: board_id,
-                        subject: subject,
-                        author: author,
-                        createTime: new Date(),
+                        json: json,
                     }, true);
                 });
                 console.log('BoardListModel.create() success');
@@ -55,12 +45,12 @@ export default class BoardListModel {
         });
     }
 
-    static read() {
+    static read(id) {
         return new Promise(function (resolve, reject) {
             BoardListModel.open().then(realm => {
-                let array = realm.objects(BoardListSchema.name).slice(0, 100);
+                let object = realm.objectForPrimaryKey(BoardListSchema.name, id);
                 console.log('BoardListModel.read() success');
-                resolve(array);
+                resolve(object);
             }).catch((error) => {
                 console.log('BoardListModel.read() error = ' + error);
                 reject(error);

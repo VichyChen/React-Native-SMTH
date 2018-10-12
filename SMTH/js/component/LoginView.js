@@ -58,10 +58,10 @@ export default class LoginView extends Component {
                     image: 'data:image/png;base64,' + result1
                 });
             }, (error) => {
-    
+
             }, (errorMessage) => {
-    
-            });    
+
+            });
 
         }, (error) => {
 
@@ -157,8 +157,8 @@ export default class LoginView extends Component {
                         <Image style={{ width: 100, height: 100, resizeMode: Image.resizeMode.contain, backgroundColor: 'red' }}
                             source={{
                                 uri:
-                                  this.state.image,
-                              }} />
+                                    this.state.image,
+                            }} />
 
                         <Button style={styles.login}
                             text={'登陆'}
@@ -199,6 +199,7 @@ export default class LoginView extends Component {
 
                                 NetworkManager.postNewSignIn(_username, _password, _captcha, () => {
                                     console.log('this.props.success();');
+                                    DeviceEventEmitter.emit('LoginSuccessNotification', _username);
                                     this.props.success();
                                 }, (error) => {
 

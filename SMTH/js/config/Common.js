@@ -20,6 +20,7 @@ import WindowsMaskView from '../component/WindowsMaskView';
 import TitleValueItem from '../component/TitleValueItem';
 import LeftImageTitleValueArrowItem from '../component/LeftImageTitleValueArrowItem';
 import TitleArrowItem from '../component/TitleArrowItem';
+import LoginButtonView from '../component/LoginButtonView';
 
 import BoardItems from '../page/items/BoardItems';
 
@@ -79,6 +80,7 @@ export {
     TitleValueItem,
     LeftImageTitleValueArrowItem,
     TitleArrowItem,
+    LoginButtonView,
     LoginView,
     Screen,
     Toast,

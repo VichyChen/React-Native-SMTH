@@ -25,7 +25,8 @@ import {
     LoadingView,
     Screen,
     ToastUtil,
-    NavigationBar
+    NavigationBar,
+    LoginButtonView,
 } from '../config/Common';
 
 var _dataArray;
@@ -49,7 +50,7 @@ export default class NewFavouriteBoardScreen extends Component {
             title: '编辑',
         }
 
-        this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
+        this.refreshViewNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({});
         });
 
@@ -231,27 +232,32 @@ export default class NewFavouriteBoardScreen extends Component {
           }
           refreshing={this.state.pullLoading}
         /> */}
-                <ScrollView>
-                    <View style={styles.rightView} >
-                        {
-                            global.current.favouriteArray.map((item) => {
-                                return (
-                                    <CellBackground
-                                        showSelect={false}
-                                        onPress={() => {
-                                            this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.title, title: item.name });
-                                        }}
-                                    >
-                                        <View style={styles.rightItemContainer} >
-                                            <Text style={styles.rightItemTitle} >{item.title}</Text>
-                                        </View>
-                                    </CellBackground>
-                                );
-                            })
-                        }
-                    </View>
-                </ScrollView>
-
+                {
+                    global.current.favouriteArray == null
+                        ?
+                        <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
+                        :
+                        <ScrollView>
+                            <View style={styles.rightView} >
+                                {
+                                    global.current.favouriteArray.map((item) => {
+                                        return (
+                                            <CellBackground
+                                                showSelect={false}
+                                                onPress={() => {
+                                                    this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.title, title: item.name });
+                                                }}
+                                            >
+                                                <View style={styles.rightItemContainer} >
+                                                    <Text style={styles.rightItemTitle} >{item.title}</Text>
+                                                </View>
+                                            </CellBackground>
+                                        );
+                                    })
+                                }
+                            </View>
+                        </ScrollView>
+                }
             </View >
         )
     }
@@ -261,7 +267,7 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            flexDirection: 'column',
+            // flexDirection: 'column',
             backgroundColor: global.colors.clearColor
         }
     },
