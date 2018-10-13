@@ -31,7 +31,7 @@ import FavouriteThreadModel from '../models/FavouriteThreadModel';
 
 export default class NewFavouriteThreadScreen extends Component {
 
-  constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             dataArray: [],
@@ -49,10 +49,10 @@ export default class NewFavouriteThreadScreen extends Component {
     }
 
     readrFavouriteThreadModel() {
-      FavouriteThreadModel.read().then((array) => {
+        FavouriteThreadModel.read().then((array) => {
             this.setState({
                 dataArray: array,
-                screenText: array.length > 0 ? null : '您还没有浏览记录'
+                screenText: array.length > 0 ? null : '您没有收藏帖子'
             });
         });
     }
@@ -69,12 +69,13 @@ export default class NewFavouriteThreadScreen extends Component {
                     }
                 }}
             >
-                <View style={styles.container}>
-                    <Text style={styles.subject}>{item.subject}</Text>
-                    <View style={styles.other}>
-                        <Text style={styles.board}>{unescape(item.board_id)}</Text>
-                        <Text style={styles.dot}>•</Text>
-                        <Text style={styles.author}>{item.author}</Text>
+                <View>
+                    <View style={styles.container}>
+                        <Text style={styles.subject}>{item.subject}</Text>
+                        <View style={styles.other}>
+                            <Text style={styles.board}>{unescape(item.board_id)}</Text>
+                            <Text style={styles.author}>{item.author}</Text>
+                        </View>
                     </View>
                     <SeperatorLine />
                 </View>
@@ -112,37 +113,39 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            padding: 0,
-            backgroundColor: global.colors.clearColor
+            flexDirection: 'column',
+            padding: global.constants.Padding,
+            backgroundColor: global.colors.whiteColor
         }
     },
     get subject() {
         return {
-            paddingLeft: 13,
-            paddingRight: 13,
-            paddingTop: 13,
             fontSize: global.configures.fontSize17,
-            color: global.colors.fontColor,
-            backgroundColor: global.colors.whiteColor
+            fontWeight: 'bold',
+            color: global.colors.fontColor
         }
     },
     get other() {
         return {
             flexDirection: 'row',
-            padding: 13,
+            paddingTop: 13,
             backgroundColor: global.colors.whiteColor
         }
     },
     get board() {
         return {
-            paddingTop: 3,
-            paddingBottom: 3,
-            paddingLeft: 5,
-            paddingRight: 5,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.gray2Color,
-            backgroundColor: global.colors.backgroundGrayColor,
-            borderRadius: 10,
+            // marginTop: 10,
+            marginRight: 8,
+            paddingLeft: 4,
+            paddingRight: 4,
+            alignItems: 'center',
+            fontSize: global.configures.fontSize14,
+            color: global.colors.redColor,
+            borderColor: global.colors.redColor,
+            borderWidth: 1,
+            borderRadius: 2,
+            height: 18,
+            textAlign: 'center'
         }
     },
     get avator() {
@@ -154,7 +157,6 @@ var styles = {
     get author() {
         return {
             fontSize: global.configures.fontSize15,
-            paddingTop: 3,
             height: 20,
             color: global.colors.gray2Color,
         }
