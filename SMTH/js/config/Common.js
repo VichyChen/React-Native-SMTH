@@ -44,6 +44,7 @@ import NewLoginView from '../NewPage/NewLoginView';
 import NewFavouriteBoardScreen from '../NewPage/NewFavouriteBoardScreen';
 import NewFavouriteThreadScreen from '../NewPage/NewFavouriteThreadScreen';
 
+import NewUserInfoScreen from '../NewPage/NewUserInfoScreen';
 import NewUserArticleScreen from '../NewPage/NewUserArticleScreen';
 import NewUserMemberScreen from '../NewPage/NewUserMemberScreen';
 import NewUserFriendsScreen from '../NewPage/NewUserFriendsScreen';
@@ -91,6 +92,7 @@ export {
     NewLoginView,
     NewFavouriteBoardScreen,
     NewFavouriteThreadScreen,
+    NewUserInfoScreen,
     NewUserArticleScreen,
     NewUserMemberScreen,
     NewUserFriendsScreen,

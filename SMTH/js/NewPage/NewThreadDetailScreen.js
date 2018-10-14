@@ -372,7 +372,8 @@ export default class NewThreadDetailScreen extends Component {
                   onPressClick={() => {
                     this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                   }}
-                  uri={'https://exp.newsmth.net/' + item.avatar} />
+                  uri={NetworkManager.net_getFace(item.name)}
+                />
 
                 <Text style={styles.itemName} >{item.name}</Text>
                 <Text style={styles.itemMeta} >{item.meta}</Text>
@@ -447,7 +448,8 @@ export default class NewThreadDetailScreen extends Component {
                 onPressClick={() => {
                   this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
-                uri={'https://exp.newsmth.net/' + item.avatar} />
+                uri={NetworkManager.net_getFace(item.name)} 
+              />
               <View style={{
                 flex: 1,
                 justifyContent: 'flex-start',
@@ -498,7 +500,8 @@ export default class NewThreadDetailScreen extends Component {
                 onPressClick={() => {
                   this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
-                uri={'https://exp.newsmth.net/' + item.avatar} />
+                uri={NetworkManager.net_getFace(item.name)} 
+              />
 
               <Text style={styles.itemName} >{item.name}</Text>
               <Text style={styles.itemMeta} >{item.meta}</Text>

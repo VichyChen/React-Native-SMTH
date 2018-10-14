@@ -29,14 +29,14 @@ var styles = {
     },
     get title() {
         return {
-            marginLeft: 13,
+            // marginLeft: 13,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
         }
     },
     get value() {
         return {
-            marginRight: 13,
+            // marginRight: 13,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
         }

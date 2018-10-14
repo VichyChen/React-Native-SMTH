@@ -28,6 +28,7 @@ import {
     NavigatorTitleButton,
     CellBackground,
     NavigationBar,
+    NewUserInfoScreen,
     NewUserArticleScreen,
     NewUserMemberScreen,
     NewUserFriendsScreen,
@@ -41,36 +42,11 @@ export default class NewUserScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            nick: '',
             isLoading: true,
             dataArray: [],
             screenText: null
         }
-
-        NetworkManager.net_QueryUser(this.props.navigation.state.params.name, (result) => {
-            this.setState({
-                isLoading: false,
-                id: result['user'].id,
-                nick: result['user'].nick,
-                uid: result['user'].uid,
-                gender: result['user'].gender,
-                title: result['user'].title,
-                posts: result['user'].posts,
-                logins: result['user'].logins,
-                level: result['user'].level,
-                score: result['user'].score,
-                first_login: result['user'].first_login,
-                last_login: result['user'].last_login,
-                age: result['user'].age,
-            });
-        }, (error) => {
-            this.setState({
-                screenText: error,
-            });
-        }, (errorMessage) => {
-            this.setState({
-                screenText: errorMessage,
-            });
-        });
     }
 
     render() {
@@ -91,7 +67,7 @@ export default class NewUserScreen extends Component {
                     <View style={styles.headerRight} >
                         <View>
                             <Text style={styles.headerRightName}>{this.props.navigation.state.params.name}</Text>
-                            <Text style={styles.headerRightMeta}>{this.state.id == this.state.nick ? '未设置昵称' : this.state.nick}</Text>
+                            <Text style={styles.headerRightMeta}>{this.props.navigation.state.params.name == this.state.nick ? '未设置昵称' : this.state.nick}</Text>
                         </View>
                         <View>
                             <CellBackground
@@ -120,8 +96,17 @@ export default class NewUserScreen extends Component {
                 </View>
                 <TabPageView
                     style={{}}
-                    titles={['文章', '版面', '关注', '粉丝']}
+                    titles={['资料', '文章', '版面', '关注', '粉丝']}
                     pages={[
+                        (<NewUserInfoScreen 
+                            navigation={this.props.navigation}
+                             id={this.props.navigation.state.params.id} 
+                             callback={(nick) => {
+                                this.setState({
+                                    nick: nick,
+                                });
+                             }}
+                             />),
                         (<NewUserArticleScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserMemberScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserFriendsScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
@@ -174,14 +159,14 @@ var styles = {
     get headerRightName() {
         return {
             marginTop: 5,
-            fontSize: global.configures.fontSize18,
+            fontSize: global.configures.fontSize19,
             fontWeight: 'bold',
             color: global.colors.fontColor,
         }
     },
     get headerRightMeta() {
         return {
-            marginTop: 5,
+            marginTop: 10,
             fontSize: global.configures.fontSize16,
             color: global.colors.gray2Color,
         }

@@ -45,7 +45,7 @@ export default class TabPageView extends Component {
   };
 
   _renderTabBar = props => {
-    var tabWidth = this.props.titles.length > 4 ? 88 : global.constants.ScreenWidth / this.props.titles.length;
+    var tabWidth = this.props.titles.length > 5 ? 88 : global.constants.ScreenWidth / this.props.titles.length;
     var tabHeight = 40;
     var indicatorWidth = 16;
     var indicatorHeight = 2;
