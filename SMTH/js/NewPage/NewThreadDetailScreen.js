@@ -672,8 +672,6 @@ export default class NewThreadDetailScreen extends Component {
               else {
                 DeviceEventEmitter.emit('LoginNotification', null);
               }
-              // this.showActionSheet(); return;
-
             }}
           />
           {/*
@@ -936,11 +934,6 @@ export default class NewThreadDetailScreen extends Component {
 
     )
   }
-
-  showActionSheet = () => {
-    this.ActionSheet.show()
-  }
-
 }
 
 var styles = {
