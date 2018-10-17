@@ -660,8 +660,8 @@ export default class ThreadDetailScreen extends Component {
                 FavouriteThreadModel.create(
                   'old',
                   this.props.navigation.state.params.id,
-                  this.boardName,
-                  this.title,
+                  this.board,
+                  this.props.navigation.state.params.subject,
                   this.hostID,
                 ).then(() => {
                   ToastUtil.info('已收藏');
@@ -853,6 +853,7 @@ var styles = {
   get body() {
     return {
       marginTop: 10,
+      lineHeight: global.constants.LineHeight,
       fontSize: global.configures.fontSize17,
       color: global.colors.fontColor,
     }

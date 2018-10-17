@@ -32,6 +32,7 @@ global.constants = {
     RightMargin: 15,
     Margin: 15,
     Padding: 15,
+    LineHeight: 18,
 };
 
 global.colors = {

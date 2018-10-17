@@ -1111,6 +1111,7 @@ var styles = {
     return {
       p: {
         marginBottom: -15,
+        lineHeight: global.constants.LineHeight,
         fontSize: global.configures.fontSize16,
         color: global.colors.fontColor,
       },
@@ -1130,6 +1131,7 @@ var styles = {
       p: {
         marginBottom: -25,
         marginLeft: 10,
+        lineHeight: global.constants.LineHeight,
         fontSize: global.configures.fontSize15,
         color: global.colors.gray2Color,
       },

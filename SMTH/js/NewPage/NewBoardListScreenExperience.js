@@ -218,6 +218,7 @@ var styles = {
     get itemContent() {
         return {
             marginTop: 10,
+            lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize15,
             color: global.colors.fontColor
         }
