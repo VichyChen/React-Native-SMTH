@@ -23,12 +23,15 @@ import {
 } from 'react-native';
 
 import codePush from 'react-native-code-push'
+import SegmentedControl from 'antd-mobile/lib/segmented-control';
 
 import {
   NavigationBar,
   TabPageView,
   NewHotListScreen,
-  NewLoginView
+  NewLoginView,
+  NewTopTenScreen,
+  NewPictureListScreen
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -42,6 +45,7 @@ export default class NewHotScreen extends Component {
       screenText: null,
       dataArray: [],
       showLogin: false,
+      selectedIndex: 0,
     }
 
     this.loginNotification = DeviceEventEmitter.addListener('LoginNotification', () => {
@@ -55,9 +59,9 @@ export default class NewHotScreen extends Component {
     // codePush.sync();
   }
 
-  componentWillUpdate(){
+  componentWillUpdate() {
     // StatusBar.setBarStyle('dark-content');
-  }  
+  }
 
   componentWillUnmount() {
 
@@ -83,8 +87,40 @@ export default class NewHotScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <NavigationBar title='热点' showBottomLine={false} />
-        <TabPageView titles={titles} pages={pages} />
+        {/* <NavigationBar title='热点' showBottomLine={false} > */}
+        <NavigationBar showBottomLine={false} >
+          <SegmentedControl
+            values={['热点', '十大', '图览']}
+            tintColor={global.colors.themeColor}
+            style={{ height: 26, width: 180 }}
+            selectedIndex={this.state.selectedIndex}
+            onChange={(e) => {
+              this.setState({
+                selectedIndex: e.nativeEvent.selectedSegmentIndex,
+              });
+              this.refs.scrollView.scrollTo({ x: e.nativeEvent.selectedSegmentIndex * global.constants.ScreenWidth, y: 0, animated: false });
+            }}
+          />
+        </NavigationBar>
+        <ScrollView
+          ref="scrollView"
+          style={styles.scrollView}
+          horizontal={true}
+          bounces={false}
+          scrollEnabled={false}
+          pagingEnabled={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View style={styles.page}>
+            <TabPageView titles={titles} pages={pages} />
+          </View>
+          <View style={styles.page}>
+            <NewTopTenScreen navigation={this.props.navigation} />
+          </View>
+          <View style={styles.page}>
+            <NewPictureListScreen navigation={this.props.navigation} />
+          </View>
+        </ScrollView>
         <NewLoginView visible={this.state.showLogin} success={() => {
           this.setState({
             showLogin: false,
@@ -101,6 +137,20 @@ var styles = {
     return {
       flex: 1,
       backgroundColor: global.colors.whiteColor
+    }
+  },
+  get scrollView() {
+    return {
+      flex: 1,
+      width: global.constants.ScreenWidth,
+      height: global.constants.ScreenHeight - global.constants.NavigationBarHeight - global.constants.TabBarHeight,
+      backgroundColor: global.colors.whiteColor
+    }
+  },
+  get page() {
+    return {
+      width: global.constants.ScreenWidth,
+      height: global.constants.ScreenHeight - global.constants.NavigationBarHeight - global.constants.TabBarHeight,
     }
   },
 }

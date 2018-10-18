@@ -77,6 +77,8 @@ export default class NavigationBar extends Component {
                             :
                             null
                     }
+                    
+                    {this.props.children}
 
                     {
                         this.props.rightButtonImage != null

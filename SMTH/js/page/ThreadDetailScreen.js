@@ -270,9 +270,9 @@ export default class ThreadDetailScreen extends Component {
               result['boards'][i].id,
               result['boards'][i].name,
             );
-            this.setState({
+            // this.setState({
 
-            });
+            // });
           }, 1000);
           break;
         }

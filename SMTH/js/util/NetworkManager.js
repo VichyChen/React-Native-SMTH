@@ -987,6 +987,17 @@ export default class NetworkManager {
         });
     }
 
+    //图览
+    static getNewAlbum(page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/album/global/' + page, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
     //版面列表
     static getNewSections(section_id, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/section/' + section_id, null, result => {
@@ -1036,7 +1047,7 @@ export default class NetworkManager {
         var url;
         if (type == null) {
             url = 'https://exp.newsmth.net/topic/' + topic_id + (page == 1 ? '' : ('/' + page));
-        } 
+        }
         else {
             url = 'https://exp.newsmth.net/topic/article/' + topic_id + (page == 1 ? '' : ('/' + page));
         }

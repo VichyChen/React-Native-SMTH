@@ -39,6 +39,8 @@ import PickerSelectView from '../component/PickerSelectView';
 import NavigationBar from '../component/NavigationBar';
 import TabPageView from '../component/TabPageView';
 
+import NewPictureListScreen from '../NewPage/NewPictureListScreen';
+import NewTopTenScreen from '../NewPage/NewTopTenScreen';
 import NewHotListScreen from '../NewPage/NewHotListScreen';
 import NewLoginView from '../NewPage/NewLoginView';
 import NewFavouriteBoardScreen from '../NewPage/NewFavouriteBoardScreen';
@@ -89,6 +91,8 @@ export {
     NavigationBar,
     TabPageView,
     NewHotListScreen,
+    NewTopTenScreen,
+    NewPictureListScreen,
     NewLoginView,
     NewFavouriteBoardScreen,
     NewFavouriteThreadScreen,
