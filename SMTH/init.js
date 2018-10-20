@@ -133,6 +133,10 @@ global.current = {
 };
 
 function init() {
+    //是否有登陆
+    AsyncStorageManger.getLogin().then(login => {
+        global.login = login;
+    });
     //用户名
     AsyncStorageManger.getUsername().then(username => {
         global.current.username = username;

@@ -29,19 +29,18 @@ import {
     LoginButtonView,
 } from '../config/Common';
 
+import cio from 'cheerio-without-node-native';
+import AsyncStorageManger from '../storage/AsyncStorageManger';
+
 var _dataArray;
 
 export default class NewFavouriteBoardScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: '收藏',
-        headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-    });
 
     constructor(props) {
         super(props);
         this.state = {
             pullLoading: false,
-            viewLoading: true,
+            viewLoading: false,
             loadingType: 'background',
             screenText: null,
             isDeleting: false,
@@ -50,11 +49,28 @@ export default class NewFavouriteBoardScreen extends Component {
             title: '编辑',
         }
 
-        this.refreshViewNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
+        this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
+            this.setState({});
+        });
+        this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
+            this.net_LoadFavorites();
+        });
+        this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
             this.setState({});
         });
 
-        // this.net_LoadFavorites();
+        //没登录
+        if (global.login == false) {
+            this.setState({});
+        }
+        else {
+            this.setState({
+                viewLoading: true,
+                loadingType: 'background',
+                screenText: null
+            });
+            this.net_LoadFavorites();
+        }
     }
 
     componentDidMount() {
@@ -63,6 +79,8 @@ export default class NewFavouriteBoardScreen extends Component {
 
     componentWillUnmount() {
         this.refreshViewNotification.remove();
+        this.loginSuccessNotification.remove();
+        this.logoutNotification.remove();
     }
 
     setBarItemButton(title) {
@@ -96,49 +114,23 @@ export default class NewFavouriteBoardScreen extends Component {
     }
 
     net_LoadFavorites() {
-        NetworkManager.net_LoadFavorites(0, (result) => {
-            for (var i = 0; i < result['favorites'].length; i++) {
-                result['favorites'][i].key = i;
+        NetworkManager.getNewHot('', 1, (result) => {
+            this.$ = cio.load(result);
+            this.$ = cio.load(this.$('body').html());
+            var srcipt = this.$('script').text();
+            if (srcipt.length > 0) {
+                var favouriteArray = JSON.parse(this.$('script').text()
+                    .replace("\n        $(function () {\n            build_favorites($(\'#__favorites\'), ", '')
+                    .replace(");\n        });\n    ", ''));
             }
-            _dataArray = result['favorites'];
-            this.setState({
-                dataArray: _dataArray,
-                pullLoading: false,
-                viewLoading: false,
-                screenText: null
-            });
+            AsyncStorageManger.setFavouriteArray(favouriteArray);
+
+            this.setState({});
+
         }, (error) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: error
-                });
-            }
-            else {
-                ToastUtil.info(error);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+
         }, (errorMessage) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: errorMessage + '，请点击重试'
-                });
-            }
-            else {
-                ToastUtil.info(errorMessage);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+
         });
     }
 
@@ -201,63 +193,49 @@ export default class NewFavouriteBoardScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}
-            // showLoading={this.state.viewLoading || this.state.isDeleting}
-            // loadingType={this.state.loadingType}
-            // text={this.state.screenText}
-            // onPress={() => {
-            //   this.setState({
-            //     viewLoading: true,
-            //     loadingType: 'background',
-            //     screenText: null
-            //   });
-            //   this.net_LoadFavorites();
-            // }}
-            >
-                {/* <FlatList
-          data={this.state.dataArray}
-          renderItem={this._renderItem}
-          removeClippedSubviews={false}
-          extraData={this.state}
-          style={{
-            backgroundColor: global.colors.backgroundGrayColor,
-            height: global.constants.ScreenHeight - 64 - 48
-          }}
-          onRefresh={() => {
-            this.setState({
-              pullLoading: true
-            });
-            this.net_LoadFavorites();
-          }
-          }
-          refreshing={this.state.pullLoading}
-        /> */}
-                {
-                    global.current.favouriteArray == null
-                        ?
-                        <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
-                        :
-                        <ScrollView>
-                            <View style={styles.rightView} >
-                                {
-                                    global.current.favouriteArray.map((item) => {
-                                        return (
-                                            <CellBackground
-                                                showSelect={false}
-                                                onPress={() => {
-                                                    this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.title, title: item.name });
-                                                }}
-                                            >
-                                                <View style={styles.rightItemContainer} >
-                                                    <Text style={styles.rightItemTitle} >{item.title}</Text>
-                                                </View>
-                                            </CellBackground>
-                                        );
-                                    })
-                                }
-                            </View>
-                        </ScrollView>
-                }
+            <View style={styles.container}>
+                {/* <Screen
+                    showLoading={this.state.viewLoading}
+                    loadingType={'background'}
+                    text={this.state.screenText}
+                    onPress={() => {
+                        this.setState({
+                            viewLoading: true,
+                            loadingType: 'background',
+                            screenText: null
+                        });
+                        this.net_LoadFavorites();
+                    }}
+                >
+                    <View style={styles.container}> */}
+                        {
+                            global.login == false
+                                ?
+                                <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
+                                :
+                                <ScrollView>
+                                    <View style={styles.rightView} >
+                                        {
+                                            global.current.favouriteArray.map((item) => {
+                                                return (
+                                                    <CellBackground
+                                                        showSelect={false}
+                                                        onPress={() => {
+                                                            this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.title, title: item.name });
+                                                        }}
+                                                    >
+                                                        <View style={styles.rightItemContainer} >
+                                                            <Text style={styles.rightItemTitle} >{item.title}</Text>
+                                                        </View>
+                                                    </CellBackground>
+                                                );
+                                            })
+                                        }
+                                    </View>
+                                </ScrollView>
+                        }
+                    {/* </View>
+                </Screen> */}
             </View >
         )
     }

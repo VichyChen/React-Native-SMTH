@@ -86,12 +86,11 @@ export default class AsyncStorageManger {
 
     static setLogin(login) {
         AsyncStorageKit.set('Login', login == true ? '1' : '0');
-        global.login = login;
-        console.log('global.login:' + global.login);
     }
 
     static getLogin() {
-        var login = AsyncStorageKit.get('Login');
-        return login == '1' ? true : false;
+        return AsyncStorageKit.get('Login').then(login => {
+            return login == '1' ? true : false;
+        });
     }
 }    

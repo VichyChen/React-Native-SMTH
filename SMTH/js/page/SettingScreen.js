@@ -27,6 +27,7 @@ import {
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import Cookie from 'react-native-cookie';
 
 var maxFontSize = 20;
 var minFontSize = 14;
@@ -60,7 +61,7 @@ export default class SettingScreen extends Component {
 
         <NavigationBar title='设置' />
 
-        {/* <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
+        <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
 
           <SectionBlankHeader />
 
@@ -147,11 +148,14 @@ export default class SettingScreen extends Component {
           <SectionBlankHeader />
 
           <Button onPress={() => {
+            Cookie.clear();
             AsyncStorageManger.setAccessToken('');
-            // AsyncStorageManger.setUsernamePassword('', '');
-            this.props.navigation.goBack();
+            AsyncStorageManger.setLogin(false);
+            global.login = false;
             global.current.username = '';
-            DeviceEventEmitter.emit('LoginNotification', null);
+            DeviceEventEmitter.emit('LogoutNotification', null);
+
+            this.props.navigation.goBack();
           }} text='退出' />
 
           <PickerSelectView
@@ -178,7 +182,7 @@ export default class SettingScreen extends Component {
               });
             }}
           />
-        </ScrollView>      */}
+        </ScrollView>     
       </View>
 
     );

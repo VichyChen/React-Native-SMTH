@@ -175,11 +175,12 @@ export default class NewLoginView extends Component {
                                 NetworkManager.postNewSignIn(_username, _password, _captcha, () => {
 
                                     NetworkManager.login(_username, _password, () => {
-                                        global.current.username = _username;
-                                        DeviceEventEmitter.emit('LoginSuccessNotification', _username);
-                                        this.props.success();
 
                                         AsyncStorageManger.setLogin(true);
+                                        global.login = true;
+                                        global.current.username = _username;
+
+                                        DeviceEventEmitter.emit('LoginSuccessNotification', _username);
 
                                         this.setState({
                                             isLoading: false,

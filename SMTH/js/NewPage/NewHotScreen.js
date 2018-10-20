@@ -53,6 +53,12 @@ export default class NewHotScreen extends Component {
         showLogin: true,
       });
     });
+    this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
+      this.setState({
+        showLogin: false,
+        viewLoading: true
+      });
+    });
   }
 
   componentDidMount() {
@@ -64,7 +70,8 @@ export default class NewHotScreen extends Component {
   }
 
   componentWillUnmount() {
-
+    this.loginNotification.remove();
+    this.loginSuccessNotification.remove();
   }
 
   render() {
@@ -121,12 +128,7 @@ export default class NewHotScreen extends Component {
             <NewPictureListScreen navigation={this.props.navigation} />
           </View>
         </ScrollView>
-        <NewLoginView visible={this.state.showLogin} success={() => {
-          this.setState({
-            showLogin: false,
-            viewLoading: true
-          });
-        }} />
+        <NewLoginView visible={this.state.showLogin} />
       </View>
     )
   }

@@ -34,7 +34,8 @@ import {
     Screen,
     Toast,
     ToastUtil,
-    AvatorImage
+    AvatorImage,
+    LoginButtonView
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -53,14 +54,22 @@ export default class NewTopTenScreen extends Component {
             showLogin: false,
         }
 
-        this.loginNotification = DeviceEventEmitter.addListener('LoginNotification', () => {
-
+        this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
+            this.setState({
+                viewLoading: true,
+                loadingType: 'background',
+                screenText: null
+            });
+            this.net_LoadSectionHot();
+        });
+        this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
+            this.setState({});
         });
 
         AsyncStorageManger.getAccessToken().then((value) => {
             //没登录
             if (value.length == 0) {
-
+                this.setState({});
             }
             else {
                 this.net_LoadSectionHot();
@@ -69,7 +78,8 @@ export default class NewTopTenScreen extends Component {
     }
 
     componentWillUnmount() {
-        this.loginNotification.remove();
+        this.loginSuccessNotification.remove();
+        this.logoutNotification.remove();
     }
 
     net_LoadSectionHot() {
@@ -160,34 +170,40 @@ export default class NewTopTenScreen extends Component {
         return (
             <View style={styles.container}>
                 <HorizontalSeperatorLine />
-                <Screen
-                    showLoading={this.state.viewLoading}
-                    loadingType={'background'}
-                    text={this.state.screenText}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading: true,
-                            loadingType: 'background',
-                            screenText: null
-                        });
-                        this.net_LoadSectionHot();
-                    }}
-                >
-                    <FlatList
-                        data={this.state.dataArray}
-                        renderItem={this._renderItem}
-                        removeClippedSubviews={false}
-                        extraData={this.state}
-                        style={styles.flatList}
-                        onRefresh={() => {
-                            this.setState({
-                                pullLoading: true
-                            });
-                            this.net_LoadSectionHot();
-                        }}
-                        refreshing={this.state.pullLoading}
-                    />
-                </Screen>
+                {
+                    global.login == false
+                        ?
+                        <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 1, bottom: 0, left: 0, right: 0 }} />
+                        :
+                        <Screen
+                            showLoading={this.state.viewLoading}
+                            loadingType={'background'}
+                            text={this.state.screenText}
+                            onPress={() => {
+                                this.setState({
+                                    viewLoading: true,
+                                    loadingType: 'background',
+                                    screenText: null
+                                });
+                                this.net_LoadSectionHot();
+                            }}
+                        >
+                            <FlatList
+                                data={this.state.dataArray}
+                                renderItem={this._renderItem}
+                                removeClippedSubviews={false}
+                                extraData={this.state}
+                                style={styles.flatList}
+                                onRefresh={() => {
+                                    this.setState({
+                                        pullLoading: true
+                                    });
+                                    this.net_LoadSectionHot();
+                                }}
+                                refreshing={this.state.pullLoading}
+                            />
+                        </Screen>
+                }
             </View>
         )
     }

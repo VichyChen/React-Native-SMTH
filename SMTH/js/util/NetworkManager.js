@@ -79,7 +79,6 @@ export default class NetworkManager {
                 //用户名密码错误
                 //{"error":10099,"error_description":"Invalid username and password combination"}
                 if (result['error'] != null && result['error'] == 10099) {
-                    DeviceEventEmitter.emit('LoginNotification', null);
                     failure('账号或密码错误');
                 }
                 //{"error":"invalid_user","error_description":null}                

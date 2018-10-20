@@ -173,7 +173,7 @@ export default class NewPictureListScreen extends Component {
                         {
                             item.attachment_list.map((image) => {
                                 return (
-                                    <Image style={styles.image} source={{ uri: 'https://exp.newsmth.net' + image.url }} />
+                                    <Image style={styles.image} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
                                 );
                             })
                         }
@@ -205,7 +205,7 @@ export default class NewPictureListScreen extends Component {
                         });
                         this._page = 1;
                         this.getNewAlbum(this._page);
-                }}
+                    }}
                 >
                     <FlatList
                         data={this.state.dataArray}
@@ -248,6 +248,7 @@ var styles = {
     get itemContainer() {
         return {
             padding: global.constants.Padding,
+            backgroundColor: global.colors.whiteColor,
         }
     },
     get itemTitle() {

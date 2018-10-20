@@ -49,20 +49,21 @@ export default class NewMyScreen extends Component {
     replyMeCount = 0;
     atMeCount = 0;
 
-    this.subscription1 = DeviceEventEmitter.addListener('LoginSuccessNotification', (username) => {
+    this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', (username) => {
       this.setState({
         username: username,
         notificationCount: 0,
       });
       this.network();
     });
-    this.subscription2 = DeviceEventEmitter.addListener('LogoutNotification', () => {
-
+    this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
+      this.setState({});
     });
-    this.subscription3 = DeviceEventEmitter.addListener('ClickMyScreenNotification', () => {
-      this.network();
+    this.clickMyScreenNotification = DeviceEventEmitter.addListener('ClickMyScreenNotification', () => {
+      if (global.login == true) {
+        this.network();
+      }  
     });
-
     this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
       this.setState({});
     });
@@ -72,7 +73,10 @@ export default class NewMyScreen extends Component {
         username: username,
       });
     });
-    this.network();
+    
+    if (global.login == true) {
+      this.network();
+    }
   }
 
   network() {
@@ -133,9 +137,9 @@ export default class NewMyScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.subscription1.remove();
-    this.subscription2.remove();
-    this.subscription3.remove();
+    this.loginSuccessNotification.remove();
+    this.logoutNotification.remove();
+    this.clickMyScreenNotification.remove();
     this.refreshViewNotification.remove();
   }
 
@@ -161,7 +165,7 @@ export default class NewMyScreen extends Component {
             onPress={() => {
               // this.props.navigation.navigate('newUserScreen', { id: this.state.username, name: this.state.username });
               this.props.navigation.navigate('newUserScreen', { id: 'f8208b9eedb991d5bf925242d1ea80dd', name: this.state.username });
-              
+
             }}
           >
             <View style={{
