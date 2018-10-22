@@ -448,7 +448,7 @@ export default class NewThreadDetailScreen extends Component {
                 onPressClick={() => {
                   this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
-                uri={NetworkManager.net_getFace(item.name)} 
+                uri={NetworkManager.net_getFace(item.name)}
               />
               <View style={{
                 flex: 1,
@@ -500,7 +500,7 @@ export default class NewThreadDetailScreen extends Component {
                 onPressClick={() => {
                   this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
                 }}
-                uri={NetworkManager.net_getFace(item.name)} 
+                uri={NetworkManager.net_getFace(item.name)}
               />
 
               <Text style={styles.itemName} >{item.name}</Text>
@@ -583,11 +583,18 @@ export default class NewThreadDetailScreen extends Component {
   };
 
   _attachmentImageItem = ({ item }) => (
-    <AutoHeightImage
-      style={styles.itemImage}
-      width={global.constants.ScreenWidth - global.constants.Padding * 2}
-      imageURL={'https://exp.newsmth.net/' + item.url}
-    />
+    <View style={{
+      marginTop: 15, backgroundColor: global.colors.backgroundGrayColor
+    }}>
+      <AutoHeightImage
+        style={styles.itemImage}
+        width={global.constants.ScreenWidth - global.constants.Padding * 2}
+        imageURL={'https://exp.newsmth.net/' + item.url}
+        onHeightChange={(height) => {
+
+        }}
+      />
+    </View>
   );
 
   render() {
@@ -848,7 +855,7 @@ export default class NewThreadDetailScreen extends Component {
             title={this.title}
             // message={}
             options={['分享', '收藏', '从浏览器打开', '复制链接', '给楼主私信',/*'查看快照',*/ '举报', '取消']}
-            cancelButtonIndex={5}
+            cancelButtonIndex={6}
             onPress={(index) => {
               //分享
               if (index == 0) {
@@ -1091,8 +1098,6 @@ var styles = {
   },
   get itemImage() {
     return {
-      marginTop: 15,
-      backgroundColor: global.colors.backgroundColor
     }
   },
   get itemReplyView() {

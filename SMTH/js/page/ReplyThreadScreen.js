@@ -21,17 +21,15 @@ import {
     NavigatorTitleButton,
     SectionBlankHeader,
     ToastUtil,
-    Screen
+    Screen,
+    NavigationBar,
+    HorizontalSeperatorLine
 } from '../config/Common';
 
 var _title;
 var _content;
 
 export default class ReplyThreadScreen extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        title: '回复帖子',
-        headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-    });
 
     constructor(props) {
         super(props);
@@ -75,81 +73,87 @@ export default class ReplyThreadScreen extends Component {
         this.state = {
             isLoading: false,
             title: 'Re: ' + this.props.navigation.state.params.subject,
-            content: content.length > 0 ? '\r【 在 ' + this.props.navigation.state.params.author + ' 的大作中提到: 】\r' + '' + content : '',
+            content: content.length > 0 ? '\n【 在 ' + this.props.navigation.state.params.author + ' 的大作中提到: 】\n' + '' + content : '',
         }
         _title = this.state.title;
         _content = this.state.content;
     }
 
-    componentDidMount() {
-        this.setBarItemButton('编辑');
-    }
-
-    setBarItemButton(title) {
-        this.props.navigation.setParams({
-            headerRight: (
-                <NavigatorTitleButton
-                    color={global.colors.whiteColor}
-                    fontSize={16}
-                    onPressClick={() => {
-                        if (_title == null || _content == null) {
-                            ToastUtil.info('请输入标题和内容');
-                            return;
-                        }
-                        if (this.state.isLoading == true) return;
-                        this.setState({
-                            isLoading: true,
-                        });
-                        NetworkManager.net_ReplyArticle(this.props.navigation.state.params.board, this.props.navigation.state.params.id, _title, _content, (result) => {
-                            DeviceEventEmitter.emit('ThreadRefreshNotification', this.props.navigation.state.params.mid);
-                            this.props.navigation.goBack();
-                        }, (error) => {
-                            this.setState({
-                                isLoading: false,
-                            });
-                            ToastUtil.error(error);
-                        }, (errorMessage) => {
-                            this.setState({
-                                isLoading: false,
-                            });
-                            ToastUtil.error(errorMessage);
-                        });
-                    }}
-                    title='回复' />
-            )
-        })
+    save() {
+        if (_title == null || _content == null) {
+            ToastUtil.info('请输入标题和内容');
+            return;
+        }
+        if (this.state.isLoading == true) return;
+        this.setState({
+            isLoading: true,
+        });
+        NetworkManager.net_ReplyArticle(this.props.navigation.state.params.board, this.props.navigation.state.params.id, _title, _content, (result) => {
+            DeviceEventEmitter.emit('ThreadRefreshNotification', this.props.navigation.state.params.mid);
+            this.props.navigation.goBack();
+        }, (error) => {
+            this.setState({
+                isLoading: false,
+            });
+            ToastUtil.error(error);
+        }, (errorMessage) => {
+            this.setState({
+                isLoading: false,
+            });
+            ToastUtil.error(errorMessage);
+        });
     }
 
     render() {
         return (
             <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
-                <ScrollView style={[styles.container, { height: Dimensions.get('window').height - 64 }]} keyboardDismissMode={'on-drag'} >
-                    <Text style={styles.title}>标题：</Text>
-                    <TextInput
-                        ref="titleTextInput"
-                        style={styles.titleInput}
-                        underlineColorAndroid={'transparent'}
-                        autoCorrect={false}
-                        spellCheck={false}
-                        autoCapitalize={'none'}
-                        onChangeText={(text) => { this.setState({ title: text }); _title = text; }}
-                        value={this.state.title}
-                    />
-                    <Text style={styles.content}>内容：</Text>
-                    <TextInput
-                        style={styles.contentInput}
-                        underlineColorAndroid={'transparent'}
-                        multiline={true}
-                        autoFocus={true}
-                        autoCorrect={false}
-                        spellCheck={false}
-                        autoCapitalize={'none'}
-                        selection={this.state.selection}
-                        onSelectionChange={(event) => this.setState({ selection: event.nativeEvent.selection })}
-                        onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
-                        onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
-                        value={this.state.content}
-                    />
+
+                <NavigationBar title='回复'
+                    navigation={this.props.navigation}
+                    showCancelButton={true}
+                    showBottomLine={true}
+                    rightButtonTitle={'确定'}
+                    rightButtonOnPress={() => {
+                        this.save();
+                    }}
+                />
+
+                <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
+                    <View style={styles.container} >
+
+                        <Text style={styles.title} >{this.state.title}</Text>
+                        <HorizontalSeperatorLine />
+
+                        <TextInput
+                            style={styles.contentInput}
+                            underlineColorAndroid={'transparent'}
+                            multiline={true}
+                            autoFocus={true}
+                            autoCorrect={false}
+                            spellCheck={false}
+                            placeholder={'输入文章正文...'}
+                            placeholderTextColor={global.colors.gray3Color}
+                            autoCapitalize={'none'}
+                            selection={this.state.selection}
+                            onSelectionChange={(event) => {
+                                this.setState({
+                                    selection: event.nativeEvent.selection
+                                })
+                            }}
+                            onFocus={() => {
+                                this.setState({
+                                    selection: { start: 0, end: 0 }
+                                })
+                            }}
+                            onChangeText={(text) => {
+                                this.setState({
+                                    content: text
+                                });
+                                _content = text;
+                            }}
+                            value={this.state.content}
+                        />
+                    </View>
                 </ScrollView>
             </Screen>
         )
@@ -157,43 +161,30 @@ export default class ReplyThreadScreen extends Component {
 }
 
 var styles = {
+    get scrollView() {
+        return {
+            height: global.constants.ScreenHeight - global.constants.BottomSaveArea,
+        }
+    },
     get container() {
         return {
-            backgroundColor: global.colors.backgroundGrayColor,
-            padding: 13,
+            flex: 1,
+            paddingTop: global.constants.Padding,
+            paddingLeft: global.constants.Padding + 6,
+            paddingRight: global.constants.Padding + 6,
         }
     },
     get title() {
         return {
-            marginBottom: 10,
-            fontSize: global.configures.fontSize17,
-            color: global.colors.gray1Color,
-        }
-    },
-    get titleInput() {
-        return {
-            height: 35,
-            padding: 0,
-            backgroundColor: global.colors.whiteColor,
-            borderColor: global.colors.clearColor,
-            fontSize: global.configures.fontSize17,
-            color: global.colors.fontColor,
-        }
-    },
-    get content() {
-        return {
-            marginTop: 10,
-            marginBottom: 10,
+            paddingBottom: global.constants.Padding,
             fontSize: global.configures.fontSize17,
             color: global.colors.gray1Color,
         }
     },
     get contentInput() {
         return {
-            height: 150,
-            padding: 0,
-            backgroundColor: global.colors.whiteColor,
-            borderColor: global.colors.clearColor,
+            height: 200,
+            paddingTop: global.constants.Padding,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
             textAlignVertical: 'top'
