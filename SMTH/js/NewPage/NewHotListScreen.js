@@ -118,16 +118,25 @@ export default class NewHotListScreen extends Component {
             });
             AsyncStorageManger.setSectionArray(sectionArray);
 
-            //收藏
-            this.$ = cio.load(result);
-            this.$ = cio.load(this.$('body').html());
-            var srcipt = this.$('script').text();
-            if (srcipt.length > 0) {
-                var favouriteArray = JSON.parse(this.$('script').text()
-                    .replace("\n        $(function () {\n            build_favorites($(\'#__favorites\'), ", '')
-                    .replace(");\n        });\n    ", ''));
-            }
-            AsyncStorageManger.setFavouriteArray(favouriteArray);
+            // //收藏
+            // this.$ = cio.load(result);
+            // this.$ = cio.load(this.$('body').html());
+            // var srcipt = this.$('script').text();
+            // if (srcipt.length > 0) {
+            //     console.log('qweqewewew:'+(this.$('script').text()
+            //     .replace("$(function () {", '')
+            //     .replace("build_favorites($('#__favorites'), ", '')
+            //     .replace("        });", '')
+            //     .replace(");", '')
+            //     .replace("&quot;", "").trim()));
+            //     var favouriteArray = JSON.parse((this.$('script').text()
+            //     .replace("$(function () {", '')
+            //     .replace("build_favorites($('#__favorites'), ", '')
+            //     .replace("        });", '')
+            //     .replace(");", '')
+            //     .replace("&quot;", "").trim()));
+            // }
+            // AsyncStorageManger.setFavouriteArray(favouriteArray);
 
             if (array.length == 0) {
                 if (this.state.viewLoading == true) {

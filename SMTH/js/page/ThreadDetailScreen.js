@@ -398,13 +398,13 @@ export default class ThreadDetailScreen extends Component {
       <View style={{ flex: 1 }}>
 
         <NavigationBar
-          title={unescape(this.props.navigation.state.params.board)}
+          title={global.boards.all[unescape(this.props.navigation.state.params.board)].name}
           titleOnPress={() => {
-            // this.props.navigation.navigate('newBoardListScreen', {
-            //   id: this.boardID,
-            //   name: this.boardTitle,
-            //   title: this.boardName,
-            // });
+            this.props.navigation.navigate('newBoardListScreen', {
+              id: global.boards.all[unescape(this.props.navigation.state.params.board)].id,
+              name: global.boards.all[unescape(this.props.navigation.state.params.board)].name,
+              title: unescape(this.props.navigation.state.params.board),
+            });
           }}
           showBackButton={true}
           navigation={this.props.navigation}
