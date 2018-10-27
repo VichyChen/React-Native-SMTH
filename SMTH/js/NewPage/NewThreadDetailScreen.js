@@ -77,6 +77,8 @@ export default class NewThreadDetailScreen extends Component {
   boardID;
   boardName;
   boardTitle;
+  boardObject;
+  isGetBoardObject;
   selectMoreItemIndex;
   selectMoreItemName;
   selectMoreItemMeta;
@@ -104,7 +106,7 @@ export default class NewThreadDetailScreen extends Component {
       showMoreLike: false,
     }
     this.scanRecord = false;
-
+    this.isGetBoardObject = false;
     this.webURL = 'https://exp.newsmth.net/topic/' + (this.props.navigation.state.params.type == null ? '' : 'article/') + this.props.navigation.state.params.id;
 
     this.page = 1;
@@ -245,9 +247,6 @@ export default class NewThreadDetailScreen extends Component {
           this.$('.image-package').remove();
           this.$('.image-caption').remove();
 
-          console.log('this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)):' + this.currentPage == 1 ? (i + 1) : (i + ((this.currentPage - 1) * 20)));
-          console.log('this.currentPage:' + this.currentPage);
-          console.log('i:' + i);
           array.push({
             key: array.length,
             index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
@@ -329,6 +328,20 @@ export default class NewThreadDetailScreen extends Component {
           this.scanRecord = true;
         }).catch((error) => {
           this.scanRecord == false
+        });
+      }
+
+      if (this.isGetBoardObject == false) {
+        NetworkManager.net_QueryBoard(this.boardName, (result) => {
+          for (var i = 0; i < result['boards'].length; i++) {
+            if (this.boardName == result['boards'][i].id) {
+              this.boardObject = result['boards'][i];
+              break;
+            }
+          }
+          this.isGetBoardObject = true;
+        }, (error) => {
+        }, (timeout) => {
         });
       }
 
@@ -681,72 +694,6 @@ export default class NewThreadDetailScreen extends Component {
               }
             }}
           />
-          {/*
-          <BackgroundMaskView height={Dimensions.get('window').height - global.constants.NavigationBarHeight}
-            onPress={() => {
-              this.setState({
-                selectPageViewHidden: true,
-                backgroundMaskViewHidden: true,
-                floorActionViewHidden: true,
-                moreViewHidden: true,
-                currentPage: (parseInt(from / size) + 1).toString(),
-              });
-            }}
-            hidden={this.state.backgroundMaskViewHidden}
-          />
-
-          <ThreadDetailMoreView hidden={this.state.moreViewHidden}
-            onShareClick={() => {
-              this.setState({
-                backgroundMaskViewHidden: true,
-                moreViewHidden: true,
-              });
-              var shareManager = NativeModules.ShareManager;
-              shareManager.share(this.props.navigation.state.params.subject, this.webURL);
-            }}
-            onCopyClick={() => {
-              Clipboard.setString(this.webURL);
-              ToastUtil.info('已复制到剪贴板');
-            }}
-            onSafariClick={() => {
-              // Linking.openURL(this.webURL).catch(err => console.error('An error occurred', err));
-              // this.setState({
-              //   backgroundMaskViewHidden: true,
-              //   moreViewHidden: true,
-              // });
-
-              Realm.open({
-                schema: [{ name: 'Dog', properties: { name: 'string' } }]
-              }).then(realm => {
-                realm.write(() => {
-                  realm.create('Dog', { name: 'Rex' });
-                });
-                this.setState({ realm });
-              });
-
-            }}
-            onHistoryClick={() => {
-              // Linking.openURL(historyURL).catch(err => console.error('An error occurred', err));
-              this.setState({
-                backgroundMaskViewHidden: true,
-                moreViewHidden: true,
-              });
-            }}
-            onReportClick={() => {
-              if (boardObject == null) return;
-              var array = boardObject.manager.split(" ");
-              if (array.length == 0) return;
-              this.props.navigation.navigate('sendMessageScreen', {
-                user: array[0],
-                title: '举报 ' + hostID + ' 在 ' + board + ' 版中发表的内容',
-                content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.hostBody,
-              });
-              this.setState({
-                backgroundMaskViewHidden: true,
-                moreViewHidden: true,
-              });
-            }}
-          /> */}
 
           <ThreadDetailBottomSelectPageView
             currentPage={this.state.currentPage}
@@ -804,52 +751,6 @@ export default class NewThreadDetailScreen extends Component {
             }}
           />
 
-          {/* <ThreadDetailFloorActionView
-            hidden={this.state.floorActionViewHidden}
-            floorItem={this.state.floorItem}
-            onReplyClick={(floorItem) => {
-              this.props.navigation.navigate('replyThreadScreen',
-                {
-                  mid: this.props.navigation.state.params.id,
-                  id: floorItem.id,
-                  board: board,
-                  subject: this.props.navigation.state.params.subject,
-                  body: floorItem.body,
-                  author: floorItem.author_id,
-                });
-              this.setState({
-                backgroundMaskViewHidden: true,
-                floorActionViewHidden: true,
-              });
-            }}
-            onSeeOnlyClick={(floorItem) => {
-              this.setState({
-                backgroundMaskViewHidden: true,
-                floorActionViewHidden: true,
-              });
-            }}
-            onReportClick={(floorItem) => {
-              if (boardObject == null) return;
-              var array = boardObject.manager.split(" ");
-              if (array.length == 0) return;
-              this.props.navigation.navigate('sendMessageScreen', {
-                user: array[0],
-                title: '举报 ' + floorItem.author_id + ' 在 ' + board + ' 版中发表的内容',
-                content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + floorItem.body,
-              });
-              this.setState({
-                backgroundMaskViewHidden: true,
-                floorActionViewHidden: true,
-              });
-            }}
-            onCancelClick={() => {
-              this.setState({
-                backgroundMaskViewHidden: true,
-                floorActionViewHidden: true,
-              });
-            }}
-          /> */}
-
           <ActionSheet
             ref={o => this.moreActionSheet = o}
             title={this.title}
@@ -892,7 +793,14 @@ export default class NewThreadDetailScreen extends Component {
               }
               //举报
               else if (index == 5) {
-
+                if (this.boardObject == null) return;
+                var array = this.boardObject.manager.split(" ");
+                if (array.length == 0) return;
+                this.props.navigation.navigate('newMessageSendScreen', {
+                  user: array[0],
+                  title: '举报 ' + this.hostID + ' 在 ' + this.boardName + ' 版中发表的内容',
+                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.title,
+                });
               }
               else {
 
@@ -928,7 +836,14 @@ export default class NewThreadDetailScreen extends Component {
               }
               //举报
               else if (index == 2) {
-
+                if (this.boardObject == null) return;
+                var array = this.boardObject.manager.split(" ");
+                if (array.length == 0) return;
+                this.props.navigation.navigate('newMessageSendScreen', {
+                  user: array[0],
+                  title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.boardName + ' 版中发表的内容',
+                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                });
               }
               else {
 

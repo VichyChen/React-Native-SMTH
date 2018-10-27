@@ -263,17 +263,6 @@ export default class ThreadDetailScreen extends Component {
       for (var i = 0; i < result['boards'].length; i++) {
         if (this.board == result['boards'][i].id) {
           this.boardObject = result['boards'][i];
-          this.boardName = result['boards'][i].name;
-          global.configures.boards[result['boards'][i].id] = result['boards'][i].name;
-          setTimeout(() => {
-            BoardModel.create(
-              result['boards'][i].id,
-              result['boards'][i].name,
-            );
-            // this.setState({
-
-            // });
-          }, 1000);
           break;
         }
       }
@@ -692,10 +681,10 @@ export default class ThreadDetailScreen extends Component {
                 if (this.boardObject == null) return;
                 var array = this.boardObject.manager.split(" ");
                 if (array.length == 0) return;
-                this.props.navigation.navigate('sendMessageScreen', {
+                this.props.navigation.navigate('newMessageSendScreen', {
                   user: array[0],
                   title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
-                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.hostBody,
+                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
                 });
               }
               else {
@@ -734,7 +723,14 @@ export default class ThreadDetailScreen extends Component {
               }
               //举报
               else if (index == 2) {
-
+                if (this.boardObject == null) return;
+                var array = this.boardObject.manager.split(" ");
+                if (array.length == 0) return;
+                this.props.navigation.navigate('newMessageSendScreen', {
+                  user: array[0],
+                  title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
+                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                });
               }
               else {
 
