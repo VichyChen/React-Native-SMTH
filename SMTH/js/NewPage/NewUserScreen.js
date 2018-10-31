@@ -33,7 +33,8 @@ import {
     NewUserMemberScreen,
     NewUserFriendsScreen,
     NewUserfansScreen,
-    TabPageView
+    TabPageView,
+    ToastUtil
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -83,6 +84,13 @@ export default class NewUserScreen extends Component {
                             <CellBackground
                                 showSelect={false}
                                 onPress={() => {
+                                    NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
+                                        ToastUtil.info("关注成功");
+                                    }, (error) => {
+                                        ToastUtil.info(error);
+                                    }, (errorMessage) => {
+
+                                    });
 
                                 }}
                             >
@@ -98,15 +106,15 @@ export default class NewUserScreen extends Component {
                     style={{}}
                     titles={['资料', '文章', '版面', '关注', '粉丝']}
                     pages={[
-                        (<NewUserInfoScreen 
+                        (<NewUserInfoScreen
                             navigation={this.props.navigation}
-                             id={this.props.navigation.state.params.id} 
-                             callback={(nick) => {
+                            id={this.props.navigation.state.params.id}
+                            callback={(nick) => {
                                 this.setState({
                                     nick: nick,
                                 });
-                             }}
-                             />),
+                            }}
+                        />),
                         (<NewUserArticleScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserMemberScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserFriendsScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),

@@ -925,6 +925,34 @@ export default class NetworkManager {
         });
     }
 
+    //加好友
+    static async net_AddUserFriend(userid, success, failure, netError) {
+        var dic = new Array();
+        dic["user_id"] = userid;
+        dic["access_token"] = await AsyncStorageManger.getAccessToken();
+        var signature = "";
+        for (var key in dic) {
+            signature += key + "=" + dic[key] + "&";
+        }
+        signature += client_signature;
+        var md5 = require("crypto-js/md5");
+        dic["signature"] = md5(signature);
+
+        let params = {
+            user_id: userid,
+            access_token: dic["access_token"],
+            signature: dic["signature"],
+        }
+
+        NetworkManager.post(base_url + 'profile/add_friend.json', params, true, result => {
+            success(result);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
     static getUserThread(author, page, success, failure, netError) {
         NetworkManager.get('http://jinghuasoft.com/smth.jsp?board=&orderBy=date_created&asc=&d=&dm=&dc=&p=&pp=false&view=0&author=' + author + '&page=' + page, null, result => {
             success(result._bodyInit);
