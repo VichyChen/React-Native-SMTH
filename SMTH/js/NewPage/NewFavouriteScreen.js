@@ -31,13 +31,8 @@ import {
   NewFavouriteThreadScreen,
 } from '../config/Common';
 
-var _dataArray;
 
 export default class NewFavouriteScreen extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: '收藏',
-    headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-  });
 
   constructor(props) {
     super(props);
@@ -46,126 +41,16 @@ export default class NewFavouriteScreen extends Component {
       viewLoading: true,
       loadingType: 'background',
       screenText: null,
-      isDeleting: false,
       editing: false,
-      dataArray: [],
-      title: '编辑',
     }
 
     this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
       this.setState({});
     });
-
-    // this.net_LoadFavorites();
-  }
-
-  componentDidMount() {
-    this.setBarItemButton('编辑');
   }
 
   componentWillUnmount() {
     this.refreshViewNotification.remove();
-  }
-
-  setBarItemButton(title) {
-    this.props.navigation.setParams({
-      headerRight: (
-        <NavigatorTitleButton
-          color={global.colors.whiteColor}
-          fontSize={16}
-          title={title}
-          onPressClick={() => {
-            if (title == '编辑') {
-              this.setBarItemButton('完成');
-
-              this.setState({
-                dataArray: _dataArray,
-                editing: true
-              });
-
-            } else {
-              this.setBarItemButton('编辑');
-
-              this.setState({
-                dataArray: _dataArray,
-                editing: false
-              });
-            }
-          }}
-        />
-      )
-    })
-  }
-
-  net_LoadFavorites() {
-    NetworkManager.net_LoadFavorites(0, (result) => {
-      for (var i = 0; i < result['favorites'].length; i++) {
-        result['favorites'][i].key = i;
-      }
-      _dataArray = result['favorites'];
-      this.setState({
-        dataArray: _dataArray,
-        pullLoading: false,
-        viewLoading: false,
-        screenText: null
-      });
-    }, (error) => {
-      if (this.state.viewLoading == true) {
-        this.setState({
-          pullLoading: false,
-          viewLoading: false,
-          screenText: error
-        });
-      }
-      else {
-        ToastUtil.info(error);
-        this.setState({
-          pullLoading: false,
-          viewLoading: false,
-          screenText: null
-        });
-      }
-    }, (errorMessage) => {
-      if (this.state.viewLoading == true) {
-        this.setState({
-          pullLoading: false,
-          viewLoading: false,
-          screenText: errorMessage + '，请点击重试'
-        });
-      }
-      else {
-        ToastUtil.info(errorMessage);
-        this.setState({
-          pullLoading: false,
-          viewLoading: false,
-          screenText: null
-        });
-      }
-    });
-  }
-
-  net_DelFav(item) {
-    this.setState({
-      isDeleting: true,
-      loadingType: 'clear',
-    });
-    NetworkManager.net_DelFav(item.id, (result) => {
-      _dataArray.splice(item.key, 1);
-      this.setState({
-        dataArray: _dataArray,
-        isDeleting: false,
-      });
-    }, (error) => {
-      ToastUtil.info(error);
-      this.setState({
-        isDeleting: false,
-      });
-    }, (errorMessage) => {
-      ToastUtil.info(errorMessage);
-      this.setState({
-        isDeleting: false,
-      });
-    });
   }
 
   _renderItem = ({ item }) => {
@@ -204,11 +89,17 @@ export default class NewFavouriteScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <NavigationBar title='收藏' showBottomLine={false} />
+        <NavigationBar title='收藏' showBottomLine={false} rightButtonTitle={this.state.editing == true ? '完成' : '编辑'}
+          rightButtonOnPress={() => {
+            this.setState({
+              editing: !this.state.editing,
+            });
+          }}
+        />
         <TabPageView titles={['板块', '帖子']}
           pages={[
-            (<NewFavouriteBoardScreen navigation={this.props.navigation} />),
-            (<NewFavouriteThreadScreen navigation={this.props.navigation} />)]}
+            (<NewFavouriteBoardScreen navigation={this.props.navigation} editing={this.state.editing} />),
+            (<NewFavouriteThreadScreen navigation={this.props.navigation} editing={this.state.editing} />)]}
         />
       </View>
     )
