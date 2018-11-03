@@ -67,4 +67,24 @@ export default class FavouriteThreadModel {
             });
         });
     }
+
+    static delete(id) {
+        return new Promise(function (resolve, reject) {
+            FavouriteThreadModel.open().then(realm => {
+                realm.write(() => {
+                    let objects = realm.objects(FavouriteThreadSchema.name).filtered('id="' + id + '"');
+                    if (objects.length > 0) {
+                        realm.delete(objects);
+                        console.log('FavouriteThreadModel.delete() success');
+                    } else {
+                        console.log('FavouriteThreadModel.delete() not found');
+                    }
+                    resolve();
+                })
+            }).catch((error) => {
+                console.log('FavouriteThreadModel.delete() error = ' + error);
+                reject(error);
+            });
+        });
+    }
 }

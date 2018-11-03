@@ -57,6 +57,12 @@ export default class NewFavouriteThreadScreen extends Component {
         });
     }
 
+    deleteFavouriteThreadModel(id) {
+        FavouriteThreadModel.delete(id).then(() => {
+            this.readrFavouriteThreadModel();
+        });
+    }
+
     _renderItem = ({ item }) => {
         return (
             <CellBackground
@@ -70,14 +76,24 @@ export default class NewFavouriteThreadScreen extends Component {
                 }}
             >
                 <View>
-                    <View style={styles.container}>
-                        <Text style={styles.subject}>{item.subject}</Text>
-                        <View style={styles.other}>
-                            <Text style={styles.board}>{unescape(item.board_id)}</Text>
-                            <Text style={styles.author}>{item.author}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: global.colors.whiteColor }}>
+                        {
+                            this.props.editing == true
+                                ?
+                                <ImageButton style={styles.deleteImage} width={44} height={44} margin={24} source={global.images.icon_minus}
+                                    onPress={() => { this.deleteFavouriteThreadModel(item.id); }} />
+                                :
+                                null
+                        }
+                        <View style={styles.container}>
+                            <Text style={styles.subject}>{item.subject}</Text>
+                            <View style={styles.other}>
+                                <Text style={styles.board}>{unescape(item.board_id)}</Text>
+                                <Text style={styles.author}>{item.author}</Text>
+                            </View>
                         </View>
+                        <SeperatorLine />
                     </View>
-                    <SeperatorLine />
                 </View>
             </CellBackground>
         )
@@ -116,6 +132,11 @@ var styles = {
             flexDirection: 'column',
             padding: global.constants.Padding,
             backgroundColor: global.colors.whiteColor
+        }
+    },
+    get deleteImage() {
+        return {
+            paddingLeft: global.constants.Padding,
         }
     },
     get subject() {

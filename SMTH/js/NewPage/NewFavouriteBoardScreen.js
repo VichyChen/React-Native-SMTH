@@ -73,44 +73,10 @@ export default class NewFavouriteBoardScreen extends Component {
         }
     }
 
-    componentDidMount() {
-        this.setBarItemButton('编辑');
-    }
-
     componentWillUnmount() {
         this.refreshViewNotification.remove();
         this.loginSuccessNotification.remove();
         this.logoutNotification.remove();
-    }
-
-    setBarItemButton(title) {
-        this.props.navigation.setParams({
-            headerRight: (
-                <NavigatorTitleButton
-                    color={global.colors.whiteColor}
-                    fontSize={16}
-                    title={title}
-                    onPressClick={() => {
-                        if (title == '编辑') {
-                            this.setBarItemButton('完成');
-
-                            this.setState({
-                                dataArray: _dataArray,
-                                editing: true
-                            });
-
-                        } else {
-                            this.setBarItemButton('编辑');
-
-                            this.setState({
-                                dataArray: _dataArray,
-                                editing: false
-                            });
-                        }
-                    }}
-                />
-            )
-        })
     }
 
     net_LoadFavorites() {
@@ -184,39 +150,6 @@ export default class NewFavouriteBoardScreen extends Component {
         });
     }
 
-    _renderItem = ({ item }) => {
-        return (
-            <CellBackground
-                onPress={() => {
-                    if (this.state.editing == true) {
-
-                    }
-                    else {
-                        this.props.navigation.navigate('boardListScreen', { id: item.id, text: item.name })
-                    }
-                }}
-            >
-                <View style={styles.container}>
-                    <View style={styles.content}>
-                        {this.state.editing == true ?
-                            <ImageButton
-                                style={styles.deleteButton}
-                                width={44}
-                                height={44}
-                                margin={24}
-                                onPress={() => {
-                                    this.net_DelFav(item);
-                                }}
-                                source={global.images.icon_minus} /> : null}
-                        <Text style={styles.board}>{item.name}</Text>
-                    </View>
-                    {this.state.editing == true ? null : <Image style={styles.arrow} source={global.images.icon_forward_arrow} />}
-                    <SeperatorLine />
-                </View>
-            </CellBackground>
-        )
-    };
-
     render() {
         return (
             <View style={styles.container}>
@@ -250,8 +183,16 @@ export default class NewFavouriteBoardScreen extends Component {
                                                     this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
                                                 }}
                                             >
-                                                <View style={styles.rightItemContainer} >
-                                                    <Text style={styles.rightItemTitle} >{item.name}</Text>
+                                                <View style={styles.itemContainer} >
+                                                    <Text style={styles.itemTitle} >{item.name}</Text>
+                                                    {
+                                                        this.props.editing == true
+                                                            ?
+                                                            <ImageButton style={styles.itemImage} width={36} height={36} margin={16} source={global.images.icon_minus}
+                                                                onPress={() => { this.net_DelFav(item); }} />
+                                                            :
+                                                            null
+                                                    }
                                                 </View>
                                             </CellBackground>
                                         );
@@ -318,7 +259,7 @@ var styles = {
             paddingBottom: 15,
         }
     },
-    get rightItemContainer() {
+    get itemContainer() {
         return {
             height: 30,
             justifyContent: 'center',
@@ -333,10 +274,19 @@ var styles = {
             borderRadius: 4,
         }
     },
-    get rightItemTitle() {
+    get itemTitle() {
         return {
             fontSize: global.configures.fontSize15,
             color: global.colors.gray1Color,
+        }
+    },
+    get itemImage() {
+        return {
+            position: 'absolute',
+            top: -15,
+            right: -15,
+            // width: 15,
+            // height: 15
         }
     },
 }
