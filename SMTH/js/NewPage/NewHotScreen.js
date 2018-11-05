@@ -37,6 +37,9 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 export default class NewHotScreen extends Component {
+
+  _catchArray = [0];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -102,6 +105,9 @@ export default class NewHotScreen extends Component {
             style={{ height: 26, width: 180 }}
             selectedIndex={this.state.selectedIndex}
             onChange={(e) => {
+              if (this._catchArray.indexOf(e.nativeEvent.selectedSegmentIndex) == -1) {
+                this._catchArray.push(e.nativeEvent.selectedSegmentIndex);
+              }
               this.setState({
                 selectedIndex: e.nativeEvent.selectedSegmentIndex,
               });
@@ -114,18 +120,31 @@ export default class NewHotScreen extends Component {
           style={styles.scrollView}
           horizontal={true}
           bounces={false}
-          scrollEnabled={false}
+          scrollEnabled={true}
           pagingEnabled={true}
           showsHorizontalScrollIndicator={false}
+          onScroll={event => {
+            var selectedIndex = Math.floor((event.nativeEvent.contentOffset.x - global.constants.ScreenWidth / 2) / global.constants.ScreenWidth) + 1;
+            if (this._catchArray.indexOf(selectedIndex) == -1) {
+              this._catchArray.push(selectedIndex);
+            }
+            this.setState({
+              selectedIndex: selectedIndex,
+            });
+          }}
         >
           <View style={styles.page}>
             <TabPageView titles={titles} pages={pages} />
           </View>
           <View style={styles.page}>
-            <NewTopTenScreen navigation={this.props.navigation} />
+            {
+              this._catchArray.indexOf(1) == -1 ? null : <NewTopTenScreen navigation={this.props.navigation} />
+            }
           </View>
           <View style={styles.page}>
-            <NewPictureListScreen navigation={this.props.navigation} />
+            {
+              this._catchArray.indexOf(2) == -1 ? null : <NewPictureListScreen navigation={this.props.navigation} />
+            }
           </View>
         </ScrollView>
         <NewLoginView visible={this.state.showLogin} />

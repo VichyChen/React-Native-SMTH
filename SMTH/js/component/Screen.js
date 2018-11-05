@@ -12,12 +12,15 @@ import {
 } from '../config/Common';
 import CellBackground from '../component/CellBackground'
 
+global.screen = {
+    loading: '1',
+    clearLoading: '2',
+    text: '3',
+    textImage: '4',
+    network: '5',
+};
+
 export default class Screen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        }
-    }
 
     render() {
         return (
@@ -34,7 +37,6 @@ export default class Screen extends Component {
                     }} />
                 </View>
             </View>
-
         )
     }
 }
