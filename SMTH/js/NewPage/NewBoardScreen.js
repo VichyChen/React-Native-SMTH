@@ -44,13 +44,9 @@ export default class NewBoardScreen extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
-            pullLoading: false,
-            viewLoading: true,
-            loadingType: 'background',
-            screenText: null,
-            leftDataArray: global.current.sectionArray != null ? global.current.sectionArray : global.configures.sections,
+            screenStatus: global.screen.loading,
+            leftDataArray: global.sections.all,
             rightDataArray: [],
         }
 
@@ -59,7 +55,6 @@ export default class NewBoardScreen extends Component {
         });
 
         this.getSectionsFromCatch(0, this.state.leftDataArray[0].id);
-        // this.getSections(0, this.state.leftDataArray[0].id);
     }
 
     componentWillUnmount() {
@@ -70,6 +65,7 @@ export default class NewBoardScreen extends Component {
         BoardListModel.read(id).then((object) => {
             this.refs.scrollView.scrollTo({ x: 0, y: 0, animated: false });
             this.setState({
+                screenStatus: object == null ? global.screen.loading : global.screen.none,
                 rightDataArray: object == null ? [] : JSON.parse(object.json)
             });
             if (_catchDataArray.indexOf(id) == -1) {
@@ -102,6 +98,7 @@ export default class NewBoardScreen extends Component {
 
             if (_leftSelectedItem == index) {
                 this.setState({
+                    screenStatus: global.screen.none,
                     rightDataArray: _rightDataArray,
                 });
             }
@@ -160,31 +157,32 @@ export default class NewBoardScreen extends Component {
                         />
                     </View>
 
-                    <ScrollView ref='scrollView' >
-                        <View style={styles.rightView} >
-                            {
-                                this.state.rightDataArray.map((item) => {
-                                    return (
-                                        <CellBackground
-                                            showSelect={false}
-                                            onPress={() => {
-                                                this.props.navigation.navigate('newBoardListScreen', {
-                                                    id: item.id,
-                                                    name: item.name,
-                                                    title: item.title
-                                                });
-                                            }}
-                                        >
-                                            <View style={styles.rightItemContainer} >
-                                                <Text style={styles.rightItemTitle} >{item.name}</Text>
-                                            </View>
-                                        </CellBackground>
-                                    );
-                                })
-                            }
-                        </View>
-                    </ScrollView>
-
+                    <Screen status={this.state.screenStatus} >
+                        <ScrollView ref='scrollView' >
+                            <View style={styles.rightView} >
+                                {
+                                    this.state.rightDataArray.map((item) => {
+                                        return (
+                                            <CellBackground
+                                                showSelect={false}
+                                                onPress={() => {
+                                                    this.props.navigation.navigate('newBoardListScreen', {
+                                                        id: item.id,
+                                                        name: item.name,
+                                                        title: item.title
+                                                    });
+                                                }}
+                                            >
+                                                <View style={styles.rightItemContainer} >
+                                                    <Text style={styles.rightItemTitle} >{item.name}</Text>
+                                                </View>
+                                            </CellBackground>
+                                        );
+                                    })
+                                }
+                            </View>
+                        </ScrollView>
+                    </Screen>
                 </View>
             </View >
         )

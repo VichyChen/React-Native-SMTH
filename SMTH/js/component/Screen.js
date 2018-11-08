@@ -13,11 +13,12 @@ import {
 import CellBackground from '../component/CellBackground'
 
 global.screen = {
-    loading: '1',
-    clearLoading: '2',
-    text: '3',
-    textImage: '4',
-    network: '5',
+    none: 0,
+    loading: 1,
+    loadingClear: 2,
+    text: 3,
+    textImage: 4,
+    networkError: 5,
 };
 
 export default class Screen extends Component {
@@ -28,14 +29,23 @@ export default class Screen extends Component {
                 backgroundColor: (this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor),
             }]}
             >
-                <View>
-                    {this.props.children}
-                    <LoadingView hidden={!this.props.showLoading} type={this.props.loadingType} />
-                    <LoadingViewText text={this.props.text} hidden={this.props.text == null ? true : false} onPress={() => {
-                        if (this.props.onPress == null || this.props.showLoading == true) return;
-                        this.props.onPress();
-                    }} />
-                </View>
+                {this.props.children}
+                {
+                    this.props.status == global.screen.none || this.props.status == global.screen.loading || this.props.status == global.screen.loadingClear
+                        ?
+                        <LoadingView hidden={this.props.status == global.screen.none ? true : false} clear={this.props.status == global.screen.loadingClear ? true : false} />
+                        :
+                        (
+                            this.props.status == global.screen.text || this.props.status == global.screen.textImage || this.props.status == global.screen.networkError ?
+                                <LoadingViewText text={this.props.text} onPress={() => {
+                                    if (this.props.onPress == null ||
+                                        (this.props.status == global.screen.loading || this.props.status == global.screen.loadingClear)) return;
+                                    this.props.onPress();
+                                }} />
+                                :
+                                null
+                        )
+                }
             </View>
         )
     }

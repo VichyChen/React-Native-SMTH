@@ -50,10 +50,10 @@ export default class NewPictureListScreen extends Component {
         super(props);
         this.state = {
             pullLoading: false,
-            viewLoading: true,
+            pullMoreLoading: false,
+            screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
-            showLogin: false,
         }
 
         this.getNewAlbum(this._page);
@@ -63,9 +63,7 @@ export default class NewPictureListScreen extends Component {
         NetworkManager.getNewAlbum(page, (result) => {
             this.$ = cio.load(result);
             this.$ = cio.load(this.$('div[class=container]').last().html());
-            console.log('4564545655');
 
-            console.log(result);
             var array = [];
             if (page != 1) {
                 array = array.concat(this.state.dataArray);
@@ -97,66 +95,27 @@ export default class NewPictureListScreen extends Component {
                 });
             });
 
-            if (array.length == 0) {
-                if (this.state.viewLoading == true) {
-                    this.setState({
-                        pullLoading: false,
-                        pullMoreLoading: false,
-                        viewLoading: false,
-                        screenText: '网络请求出错，请点击重试',
-                    });
-                }
-                else {
-                    this.setState({
-                        pullLoading: false,
-                        pullMoreLoading: false,
-                        viewLoading: false,
-                        screenText: null
-                    });
-                }
-            }
-            else {
-                this.setState({
-                    dataArray: array,
-                    pullLoading: false,
-                    pullMoreLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            this.setState({
+                dataArray: array,
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: global.screen.none,
+            });
 
         }, (error) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: error
-                });
-            }
-            else {
-                ToastUtil.info(error);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: errorMessage + '，请点击重试'
-                });
-            }
-            else {
-                ToastUtil.info(errorMessage);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
@@ -193,20 +152,13 @@ export default class NewPictureListScreen extends Component {
         return (
             <View style={styles.container}>
                 <HorizontalSeperatorLine />
-                <Screen
-                    showLoading={this.state.viewLoading}
-                    loadingType={'background'}
-                    text={this.state.screenText}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading: true,
-                            loadingType: 'background',
-                            screenText: null
-                        });
-                        this._page = 1;
-                        this.getNewAlbum(this._page);
-                    }}
-                >
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this._page = 1;
+                    this.getNewAlbum(this._page);
+                }} >
                     <FlatList
                         data={this.state.dataArray}
                         renderItem={this._renderItem}

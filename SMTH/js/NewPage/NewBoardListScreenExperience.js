@@ -40,9 +40,8 @@ export default class NewBoardListScreenExperience extends Component {
         this.state = {
             pullLoading: false,
             pullMoreLoading: false,
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
-            isAdding: false,
             dataArray: [],
         }
 
@@ -80,14 +79,23 @@ export default class NewBoardListScreenExperience extends Component {
                 dataArray: dataArray,
                 pullLoading: false,
                 pullMoreLoading: false,
-                viewLoading: false,
-                screenText: null
+                screenStatus: global.screen.none,
             });
 
         }, (error) => {
-
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
@@ -128,107 +136,101 @@ export default class NewBoardListScreenExperience extends Component {
 
     render() {
         return (
-            <Screen
-                showLoading={this.state.viewLoading}
-                loadingType={'background'}
-                text={this.state.screenText}
-                onPress={() => {
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                     this.setState({
-                        viewLoading: true,
-                        screenText: null
+                        screenStatus: global.screen.loading,
                     });
                     this._page = 1;
                     this.getNewBoardExperience(this._page);
-                }}
-            >
-                <FlatList
-                    removeClippedSubviews={false}
-                    extraData={this.state}
-                    data={this.state.dataArray}
-                    renderItem={this._renderItem}
-                    style={styles.flatList}
-                    onRefresh={() => {
-                        this.setState({
-                            pullLoading: true
-                        });
-                        this._page = 1;
-                        this.getNewBoardExperience(this._page);
-                    }
-                    }
-                    onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                }} >
+                    <FlatList
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        style={styles.flatList}
+                        onRefresh={() => {
                             this.setState({
-                                pullMoreLoading: true
+                                pullLoading: true
                             });
-                            this._page = this._page + 1;
+                            this._page = 1;
                             this.getNewBoardExperience(this._page);
                         }
-                    }
-                    }
-                    onEndReachedThreshold={2}
-                    refreshing={this.state.pullLoading}
-                />
-            </Screen>
-        )
-    }
-}
-
-var styles = {
-    get container() {
-        return {
-            flex: 1,
-            backgroundColor: global.colors.whiteColor
+                        }
+                        onEndReached={() => {
+                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                                this.setState({
+                                    pullMoreLoading: true
+                                });
+                                this._page = this._page + 1;
+                                this.getNewBoardExperience(this._page);
+                            }
+                        }
+                        }
+                        onEndReachedThreshold={2}
+                        refreshing={this.state.pullLoading}
+                    />
+                </Screen>
+                )
+            }
         }
-    },
+        
+var styles = {
+                    get container() {
+        return {
+                    flex: 1,
+                backgroundColor: global.colors.whiteColor
+            }
+        },
     get flatList() {
         return {
-            // flex: 1,
-        }
-    },
+                    // flex: 1,
+                }
+                },
     get itemContainer() {
         return {
-            flex: 1,
-            flexDirection: 'column',
-            padding: global.constants.Padding,
-            backgroundColor: global.colors.whiteColor
-        }
-    },
+                    flex: 1,
+                flexDirection: 'column',
+                padding: global.constants.Padding,
+                backgroundColor: global.colors.whiteColor
+            }
+        },
     get itemName() {
         return {
-            marginLeft: 10,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
-        }
-    },
+                    marginLeft: 10,
+                fontSize: global.configures.fontSize15,
+                color: global.colors.fontColor
+            }
+        },
     get itemTime() {
         return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
-        }
-    },
+                    marginTop: 10,
+                fontSize: global.configures.fontSize13,
+                color: global.colors.gray2Color
+            }
+        },
     get itemTitle() {
         return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
-            color: global.colors.fontColor
-        }
-    },
+                    marginTop: 10,
+                fontSize: global.configures.fontSize17,
+                fontWeight: 'bold',
+                color: global.colors.fontColor
+            }
+        },
     get itemContent() {
         return {
-            marginTop: 10,
-            lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
-        }
-    },
+                    marginTop: 10,
+                lineHeight: global.constants.LineHeight,
+                fontSize: global.configures.fontSize15,
+                color: global.colors.fontColor
+            }
+        },
     get itemDescript() {
         return {
-            marginTop: 10,
-            marginLeft: -2,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
-        }
-    },
-}
+                    marginTop: 10,
+                marginLeft: -2,
+                fontSize: global.configures.fontSize13,
+                color: global.colors.gray2Color
+            }
+        },
+    }

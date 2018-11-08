@@ -91,15 +91,11 @@ export default class NewThreadDetailScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstLoading: true,
-      viewLoading: true,
-      loadingType: 'background',
+      screenStatus: global.screen.loading,
       screenText: null,
       dataArray: [],
       backgroundMaskViewHidden: true,
       selectPageViewHidden: true,
-      floorActionViewHidden: true,
-      moreViewHidden: true,
       currentPage: 1,
       totalPage: 1,
       // selectedValue: '1',
@@ -294,8 +290,7 @@ export default class NewThreadDetailScreen extends Component {
 
       if (page == 1 && array.length == 0) {
         this.setState({
-          firstLoading: false,
-          viewLoading: false,
+          screenStatus: global.screen.none,
           screenText: '帖子不存在',
         });
       }
@@ -305,8 +300,7 @@ export default class NewThreadDetailScreen extends Component {
           totalPage: this.totalPage,
           currentPage: page,
           selectedValue: page.toString(),
-          firstLoading: false,
-          viewLoading: false,
+          screenStatus: global.screen.none,
           screenText: null,
         });
 
@@ -346,9 +340,15 @@ export default class NewThreadDetailScreen extends Component {
       }
 
     }, (error) => {
-
+      ToastUtil.info(error);
+      this.setState({
+        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+      });
     }, (errorMessage) => {
-
+      ToastUtil.info(errorMessage);
+      this.setState({
+        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+      });
     });
   }
 
@@ -631,19 +631,13 @@ export default class NewThreadDetailScreen extends Component {
           }}
         />
 
-        <Screen
-          showLoading={this.state.viewLoading}
-          loadingType={this.state.loadingType}
-          text={this.state.screenText}
-          onPress={() => {
-            this.setState({
-              viewLoading: true,
-              loadingType: 'background',
-              screenText: null
-            });
-            this.getNewTopic(this.page);
-          }}
-        >
+        <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+          this.setState({
+            screenStatus: global.screen.loading,
+          });
+          this.getNewTopic(this.page);
+        }} >
+
           <FlatList
             ref="flatList"
             data={this.state.dataArray}
@@ -659,8 +653,7 @@ export default class NewThreadDetailScreen extends Component {
             onPreviousClick={() => {
               if (this.page == 1) return;
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
               });
               this.page = this.page - 1;
               this.getNewTopic(this.page);
@@ -674,8 +667,7 @@ export default class NewThreadDetailScreen extends Component {
             onNextClick={() => {
               if (this.page + 1 > this.totalPage) return;
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
               });
               this.page = this.page + 1;
               this.getNewTopic(this.page);
@@ -709,8 +701,7 @@ export default class NewThreadDetailScreen extends Component {
             }}
             onFirstClick={() => {
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
@@ -719,8 +710,7 @@ export default class NewThreadDetailScreen extends Component {
             }}
             onLastClick={() => {
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
@@ -736,8 +726,7 @@ export default class NewThreadDetailScreen extends Component {
                 return;
               }
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });

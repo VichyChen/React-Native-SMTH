@@ -31,15 +31,11 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 export default class NewMessageMailDetailScreen extends Component {
-    static navigationOptions = {
-        title: '详情',
-    };
 
     constructor(props) {
-
         super(props);
         this.state = {
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
             author_id: '',
             subject: '',
@@ -52,24 +48,22 @@ export default class NewMessageMailDetailScreen extends Component {
 
     net_GetMail() {
         NetworkManager.net_GetMail(this.props.navigation.state.params.message.position, (result) => {
-
             this.setState({
-                viewLoading: false,
-                screenText: null,
+                screenStatus: global.screen.none,
                 author_id: result['mail'].author_id,
                 subject: result['mail'].subject,
                 time: result['mail'].time,
                 body: result['mail'].body.trim(),
             });
         }, (error) => {
+            ToastUtil.info(error);
             this.setState({
-                viewLoading: false,
-                screenText: error
+                screenStatus: global.screen.textImage,
             });
         }, (errorMessage) => {
+            ToastUtil.info(errorMessage);
             this.setState({
-                viewLoading: false,
-                screenText: errorMessage + '，请点击重试'
+                screenStatus: global.screen.networkError,
             });
         });
     }

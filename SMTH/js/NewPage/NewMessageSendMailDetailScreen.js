@@ -31,11 +31,11 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 export default class NewMessageSendMailDetailScreen extends Component {
-    constructor(props) {
 
+    constructor(props) {
         super(props);
         this.state = {
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
             author_id: '',
             subject: '',
@@ -49,22 +49,21 @@ export default class NewMessageSendMailDetailScreen extends Component {
     net_GetMailSent() {
         NetworkManager.net_GetMailSent(this.props.navigation.state.params.message.position, (result) => {
             this.setState({
-                viewLoading: false,
-                screenText: null,
+                screenStatus: global.screen.none,
                 author_id: result['mail'].author_id,
                 subject: result['mail'].subject,
                 time: result['mail'].time,
                 body: result['mail'].body.trim(),
             });
         }, (error) => {
+            ToastUtil.info(error);
             this.setState({
-                viewLoading: false,
-                screenText: error
+                screenStatus: global.screen.textImage,
             });
         }, (errorMessage) => {
+            ToastUtil.info(errorMessage);
             this.setState({
-                viewLoading: false,
-                screenText: errorMessage + '，请点击重试'
+                screenStatus: global.screen.networkError,
             });
         });
     }
@@ -77,19 +76,12 @@ export default class NewMessageSendMailDetailScreen extends Component {
                     title='消息'
                     showBackButton={true}
                     showBottomLine={true} />
-                <Screen
-                    showLoading={this.state.viewLoading}
-                    loadingType={'background'}
-                    text={this.state.screenText}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading: true,
-                            loadingType: 'background',
-                            screenText: null
-                        });
-                        this.net_GetMailSent();
-                    }}
-                >
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this.net_GetMailSent();
+                }} >
                     <ScrollView style={{ height: Dimensions.get('window').height - 64, }}>
 
                         <Text style={styles.subject}>

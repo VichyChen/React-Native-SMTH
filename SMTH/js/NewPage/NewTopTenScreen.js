@@ -48,7 +48,7 @@ export default class NewTopTenScreen extends Component {
         super(props);
         this.state = {
             pullLoading: false,
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
             showLogin: false,
@@ -56,9 +56,7 @@ export default class NewTopTenScreen extends Component {
 
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({
-                viewLoading: true,
-                loadingType: 'background',
-                screenText: null
+                screenStatus: global.screen.loading,
             });
             this.net_LoadSectionHot();
         });
@@ -72,6 +70,9 @@ export default class NewTopTenScreen extends Component {
                 this.setState({});
             }
             else {
+                this.setState({
+                    screenStatus: global.screen.loading,
+                });
                 this.net_LoadSectionHot();
             }
         });
@@ -94,42 +95,21 @@ export default class NewTopTenScreen extends Component {
             this.setState({
                 dataArray: result['threads'],
                 pullLoading: false,
-                viewLoading: false,
-                screenText: null
+                screenStatus: global.screen.none,
             });
 
         }, (error) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: error
-                });
-            }
-            else {
-                ToastUtil.info(error);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: errorMessage + '，请点击重试'
-                });
-            }
-            else {
-                ToastUtil.info(errorMessage);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
@@ -176,19 +156,12 @@ export default class NewTopTenScreen extends Component {
                         ?
                         <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 1, bottom: 0, left: 0, right: 0 }} />
                         :
-                        <Screen
-                            showLoading={this.state.viewLoading}
-                            loadingType={'background'}
-                            text={this.state.screenText}
-                            onPress={() => {
-                                this.setState({
-                                    viewLoading: true,
-                                    loadingType: 'background',
-                                    screenText: null
-                                });
-                                this.net_LoadSectionHot();
-                            }}
-                        >
+                        <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                            this.setState({
+                                screenStatus: global.screen.loading,
+                            });
+                            this.net_LoadSectionHot();
+                        }} >
                             <FlatList
                                 data={this.state.dataArray}
                                 renderItem={this._renderItem}

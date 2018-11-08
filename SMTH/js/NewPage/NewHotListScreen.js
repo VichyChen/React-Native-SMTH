@@ -52,12 +52,10 @@ export default class NewHotListScreen extends Component {
         this.state = {
             pullLoading: false,
             pullMoreLoading: false,
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
         }
-
-        console.log('NewHotListScreen constructor');
 
         this.getNewHot(this._page);
     }
@@ -138,39 +136,27 @@ export default class NewHotListScreen extends Component {
             // }
             // AsyncStorageManger.setFavouriteArray(favouriteArray);
 
-            if (array.length == 0) {
-                if (this.state.viewLoading == true) {
-                    this.setState({
-                        pullLoading: false,
-                        pullMoreLoading: false,
-                        viewLoading: false,
-                        screenText: '网络请求出错，请点击重试',
-                    });
-                }
-                else {
-                    this.setState({
-                        pullLoading: false,
-                        pullMoreLoading: false,
-                        viewLoading: false,
-                        screenText: null
-                    });
-                }
-            }
-            else {
-                this.setState({
-                    dataArray: array,
-                    pullLoading: false,
-                    pullMoreLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            this.setState({
+                dataArray: array,
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: global.screen.none,
+            });
+
         }, (error) => {
-            console.log('error111' + error);
-
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-            console.log('errorMessage');
-
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
@@ -213,21 +199,14 @@ export default class NewHotListScreen extends Component {
     };
 
     render() {
-        console.log('NewHotListScreen render');
         return (
-            // <Screen
-            //     showLoading={this.state.viewLoading}
-            //     loadingType={'background'}
-            //     text={this.state.screenText}
-            //     onPress={() => {
-            //         this.setState({
-            //             viewLoading: true,
-            //             screenText: null
-            //         });
-            //         this.getNewHot(_page);
-            //     }}
-            // >
-            <View style={styles.container}>
+            <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                this.setState({
+                    screenStatus: global.screen.loading,
+                });
+                this._page = 1;
+                this.getNewHot(this._page);
+            }} >
                 <FlatList
                     data={this.state.dataArray}
                     renderItem={this._renderItem}
@@ -255,7 +234,7 @@ export default class NewHotListScreen extends Component {
                     onEndReachedThreshold={4}
                     refreshing={this.state.pullLoading}
                 />
-            </View>
+            </Screen>
         )
     }
 }
@@ -269,7 +248,7 @@ var styles = {
     },
     get flatList() {
         return {
-            // flex: 1,
+            flex: 1,
             backgroundColor: global.colors.whiteColor
         }
     },

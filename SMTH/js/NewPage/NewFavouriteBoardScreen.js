@@ -13,7 +13,8 @@ import {
     SectionList,
     Dimensions,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    RefreshControl
 } from 'react-native';
 
 import {
@@ -40,19 +41,20 @@ export default class NewFavouriteBoardScreen extends Component {
         super(props);
         this.state = {
             pullLoading: false,
-            viewLoading: false,
-            loadingType: 'background',
+            screenStatus: global.screen.loading,
             screenText: null,
             isDeleting: false,
             editing: false,
             dataArray: [],
-            title: '编辑',
         }
 
         this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
             this.setState({});
         });
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
+            this.setState({
+                screenStatus: global.screen.loading,
+            });
             this.net_LoadFavorites();
         });
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
@@ -61,13 +63,13 @@ export default class NewFavouriteBoardScreen extends Component {
 
         //没登录
         if (global.login == false) {
-            this.setState({});
+            this.setState({
+                screenStatus: global.screen.none,
+            });
         }
         else {
             this.setState({
-                viewLoading: true,
-                loadingType: 'background',
-                screenText: null
+                screenStatus: global.screen.loading,
             });
             this.net_LoadFavorites();
         }
@@ -88,64 +90,46 @@ export default class NewFavouriteBoardScreen extends Component {
             this.setState({
                 dataArray: _dataArray,
                 pullLoading: false,
-                viewLoading: false,
-                screenText: null
+                screenStatus: global.screen.none,
             });
         }, (error) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: error
-                });
-            }
-            else {
-                ToastUtil.info(error);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-            if (this.state.viewLoading == true) {
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: errorMessage + '，请点击重试'
-                });
-            }
-            else {
-                ToastUtil.info(errorMessage);
-                this.setState({
-                    pullLoading: false,
-                    viewLoading: false,
-                    screenText: null
-                });
-            }
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
     net_DelFav(item) {
         this.setState({
             isDeleting: true,
-            loadingType: 'clear',
+            screenStatus: global.screen.loadingClear,
         });
         NetworkManager.net_DelFav(item.id, (result) => {
             _dataArray.splice(item.key, 1);
             this.setState({
                 dataArray: _dataArray,
                 isDeleting: false,
+                screenStatus: global.screen.none,
             });
         }, (error) => {
             ToastUtil.info(error);
             this.setState({
                 isDeleting: false,
+                screenStatus: global.screen.none,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);
             this.setState({
                 isDeleting: false,
+                screenStatus: global.screen.none,
             });
         });
     }
@@ -153,56 +137,58 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {/* <Screen
-                    showLoading={this.state.viewLoading}
-                    loadingType={'background'}
-                    text={this.state.screenText}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading: true,
-                            loadingType: 'background',
-                            screenText: null
-                        });
-                        this.net_LoadFavorites();
-                    }}
-                >
-                    <View style={styles.container}> */}
-                {
-                    global.login == false
-                        ?
-                        <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
-                        :
-                        <ScrollView>
-                            <View style={styles.rightView} >
-                                {
-                                    this.state.dataArray.map((item) => {
-                                        return (
-                                            <CellBackground
-                                                showSelect={false}
-                                                onPress={() => {
-                                                    this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
-                                                }}
-                                            >
-                                                <View style={styles.itemContainer} >
-                                                    <Text style={styles.itemTitle} >{item.name}</Text>
-                                                    {
-                                                        this.props.editing == true
-                                                            ?
-                                                            <ImageButton style={styles.itemImage} width={36} height={36} margin={16} source={global.images.icon_minus}
-                                                                onPress={() => { this.net_DelFav(item); }} />
-                                                            :
-                                                            null
-                                                    }
-                                                </View>
-                                            </CellBackground>
-                                        );
-                                    })
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this.net_LoadFavorites();
+                }} >
+                    {
+                        global.login == false
+                            ?
+                            <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
+                            :
+                            <ScrollView
+                                refreshControl={
+                                    <RefreshControl
+                                        refreshing={this.state.pullLoading} onRefresh={() => {
+                                            this.setState({
+                                                pullLoading: true
+                                            });
+                                            this.net_LoadFavorites();
+                                        }}
+                                    />
                                 }
-                            </View>
-                        </ScrollView>
-                }
-                {/* </View>
-                </Screen> */}
+                            >
+                                <View style={styles.rightView} >
+                                    {
+                                        this.state.dataArray.map((item) => {
+                                            return (
+                                                <CellBackground
+                                                    showSelect={false}
+                                                    onPress={() => {
+                                                        this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
+                                                    }}
+                                                >
+                                                    <View style={styles.itemContainer} >
+                                                        <Text style={styles.itemTitle} >{item.name}</Text>
+                                                        {
+                                                            this.props.editing == true
+                                                                ?
+                                                                <ImageButton style={styles.itemImage} width={36} height={36} margin={16} source={global.images.icon_minus}
+                                                                    onPress={() => { this.net_DelFav(item); }} />
+                                                                :
+                                                                null
+                                                        }
+                                                    </View>
+                                                </CellBackground>
+                                            );
+                                        })
+                                    }
+                                </View>
+                            </ScrollView>
+                    }
+                </Screen>
             </View >
         )
     }

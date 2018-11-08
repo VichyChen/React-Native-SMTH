@@ -3,6 +3,21 @@ import {
 } from '../config/Common';
 import cio from 'cheerio-without-node-native';
 
+global.sections = {
+    all: [
+        { key: 0, id: '7fba65e45f678eb8c605d4107de04185', title: '社区管理' },
+        { key: 1, id: '4fcab28694a0be93d9297d8cede052d9', title: '国内院校' },
+        { key: 2, id: '3497e48bb537373d0f738b41fe53a41b', title: '休闲娱乐' },
+        { key: 3, id: '353fdfda1dfe7a714e592bab99c762cd', title: '五湖四海' },
+        { key: 4, id: 'c8d614e56acb8a192ec4af8b375a5eea', title: '游戏运动' },
+        { key: 5, id: '5b634fdc9ecddf6042561c959176c077', title: '社会信息' },
+        { key: 6, id: '1c455a5dccf4242008d188f9676e3f4e', title: '知性感性' },
+        { key: 7, id: '12af235486fde6684e4b9e83f5d2b779', title: '文化人文' },
+        { key: 8, id: '4ed7f0d8b621c8ccf9e11eca9991d6dc', title: '学术科学' },
+        { key: 9, id: '4dda79c64b3ffb61f8048d745292ff5d', title: '电脑技术' },
+    ],
+};
+
 global.boards = {
     all: {
         "Anhui": {
@@ -1357,7 +1372,7 @@ global.boards = {
             "id": "f9ae20f0f01aa0fbfb426cdb07c93930",
             "name": "摄影"
         },
-        "PhotoGear": {
+        "Photograph": {
             "id": "21e805939431ff120dc88e0faeb12f12",
             "name": "摄影世家"
         },

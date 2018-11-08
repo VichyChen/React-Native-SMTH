@@ -23,74 +23,61 @@ import {
     CellBackground,
     AvatorImage,
     DateUtil,
-    NavigatorTitleButton
+    NavigatorTitleButton,
+    ToastUtil
 } from '../config/Common';
 
-import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
+
 
 export default class NewMessageAtListScreen extends Component {
+
+    from = 0;
+    size = 20;
 
     constructor(props) {
         super(props);
         this.state = {
-            pullLoading4: false,
-            viewLoading4: true,
-            screenText4: null,
+            pullLoading: false,
+            pullMoreLoading: false,
+            screenStatus: global.screen.loading,
+            screenText: null,
             dataArray: [],
-            index: 0,
         }
 
-        this.network(0);
+        this.from = 0;
+        this.net_LoadRefer(this.from, this.size);
     }
 
-    network(index) {
-        NetworkManager.net_LoadRefer(1, 0, 20, (result) => {
+    net_LoadRefer(from, size) {
+        NetworkManager.net_LoadRefer(1, from, size, (result) => {
             for (var i = 0; i < result['refers'].length; i++) {
-                result['refers'][i].key = i;
+                result['refers'][i].key = from + i;
             }
             this.setState({
-                atMeDataArray: result['refers'],
-                pullLoading4: false,
-                viewLoading4: false,
-                screenText4: result['refers'].length == 0 ? '不存在任何文章' : null
+                dataArray: from == 0 ? result['refers'] : this.state.dataArray.concat(result['refers']),
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: global.screen.none,
+                screenText: result['refers'].length == 0 ? '不存在任何文章' : null
             });
-            this.refs.flatList4.scrollToOffset({ offset: 0, animated: true });
+            this.refs.flatList.scrollToOffset({ offset: 0, animated: true });
         }, (error) => {
-            if (this.state.viewLoading4 == true) {
-                this.setState({
-                    pullLoading4: false,
-                    viewLoading4: false,
-                    screenText4: error
-                });
-            }
-            else {
-                ToastUtil.info(error);
-                this.setState({
-                    pullLoading4: false,
-                    viewLoading4: false,
-                    screenText4: null
-                });
-            }
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-            if (this.state.viewLoading4 == true) {
-                this.setState({
-                    pullLoading4: false,
-                    viewLoading4: false,
-                    screenText4: errorMessage + '，请点击重试'
-                });
-            }
-            else {
-                ToastUtil.info(errorMessage);
-                this.setState({
-                    pullLoading4: false,
-                    viewLoading4: false,
-                    screenText4: null
-                });
-            }
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
-    _renderItem2 = ({ item }) => {
+    _renderItem = ({ item }) => {
         return (
             <CellBackground
                 onPress={() => {
@@ -131,33 +118,38 @@ export default class NewMessageAtListScreen extends Component {
     render() {
         return (
             <View>
-                <Screen showLoading={this.state.viewLoading4}
-                    loadingType={'background'}
-                    text={this.state.screenText4}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading4: true,
-                            screenText4: null
-                        });
-                        this.network(3);
-                    }}
-                >
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this.net_LoadRefer(this.from, this.size);
+                }} >
                     <View style={[styles.content]}>
                         <FlatList
-                            ref="flatList4"
-                            data={this.state.atMeDataArray}
-                            renderItem={this._renderItem2}
+                            ref="flatList"
+                            data={this.state.dataArray}
+                            renderItem={this._renderItem}
                             removeClippedSubviews={false}
                             extraData={this.state}
                             style={[styles.flatList]}
                             onRefresh={() => {
                                 this.setState({
-                                    pullLoading4: true
+                                    pullLoading: true
                                 });
-                                this.network(3);
-                            }
-                            }
-                            refreshing={this.state.pullLoading4}
+                                this.from = 0;
+                                this.net_LoadRefer(this.from, this.size);
+                            }}
+                            onEndReached={() => {
+                                if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                                    this.setState({
+                                        pullMoreLoading: true
+                                    });
+                                    this.from = this.from + this.size;
+                                    this.net_LoadRefer(this.from, this.size);
+                                }
+                            }}
+                            onEndReachedThreshold={0.2}
+                            refreshing={this.state.pullLoading}
                         />
                     </View>
                 </Screen>

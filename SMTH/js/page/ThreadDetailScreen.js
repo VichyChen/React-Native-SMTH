@@ -81,17 +81,10 @@ export default class ThreadDetailScreen extends Component {
   selectMoreItemReply;
   selectMoreItemReplyID;
 
-  static navigationOptions = ({ navigation }) => ({
-    title: '详情',
-    headerRight: navigation.state.params ? navigation.state.params.headerRight : null
-  });
-
   constructor(props) {
     super(props);
     this.state = {
-      firstLoading: true,
-      viewLoading: true,
-      loadingType: 'background',
+      screenStatus: global.screen.loading,
       screenText: null,
       dataArray: [],
       backgroundMaskViewHidden: true,
@@ -115,14 +108,10 @@ export default class ThreadDetailScreen extends Component {
   }
 
   componentWillMount() {
-    this.setBarItemButton('notShow');
     this.subscription = DeviceEventEmitter.addListener('ThreadRefreshNotification', (mid) => {
       if (mid == this.props.navigation.state.params.id) {
         this.setState({
-          firstLoading: true,
-          viewLoading: true,
-          loadingType: 'background',
-          screenText: null,
+          screenStatus: global.screen.loading,
         });
         this.from = 0;
         this.net_GetThread(this.from, this.size);
@@ -133,41 +122,6 @@ export default class ThreadDetailScreen extends Component {
   componentWillUnmount() {
     this.subscription.remove();
     DeviceEventEmitter.emit('RefreshScanRecordNotification', null);
-  }
-
-  setBarItemButton(type) {
-    this.props.navigation.setParams({
-      headerRight: (
-        <View style={{ flexDirection: 'row' }}>
-          <ImageButton
-            color={global.colors.whiteColor}
-            width={40}
-            height={40}
-            margin={15}
-            source={global.images.icon_more}
-            onPress={() => {
-              if (type == 'show') {
-                this.setState({
-                  selectPageViewHidden: true,
-                  floorActionViewHidden: true,
-                  backgroundMaskViewHidden: true,
-                  moreViewHidden: true,
-                });
-                this.setBarItemButton('notShow');
-              } else {
-                this.setState({
-                  selectPageViewHidden: true,
-                  floorActionViewHidden: true,
-                  backgroundMaskViewHidden: false,
-                  moreViewHidden: false,
-                });
-                this.setBarItemButton('show');
-              }
-
-            }} />
-        </View>
-      )
-    })
   }
 
   net_GetThread(from, size) {
@@ -190,8 +144,7 @@ export default class ThreadDetailScreen extends Component {
 
       if (from == 0 && result['articles'].length == 0) {
         this.setState({
-          firstLoading: false,
-          viewLoading: false,
+          screenStatus: global.screen.text,
           screenText: '帖子不存在，可以尝试从浏览器打开或查看快照',
         });
       }
@@ -201,9 +154,7 @@ export default class ThreadDetailScreen extends Component {
           totalPage: this.threadCount % size == 0 ? parseInt(this.threadCount / size) : parseInt(this.threadCount / size) + 1,
           currentPage: parseInt(from / size) + 1,
           selectedValue: (parseInt(from / size) + 1).toString(),
-          firstLoading: false,
-          viewLoading: false,
-          screenText: null,
+          screenStatus: global.screen.none,
         });
 
         this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
@@ -228,33 +179,15 @@ export default class ThreadDetailScreen extends Component {
       }
 
     }, (error) => {
-      if (this.state.firstLoading == true) {
-        this.setState({
-          viewLoading: false,
-          screenText: error,
-        });
-      }
-      else {
-        ToastUtil.info(error);
-        this.setState({
-          viewLoading: false,
-          screenText: null
-        });
-      }
+      ToastUtil.info(error);
+      this.setState({
+        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+      });
     }, (errorMessage) => {
-      if (this.state.firstLoading == true) {
-        this.setState({
-          viewLoading: false,
-          screenText: errorMessage + '，请点击重试',
-        });
-      }
-      else {
-        ToastUtil.info(errorMessage);
-        this.setState({
-          viewLoading: false,
-          screenText: null
-        });
-      }
+      ToastUtil.info(errorMessage);
+      this.setState({
+        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+      });
     });
   }
 
@@ -403,19 +336,12 @@ export default class ThreadDetailScreen extends Component {
           }}
         />
 
-        <Screen
-          showLoading={this.state.viewLoading}
-          loadingType={this.state.loadingType}
-          text={this.state.screenText}
-          onPress={() => {
-            this.setState({
-              viewLoading: true,
-              loadingType: 'background',
-              screenText: null
-            });
-            this.net_GetThread(this.from, this.size);
-          }}
-        >
+        <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+          this.setState({
+            screenStatus: global.screen.loading,
+          });
+          this.net_GetThread(this.from, this.size);
+        }} >
           <FlatList
             ref="flatList"
             data={this.state.dataArray}
@@ -431,8 +357,7 @@ export default class ThreadDetailScreen extends Component {
             onPreviousClick={() => {
               if (this.from == 0) return;
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
               });
               this.from = this.from - this.size;
               this.net_GetThread(this.from, this.size);
@@ -446,8 +371,7 @@ export default class ThreadDetailScreen extends Component {
             onNextClick={() => {
               if (this.from + this.size > this.threadCount) return;
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
               });
               this.from = this.from + this.size;
               this.net_GetThread(this.from, this.size);
@@ -544,8 +468,7 @@ export default class ThreadDetailScreen extends Component {
             }}
             onFirstClick={() => {
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
@@ -554,8 +477,7 @@ export default class ThreadDetailScreen extends Component {
             }}
             onLastClick={() => {
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });
@@ -571,8 +493,7 @@ export default class ThreadDetailScreen extends Component {
                 return;
               }
               this.setState({
-                viewLoading: true,
-                loadingType: 'none',
+                screenStatus: global.screen.loadingClear,
                 selectPageViewHidden: true,
                 backgroundMaskViewHidden: true,
               });

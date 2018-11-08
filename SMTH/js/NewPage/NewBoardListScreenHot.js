@@ -39,9 +39,8 @@ export default class NewBoardListScreenHot extends Component {
         this.state = {
             pullLoading: false,
             pullMoreLoading: false,
-            viewLoading: true,
+            screenStatus: global.screen.loading,
             screenText: null,
-            isAdding: false,
             dataArray: [],
         }
 
@@ -79,14 +78,23 @@ export default class NewBoardListScreenHot extends Component {
                 dataArray: dataArray,
                 pullLoading: false,
                 pullMoreLoading: false,
-                viewLoading: false,
-                screenText: null
+                screenStatus: global.screen.none,
             });
 
         }, (error) => {
-
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+            });
         }, (errorMessage) => {
-
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
         });
     }
 
@@ -127,20 +135,13 @@ export default class NewBoardListScreenHot extends Component {
 
     render() {
         return (
-            <Screen
-                showLoading={this.state.viewLoading}
-                loadingType={'background'}
-                text={this.state.screenText}
-                onPress={() => {
-                    this.setState({
-                        viewLoading: true,
-                        screenText: null
-                    });
-                    this._page = 1;
-                    this.getNewBoardHot(this._page);
-                }}
-            >
-
+            <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                this.setState({
+                    screenStatus: global.screen.loading,
+                });
+                this._page = 1;
+                this.getNewBoardHot(this._page);
+            }} >
                 <FlatList
                     removeClippedSubviews={false}
                     extraData={this.state}
