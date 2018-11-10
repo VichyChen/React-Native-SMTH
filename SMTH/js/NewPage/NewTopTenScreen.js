@@ -63,6 +63,21 @@ export default class NewTopTenScreen extends Component {
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
             this.setState({});
         });
+        this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
+            if (this.props.selected == true) {
+                if (this.props.selected == true) {
+                    this.setState({
+                        pullLoading: true,
+                    });
+                    setTimeout(() => {
+                        this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
+                    }, 50);
+                    setTimeout(() => {
+                        this.net_LoadSectionHot(this._page);
+                    }, 1000);
+                }
+            }
+        });
 
         AsyncStorageManger.getAccessToken().then((value) => {
             //没登录
@@ -81,6 +96,7 @@ export default class NewTopTenScreen extends Component {
     componentWillUnmount() {
         this.loginSuccessNotification.remove();
         this.logoutNotification.remove();
+        this.doubleClickHotScreenNotification.remove();
     }
 
     net_LoadSectionHot() {
@@ -163,6 +179,7 @@ export default class NewTopTenScreen extends Component {
                             this.net_LoadSectionHot();
                         }} >
                             <FlatList
+                                ref="flatList"
                                 data={this.state.dataArray}
                                 renderItem={this._renderItem}
                                 removeClippedSubviews={false}

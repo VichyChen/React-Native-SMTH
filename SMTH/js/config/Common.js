@@ -24,7 +24,9 @@ import LoginButtonView from '../component/LoginButtonView';
 
 import BoardItems from '../page/items/BoardItems';
 
+
 import Button from '../component/Button';
+import CustomDoubleClick from '../component/CustomDoubleClick';
 import ImageButton from '../component/ImageButton';
 import LoadingView from '../component/LoadingView';
 import LoadingViewText from '../component/LoadingViewText';
@@ -76,6 +78,7 @@ export {
     WindowsMaskView,
     BoardItems,
     Button,
+    CustomDoubleClick,
     ImageButton,
     LoadingView,
     LoadingViewText,

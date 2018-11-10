@@ -39,6 +39,7 @@ import AsyncStorageManger from '../storage/AsyncStorageManger';
 export default class NewHotScreen extends Component {
 
   _catchArray = [0];
+  _tabSelectedIndex = 0;
 
   constructor(props) {
     super(props);
@@ -62,6 +63,16 @@ export default class NewHotScreen extends Component {
         viewLoading: true
       });
     });
+    this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
+      if (this.state.selectedIndex == 0) {
+        setTimeout(() => {
+          DeviceEventEmitter.emit('NewHotListScreenRefreshNotification', this._tabSelectedIndex);
+        }, 50);
+      }
+    });
+    this.newHotListScreenRefreshNotification = DeviceEventEmitter.addListener('NewHotScreenNotification', (index) => {
+      this._tabSelectedIndex = index;
+    });
   }
 
   componentDidMount() {
@@ -75,23 +86,25 @@ export default class NewHotScreen extends Component {
   componentWillUnmount() {
     this.loginNotification.remove();
     this.loginSuccessNotification.remove();
+    this.doubleClickHotScreenNotification.remove();
+    this.newHotListScreenRefreshNotification.remove();
   }
 
   render() {
     var titles = [];
     var pages = [];
     titles.push('全站');
-    pages.push((<NewHotListScreen navigation={this.props.navigation} section={''} />));
+    pages.push((<NewHotListScreen navigation={this.props.navigation} section={''} index={0} />));
     if (global.current.sectionArray != null) {
       global.current.sectionArray.map((item) => {
         titles.push(item.title);
-        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} />));
+        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} index={1 + item.key} />));
       });
     }
     else {
       global.configures.sections.map((item) => {
         titles.push(item.title);
-        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} />));
+        pages.push((<NewHotListScreen navigation={this.props.navigation} section={item.id} index={1 + item.key} />));
       });
     }
 
@@ -134,16 +147,16 @@ export default class NewHotScreen extends Component {
           }}
         >
           <View style={styles.page}>
-            <TabPageView titles={titles} pages={pages} />
+            <TabPageView titles={titles} pages={pages} notification={'NewHotScreenNotification'} />
           </View>
           <View style={styles.page}>
             {
-              this._catchArray.indexOf(1) == -1 ? null : <NewTopTenScreen navigation={this.props.navigation} />
+              this._catchArray.indexOf(1) == -1 ? null : <NewTopTenScreen navigation={this.props.navigation} selected={this.state.selectedIndex == 1 ? true : false} />
             }
           </View>
           <View style={styles.page}>
             {
-              this._catchArray.indexOf(2) == -1 ? null : <NewPictureListScreen navigation={this.props.navigation} />
+              this._catchArray.indexOf(2) == -1 ? null : <NewPictureListScreen navigation={this.props.navigation} selected={this.state.selectedIndex == 2 ? true : false} />
             }
           </View>
         </ScrollView>

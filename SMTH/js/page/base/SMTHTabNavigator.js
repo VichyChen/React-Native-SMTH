@@ -2,7 +2,9 @@ import React from 'react';
 import {
     Image,
     DeviceEventEmitter,
-    StatusBar
+    StatusBar,
+    View,
+    TouchableWithoutFeedback
 } from 'react-native';
 
 import { TabNavigator } from "react-navigation";
@@ -18,7 +20,7 @@ import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
 import NewMyScreen from '../../NewPage/NewMyScreen';
 
 import {
-    Color
+    CustomDoubleClick
 } from '../../config/Common';
 
 const SMTHTabNavigator = TabNavigator({
@@ -27,10 +29,19 @@ const SMTHTabNavigator = TabNavigator({
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '热点',
             tabBarIcon: ({ tintColor, focused }) => (
-                <Image
-                    source={focused == true ? global.images.tabbar_home_filled : global.images.tabbar_home}
-                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
-                />
+                <CustomDoubleClick style={{ width: 44, height: 48, alignItems: 'center', justifyContent: 'center', }}
+                    onDoubleClick={() => {
+                        DeviceEventEmitter.emit('DoubleClickHotScreenNotification', null);
+                    }}
+                    onClick={() => {
+                        if (!focused) {
+                            StatusBar.setBarStyle('dark-content');
+                            navigation.navigate('HotScreen')
+                        }
+                    }}>
+                    <Image source={focused == true ? global.images.tabbar_home_filled : global.images.tabbar_home}
+                        style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]} />
+                </CustomDoubleClick>
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
                 StatusBar.setBarStyle('dark-content');

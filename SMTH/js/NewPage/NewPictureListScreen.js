@@ -55,8 +55,26 @@ export default class NewPictureListScreen extends Component {
             screenText: null,
             dataArray: [],
         }
+        this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
+            if (this.props.selected == true) {
+                this.setState({
+                    pullLoading: true,
+                });
+                setTimeout(() => {
+                    this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
+                }, 50);
+                setTimeout(() => {
+                    this._page = 1;
+                    this.getNewAlbum(this._page);
+                }, 1000);
+            }
+        });
 
         this.getNewAlbum(this._page);
+    }
+
+    componentWillUnmount() {
+        this.doubleClickHotScreenNotification.remove();
     }
 
     getNewAlbum(page) {
@@ -160,6 +178,7 @@ export default class NewPictureListScreen extends Component {
                     this.getNewAlbum(this._page);
                 }} >
                     <FlatList
+                        ref="flatList"
                         data={this.state.dataArray}
                         renderItem={this._renderItem}
                         removeClippedSubviews={false}

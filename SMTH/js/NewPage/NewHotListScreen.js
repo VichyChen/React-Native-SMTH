@@ -56,8 +56,26 @@ export default class NewHotListScreen extends Component {
             screenText: null,
             dataArray: [],
         }
+        this.newHotListScreenRefreshNotification = DeviceEventEmitter.addListener('NewHotListScreenRefreshNotification', (index) => {
+            if (this.props.index == index) {
+                this.setState({
+                    pullLoading: true,
+                });
+                setTimeout(() => {
+                    this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
+                }, 50);
+                setTimeout(() => {
+                    this._page = 1;
+                    this.getNewHot(this._page);
+                }, 1000);
+            }
+        });
 
         this.getNewHot(this._page);
+    }
+
+    componentWillUnmount() {
+        this.newHotListScreenRefreshNotification.remove();
     }
 
     getNewHot(page) {
@@ -208,6 +226,7 @@ export default class NewHotListScreen extends Component {
                 this.getNewHot(this._page);
             }} >
                 <FlatList
+                    ref="flatList"
                     data={this.state.dataArray}
                     renderItem={this._renderItem}
                     removeClippedSubviews={false}

@@ -9,7 +9,8 @@ import {
   AppRegistry,
   StyleSheet,
   View,
-  Text
+  Text,
+  DeviceEventEmitter
 } from 'react-native';
 
 import { TabView, TabBar, SceneMap, PagerPan } from 'react-native-tab-view';
@@ -81,6 +82,10 @@ export default class TabPageView extends Component {
     }
 
     this.setState({ index })
+
+    if (this.props.notification != null) {
+      DeviceEventEmitter.emit(this.props.notification, index);
+    }
   };
 
   render() {
