@@ -132,6 +132,7 @@ var styles = {
     },
     get subject() {
         return {
+            lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
             fontWeight: 'bold',
             color: global.colors.fontColor

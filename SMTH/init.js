@@ -32,7 +32,7 @@ global.constants = {
     RightMargin: 15,
     Margin: 15,
     Padding: 15,
-    LineHeight: 18,
+    LineHeight: 20,
 };
 
 global.colors = {
@@ -96,7 +96,7 @@ global.storageKeys = {
 
 global.configures = {
     pageSize: 20,
-    currentFontSize: 15,
+    currentFontSize: 16,
     standandFontSize: 17,
     fontSize20: 20,
     fontSize19: 19,

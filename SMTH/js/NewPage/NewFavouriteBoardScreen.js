@@ -167,6 +167,9 @@ export default class NewFavouriteBoardScreen extends Component {
                                                 <CellBackground
                                                     showSelect={false}
                                                     onPress={() => {
+                                                        if (global.boards.all[item.id] == null) {
+                                                            return;
+                                                        }
                                                         this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
                                                     }}
                                                 >

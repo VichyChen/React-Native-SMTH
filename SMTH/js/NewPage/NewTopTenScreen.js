@@ -153,8 +153,13 @@ export default class NewTopTenScreen extends Component {
                     <Text style={styles.itemTitle} >{item.subject}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
                         <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.board}</Text>
-                        <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{global.boards.all[item.board].name}</Text>
-                        <Text style={styles.itemDescript} >{item.count + '回复 '}</Text>
+                        {
+                            global.boards.all[item.board] == null ? null :
+                                (
+                                    <Text style={[styles.itemBoard, { marginLeft: 8, paddingTop: 3 }]} >{global.boards.all[item.board].name}</Text>
+                                )
+                        }
+                        <Text style={[styles.itemDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
                     </View>
 
                 </View>
@@ -336,6 +341,7 @@ var styles = {
     get itemTitle() {
         return {
             marginTop: 10,
+            lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
             fontWeight: 'bold',
             color: global.colors.fontColor

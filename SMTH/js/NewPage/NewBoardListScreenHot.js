@@ -214,6 +214,7 @@ var styles = {
     get itemTitle() {
         return {
             marginTop: 10,
+            lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
             fontWeight: 'bold',
             color: global.colors.fontColor

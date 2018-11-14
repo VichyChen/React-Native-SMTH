@@ -320,8 +320,11 @@ export default class ThreadDetailScreen extends Component {
       <View style={{ flex: 1 }}>
 
         <NavigationBar
-          title={global.boards.all[unescape(this.props.navigation.state.params.board)].name}
+          title={global.boards.all[unescape(this.props.navigation.state.params.board)] == null ? this.props.navigation.state.params.board : global.boards.all[unescape(this.props.navigation.state.params.board)].name}
           titleOnPress={() => {
+            if (global.boards.all[unescape(this.props.navigation.state.params.board)] == null) {
+              return;
+            }
             this.props.navigation.navigate('newBoardListScreen', {
               id: global.boards.all[unescape(this.props.navigation.state.params.board)].id,
               name: global.boards.all[unescape(this.props.navigation.state.params.board)].name,
@@ -599,14 +602,38 @@ export default class ThreadDetailScreen extends Component {
               }
               //举报
               else if (index == 6) {
-                if (this.boardObject == null) return;
-                var array = this.boardObject.manager.split(" ");
-                if (array.length == 0) return;
-                this.props.navigation.navigate('newMessageSendScreen', {
-                  user: array[0],
-                  title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
-                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
-                });
+                if (this.boardObject == null) {
+                  NetworkManager.net_QueryBoard(this.boardName, (result) => {
+                    for (var i = 0; i < result['boards'].length; i++) {
+                      if (this.boardName == result['boards'][i].id) {
+                        this.boardObject = result['boards'][i];
+                        break;
+                      }
+                    }
+                    if (this.boardObject != null) {
+                      var array = this.boardObject.manager.split(" ");
+                      if (array.length == 0) return;
+                      this.props.navigation.navigate('newMessageSendScreen', {
+                        user: array[0],
+                        title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
+                        content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
+                      });
+                    }
+
+                  }, (error) => {
+                  }, (timeout) => {
+                  });
+                }
+                else {
+                  var array = this.boardObject.manager.split(" ");
+                  if (array.length == 0) return;
+                  this.props.navigation.navigate('newMessageSendScreen', {
+                    user: array[0],
+                    title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
+                    content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
+                  });
+                }
+
               }
               else {
 
@@ -644,14 +671,37 @@ export default class ThreadDetailScreen extends Component {
               }
               //举报
               else if (index == 2) {
-                if (this.boardObject == null) return;
-                var array = this.boardObject.manager.split(" ");
-                if (array.length == 0) return;
-                this.props.navigation.navigate('newMessageSendScreen', {
-                  user: array[0],
-                  title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
-                  content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
-                });
+                if (this.boardObject == null) {
+                  NetworkManager.net_QueryBoard(this.boardName, (result) => {
+                    for (var i = 0; i < result['boards'].length; i++) {
+                      if (this.boardName == result['boards'][i].id) {
+                        this.boardObject = result['boards'][i];
+                        break;
+                      }
+                    }
+                    if (this.boardObject != null) {
+                      var array = this.boardObject.manager.split(" ");
+                      if (array.length == 0) return;
+                      this.props.navigation.navigate('newMessageSendScreen', {
+                        user: array[0],
+                        title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
+                        content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                      });
+                    }
+
+                  }, (error) => {
+                  }, (timeout) => {
+                  });
+                }
+                else {
+                  var array = this.boardObject.manager.split(" ");
+                  if (array.length == 0) return;
+                  this.props.navigation.navigate('newMessageSendScreen', {
+                    user: array[0],
+                    title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
+                    content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                  });
+                }
               }
               else {
 
@@ -680,7 +730,8 @@ var styles = {
   },
   get subject() {
     return {
-      fontSize: global.configures.fontSize19,
+      lineHeight: global.constants.LineHeight,
+      fontSize: global.configures.fontSize17,
       fontWeight: 'bold',
       color: global.colors.fontColor,
     }

@@ -104,17 +104,17 @@ export default class NewUserScreen extends Component {
                 </View>
                 <TabPageView
                     style={{}}
-                    titles={['资料', '文章', '版面', '关注', '粉丝']}
+                    titles={[/*'资料', */'文章', '版面', '关注', '粉丝']}
                     pages={[
-                        (<NewUserInfoScreen
-                            navigation={this.props.navigation}
-                            id={this.props.navigation.state.params.id}
-                            callback={(nick) => {
-                                this.setState({
-                                    nick: nick,
-                                });
-                            }}
-                        />),
+                        // (<NewUserInfoScreen
+                        //     navigation={this.props.navigation}
+                        //     id={this.props.navigation.state.params.id}
+                        //     callback={(nick) => {
+                        //         this.setState({
+                        //             nick: nick,
+                        //         });
+                        //     }}
+                        // />),
                         (<NewUserArticleScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserMemberScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
                         (<NewUserFriendsScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
