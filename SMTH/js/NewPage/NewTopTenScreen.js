@@ -138,7 +138,7 @@ export default class NewTopTenScreen extends Component {
             <View>
                 <View style={styles.itemContainer}>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    {/* <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                         <AvatorImage
                             borderRadius={15}
                             widthAndHeight={30}
@@ -148,7 +148,7 @@ export default class NewTopTenScreen extends Component {
                             uri={NetworkManager.net_getFace(item.author_id)} />
 
                         <Text style={styles.itemName} >{item.author_id}</Text>
-                    </View>
+                    </View> */}
                     {/* <Text style={styles.itemTime} >{item.time}</Text> */}
                     <Text style={styles.itemTitle} >{item.subject}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
@@ -159,6 +159,7 @@ export default class NewTopTenScreen extends Component {
                                     <Text style={[styles.itemBoard, { marginLeft: 8, paddingTop: 3 }]} >{global.boards.all[item.board].name}</Text>
                                 )
                         }
+                        <Text style={styles.itemName} >{item.author_id}</Text>
                         <Text style={[styles.itemDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
                     </View>
 
@@ -290,7 +291,6 @@ var styles = {
             fontSize: global.configures.fontSize14,
             color: global.colors.gray2Color,
             backgroundColor: global.colors.whiteColor
-
         }
     },
     get countView() {
@@ -326,9 +326,10 @@ var styles = {
     },
     get itemName() {
         return {
+            marginTop: 10,
             marginLeft: 10,
             fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
+            color: global.colors.gray2Color
         }
     },
     get itemTime() {
@@ -340,7 +341,6 @@ var styles = {
     },
     get itemTitle() {
         return {
-            marginTop: 10,
             lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
             fontWeight: 'bold',

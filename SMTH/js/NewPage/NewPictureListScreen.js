@@ -39,6 +39,7 @@ import {
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import cio from 'cheerio-without-node-native';
+import AutoHeightImage from 'react-native-auto-height-image';
 
 var _array;
 
@@ -146,15 +147,51 @@ export default class NewPictureListScreen extends Component {
             <View>
                 <View style={styles.itemContainer}>
                     <Text style={styles.itemTitle}>{item.title}</Text>
-                    <View style={styles.imageView} >
-                        {
-                            item.attachment_list.map((image) => {
-                                return (
-                                    <Image style={styles.image} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
-                                );
-                            })
-                        }
-                    </View>
+                    {
+
+                        item.attachment_list.length == 1 ? (
+                            <View style={[styles.imageView, {
+                                marginTop: global.constants.Padding,
+                                width: (global.constants.ScreenWidth - global.constants.Padding * 2) * 0.5,
+                                backgroundColor: global.colors.backgroundGrayColor
+                            }]} >
+                                <AutoHeightImage
+                                    style={{}}
+                                    width={(global.constants.ScreenWidth - global.constants.Padding * 2) * 0.5}
+                                    imageURL={'https://exp.newsmth.net' + item.attachment_list[0].url}
+                                />
+                            </View>
+                        ) : (
+                                item.attachment_list.length == 4 ? (
+                                    <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.7 }]} >
+                                        {
+                                            item.attachment_list.map((image) => {
+                                                return (
+                                                    <Image style={[styles.image, {
+                                                        width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                        height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                    }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
+                                                );
+                                            })
+                                        }
+                                    </View>
+                                ) : (
+                                        <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8 }]} >
+                                            {
+                                                item.attachment_list.map((image) => {
+                                                    return (
+                                                        <Image style={[styles.image, {
+                                                            width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                            height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                        }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
+                                                    );
+                                                })
+                                            }
+                                        </View>
+
+                                    )
+                            )
+                    }
                     <Text style={styles.itemTime} >{item.time}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
                         <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.boardName}</Text>
@@ -226,13 +263,12 @@ var styles = {
         return {
             lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
-            // fontWeight: 'bold',
+            fontWeight: 'bold',
             color: global.colors.fontColor
         }
     },
     get imageView() {
         return {
-            width: global.constants.ScreenWidth - global.constants.Padding,
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
@@ -241,10 +277,8 @@ var styles = {
     },
     get image() {
         return {
-            width: Math.floor((global.constants.ScreenWidth - (global.constants.Padding * 4)) / 3),
-            height: (global.constants.ScreenWidth - (global.constants.Padding * 4)) / 3,
-            marginRight: global.constants.Padding,
-            marginTop: global.constants.Padding,
+            marginRight: 10,
+            marginTop: 10,
             backgroundColor: global.colors.backgroundGrayColor,
         }
     },
