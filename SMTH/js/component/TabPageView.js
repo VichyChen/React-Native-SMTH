@@ -24,7 +24,7 @@ export default class TabPageView extends Component {
     super(props);
 
     _array = new Array();
-    _array.push('0');
+    _array.push(this.props.selectedIndex == null ? '0' : this.props.selectedIndex.toString());
 
     routes = new Array();
     props.titles.map((title, index) => {
@@ -32,7 +32,7 @@ export default class TabPageView extends Component {
     });
 
     this.state = {
-      index: 0,
+      index: this.props.selectedIndex == null ? 0 : this.props.selectedIndex,
       routes: routes,
     }
   }

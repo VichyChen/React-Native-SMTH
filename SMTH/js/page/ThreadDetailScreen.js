@@ -321,6 +321,7 @@ export default class ThreadDetailScreen extends Component {
 
         <NavigationBar
           title={global.boards.all[unescape(this.props.navigation.state.params.board)] == null ? this.props.navigation.state.params.board : global.boards.all[unescape(this.props.navigation.state.params.board)].name}
+          message={unescape(this.props.navigation.state.params.board)}
           titleOnPress={() => {
             if (global.boards.all[unescape(this.props.navigation.state.params.board)] == null) {
               return;

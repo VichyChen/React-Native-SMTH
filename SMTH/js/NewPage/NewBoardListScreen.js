@@ -55,6 +55,7 @@ export default class NewBoardListScreen extends Component {
 
                 <NavigationBar
                     title={this.props.navigation.state.params.name}
+                    message={this.props.navigation.state.params.title}
                     navigation={this.props.navigation}
                     showBackButton={true}
                     showBottomLine={false}

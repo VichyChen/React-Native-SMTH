@@ -87,6 +87,11 @@ global.images = {
     get tabbar_user() { return require('./js/image/tabbar_user.png') },
 
     get ic_return_b_90x90() { return require('./js/image/ic_return_b_90x90.png') },
+
+    get icon_message_mail() { return require('./js/image/icon_message_mail.png') },
+    get icon_message_sendmail() { return require('./js/image/icon_message_sendmail.png') },
+    get icon_message_reply() { return require('./js/image/icon_message_reply.png') },
+    get icon_message_at() { return require('./js/image/icon_message_at.png') },
 };
 
 global.storageKeys = {

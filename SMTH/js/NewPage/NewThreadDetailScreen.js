@@ -600,6 +600,7 @@ export default class NewThreadDetailScreen extends Component {
 
         <NavigationBar
           title={this.boardTitle}
+          message={this.boardName}
           titleOnPress={() => {
             this.props.navigation.navigate('newBoardListScreen', {
               id: this.boardID,

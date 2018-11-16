@@ -168,8 +168,8 @@ export default class NewPictureListScreen extends Component {
                                             item.attachment_list.map((image) => {
                                                 return (
                                                     <Image style={[styles.image, {
-                                                        width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
-                                                        height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                        width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
+                                                        height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                     }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
                                                 );
                                             })
@@ -181,8 +181,8 @@ export default class NewPictureListScreen extends Component {
                                                 item.attachment_list.map((image) => {
                                                     return (
                                                         <Image style={[styles.image, {
-                                                            width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
-                                                            height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 30) / 3),
+                                                            width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
+                                                            height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                         }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
                                                     );
                                                 })
@@ -273,18 +273,20 @@ var styles = {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',
+            marginTop: 10,
+            marginBottom: 10,
         }
     },
     get image() {
         return {
-            marginRight: 10,
-            marginTop: 10,
+            marginRight: 5,
+            marginTop: 5,
             backgroundColor: global.colors.backgroundGrayColor,
         }
     },
     get itemTime() {
         return {
-            marginTop: 10,
+            marginTop: 5,
             fontSize: global.configures.fontSize13,
             color: global.colors.gray2Color
         }

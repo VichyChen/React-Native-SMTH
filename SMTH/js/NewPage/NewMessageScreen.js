@@ -52,7 +52,7 @@ export default class NewMessageScreen extends Component {
                         this.props.navigation.navigate('newMessageSendScreen', {  })
                     }}
                 />
-                <TabPageView titles={['收件箱', '发件箱', '回复我', '@我']}
+                <TabPageView titles={['收件箱', '发件箱', '回复我', '@我']} selectedIndex={this.props.navigation.state.params.selectedIndex}
                     pages={[
                         (<NewMessageMailListScreen navigation={this.props.navigation} />),
                         (<NewMessageSendMailListScreen navigation={this.props.navigation} />),

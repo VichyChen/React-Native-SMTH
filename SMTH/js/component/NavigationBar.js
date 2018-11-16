@@ -64,20 +64,29 @@ export default class NavigationBar extends Component {
                     }
 
                     {
-                        this.props.title != null
-                            ?
-                            <Text style={[
-                                styles.title,
-                                { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
-                            ]}
-                                onPress={this.props.titleOnPress}
-                            >
-                                {this.props.title}
-                            </Text>
-                            :
-                            null
+                        this.props.title == null ? null :
+                            <TouchableWithoutFeedback onPress={this.props.titleOnPress} >
+                                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                                    <Text style={[
+                                        styles.title,
+                                        { color: this.props.titleColor != null ? this.props.titleColor : global.colors.fontColor }
+                                    ]}
+                                        onPress={this.props.titleOnPress} >
+                                        {this.props.title}
+                                    </Text>
+                                    {
+                                        this.props.message == null ? null :
+                                            <Text style={[
+                                                styles.message,
+                                                { color: this.props.messageColor != null ? this.props.messageColor : global.colors.gray2Color }
+                                            ]} >
+                                                {this.props.message}
+                                            </Text>
+                                    }
+                                </View>
+                            </TouchableWithoutFeedback>
                     }
-                    
+
                     {this.props.children}
 
                     {
@@ -181,6 +190,13 @@ var styles = {
         return {
             fontSize: 18,
             color: global.colors.fontColor,
+        }
+    },
+    get message() {
+        return {
+            marginTop: 2,
+            fontSize: 12,
+            color: global.colors.gray2Color,
         }
     },
     get rightButton() {
