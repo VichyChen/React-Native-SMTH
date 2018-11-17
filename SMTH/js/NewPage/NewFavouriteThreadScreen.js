@@ -78,7 +78,7 @@ export default class NewFavouriteThreadScreen extends Component {
                 <View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: global.colors.whiteColor }}>
                         {
-                            this.props.editing == true
+                            this.state.editing == true
                                 ?
                                 <ImageButton style={styles.deleteImage} width={44} height={44} margin={24} source={global.images.icon_minus}
                                     onPress={() => { this.deleteFavouriteThreadModel(item.id); }} />
@@ -92,8 +92,8 @@ export default class NewFavouriteThreadScreen extends Component {
                                 <Text style={styles.author}>{item.author}</Text>
                             </View>
                         </View>
-                        <SeperatorLine />
                     </View>
+                    <SeperatorLine />
                 </View>
             </CellBackground>
         )
@@ -102,6 +102,18 @@ export default class NewFavouriteThreadScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <NavigationBar
+                    navigation={this.props.navigation}
+                    title='我的收藏'
+                    showBottomLine={true}
+                    showBackButton={true}
+                    rightButtonTitle={this.state.editing == true ? '完成' : '编辑'}
+                    rightButtonOnPress={() => {
+                        this.setState({
+                            editing: !this.state.editing,
+                        });
+                    }}
+                />
 
                 <Screen
                     showLoading={false}

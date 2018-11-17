@@ -85,6 +85,7 @@ export default class NewMyScreen extends Component {
       if (result['new_count'] != null) {
         mailCount = result['new_count'];
         this.setState({
+          mailCount: mailCount,
           notificationCount: mailCount + sentMailCount + replyMeCount + atMeCount
         });
       }
@@ -98,6 +99,7 @@ export default class NewMyScreen extends Component {
       if (result['new_count'] != null) {
         sentMailCount = result['new_count'];
         this.setState({
+          sentMailCount: sentMailCount,
           notificationCount: mailCount + sentMailCount + replyMeCount + atMeCount
         });
       }
@@ -112,6 +114,7 @@ export default class NewMyScreen extends Component {
       if (result['new_count'] != null) {
         replyMeCount = result['new_count'];
         this.setState({
+          replyMeCount: replyMeCount,
           notificationCount: mailCount + sentMailCount + replyMeCount + atMeCount
         });
       }
@@ -125,6 +128,7 @@ export default class NewMyScreen extends Component {
       if (result['new_count'] != null) {
         atMeCount = result['new_count'];
         this.setState({
+          atMeCount: atMeCount,
           notificationCount: mailCount + sentMailCount + replyMeCount + atMeCount
         });
       }
@@ -152,12 +156,21 @@ export default class NewMyScreen extends Component {
     return (
       <View style={{ backgroundColor: global.colors.whiteColor }}>
         <NavigationBar
-          // titleColor={global.colors.whiteColor}
+          style={{ position: 'absolute', zIndex: 999, top: 0, left: 0, right: 0, height: global.constants.NavigationBarHeight, backgroundColor: global.colors.clearColor }}
           showBottomLine={false}
           rightButtonTitle={'设置'}
+          rightButtonOnPress={() => {
+            this.props.navigation.navigate('newSettingScreen')
+          }}
         />
+        <View style={{ height: global.constants.TopSaveArea, backgroundColor: global.colors.clearColor }} />
 
-        <ScrollView style={{ backgroundColor: global.colors.whiteColor, height: Dimensions.get('window').height - 64, }}>
+        <ScrollView style={{
+          marginTop: global.constants.TopSaveArea,
+          paddingTop: 44,
+          backgroundColor: global.colors.whiteColor,
+          height: global.constants.ScreenHeight - global.constants.TabBarHeight - global.constants.TopSaveArea,
+        }}>
           <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
 
             <AvatorImage
@@ -196,8 +209,17 @@ export default class NewMyScreen extends Component {
                   }}
                 >
                   <View style={[styles.messageItem]}>
-                    <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_mail} />
-                    <Text style={styles.messageTextItem}>收信箱</Text>
+                    <View style={{ alignItems: 'center' }}>
+                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_mail} />
+                      <Text style={styles.messageTextItem}>{'收信箱'}</Text>
+                      {
+                        this.state.mailCount > 0 ?
+                          <View style={styles.messageCountViewItem} >
+                            <Text style={styles.messageCountTextItem} >{this.state.mailCount}</Text>
+                          </View>
+                          : null
+                      }
+                    </View>
                   </View>
                 </CellBackground>
 
@@ -208,8 +230,18 @@ export default class NewMyScreen extends Component {
                   }}
                 >
                   <View style={[styles.messageItem]}>
-                    <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_sendmail} />
-                    <Text style={styles.messageTextItem}>发信箱</Text>
+                    <View style={{ alignItems: 'center' }}>
+                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_sendmail} />
+                      <Text style={styles.messageTextItem}>发信箱</Text>
+                      {
+                        this.state.sentMailCount > 0 ?
+                          <View style={styles.messageCountViewItem} >
+                            <Text style={styles.messageCountTextItem} >{this.state.sentMailCount}</Text>
+                          </View>
+                          :
+                          null
+                      }
+                    </View>
                   </View>
                 </CellBackground>
 
@@ -220,8 +252,18 @@ export default class NewMyScreen extends Component {
                   }}
                 >
                   <View style={[styles.messageItem]}>
-                    <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_reply} />
-                    <Text style={styles.messageTextItem}>回复我</Text>
+                    <View style={{ alignItems: 'center' }}>
+                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_reply} />
+                      <Text style={styles.messageTextItem}>回复我</Text>
+                      {
+                        this.state.sentMailCount > 0 ?
+                          <View style={styles.messageCountViewItem} >
+                            <Text style={styles.messageCountTextItem} >{this.state.replyMeCount}</Text>
+                          </View>
+                          :
+                          null
+                      }
+                    </View>
                   </View>
                 </CellBackground>
 
@@ -232,8 +274,18 @@ export default class NewMyScreen extends Component {
                   }}
                 >
                   <View style={[styles.messageItem]}>
-                    <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
-                    <Text style={styles.messageTextItem}>@我</Text>
+                    <View style={{ alignItems: 'center' }}>
+                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
+                      <Text style={styles.messageTextItem}>@我</Text>
+                      {
+                        this.state.sentMailCount > 0 ?
+                          <View style={styles.messageCountViewItem} >
+                            <Text style={styles.messageCountTextItem} >{this.state.atMeCount}</Text>
+                          </View>
+                          :
+                          null
+                      }
+                    </View>
                   </View>
                 </CellBackground>
               </View>
@@ -245,8 +297,22 @@ export default class NewMyScreen extends Component {
                 this.props.navigation.navigate('userThreadScreen', { id: this.state.username })
               }}
             >
-              <View style={[styles.content, { marginTop: 10 }]}>
+              <View style={[styles.content, { marginTop: 20 }]}>
                 <Text style={styles.board}>我的主题</Text>
+                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
+              </View>
+            </CellBackground>
+
+            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
+
+            <CellBackground
+              showSelect={false}
+              onPress={() => {
+                this.props.navigation.navigate('newFavouriteThreadScreen')
+              }}
+            >
+              <View style={[styles.content]}>
+                <Text style={styles.board}>我的收藏</Text>
                 <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
               </View>
             </CellBackground>
@@ -261,39 +327,6 @@ export default class NewMyScreen extends Component {
             >
               <View style={[styles.content]}>
                 <Text style={styles.board}>浏览记录</Text>
-                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
-              </View>
-            </CellBackground>
-
-            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
-
-            <CellBackground
-              showSelect={false}
-              onPress={() => {
-                this.props.navigation.navigate('sendMessageScreen', {
-                  user: 'VichyChen',
-                  title: '意见反馈',
-                  content: '',
-                });
-              }}
-            >
-              <View style={[styles.content]}>
-                <Text style={styles.board}>意见反馈</Text>
-                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
-              </View>
-            </CellBackground>
-
-            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
-
-            <CellBackground
-              showSelect={false}
-              onPress={() => {
-                var shareManager = NativeModules.ShareManager;
-                shareManager.share('T水木-简洁的水木社区客户端', 'https://itunes.apple.com/us/app/t%E6%B0%B4%E6%9C%A8/id1330286243?l=zh&ls=1&mt=8');
-              }}
-            >
-              <View style={[styles.content]}>
-                <Text style={styles.board}>分享天天水木</Text>
                 <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
               </View>
             </CellBackground>
@@ -333,6 +366,26 @@ var styles = {
       // backgroundColor: 'yellow'
     }
   },
+  get messageCountViewItem() {
+    return {
+      position: 'absolute',
+      right: -4,
+      top: -8,
+      width: 20,
+      height: 20,
+      backgroundColor: 'red',
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  },
+  get messageCountTextItem() {
+    return {
+      backgroundColor: global.colors.clearColor,
+      color: global.colors.whiteColor,
+      textAlign: 'center',
+    }
+  },
   get messageImageItem() {
     return {
       width: 25,
@@ -357,7 +410,7 @@ var styles = {
   },
   get board() {
     return {
-      paddingLeft: 15,
+      paddingLeft: 20,
       fontSize: global.configures.fontSize17,
       color: global.colors.fontColor,
       backgroundColor: global.colors.whiteColor,
@@ -365,7 +418,7 @@ var styles = {
   },
   get arrow() {
     return {
-      marginRight: 15,
+      marginRight: 20,
       width: 10,
       height: 17,
     }

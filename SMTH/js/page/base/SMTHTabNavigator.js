@@ -17,6 +17,7 @@ import MyScreen from '../MyScreen';
 import NewHotScreen from '../../NewPage/NewHotScreen';
 import NewBoardScreen from '../../NewPage/NewBoardScreen';
 import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
+import NewFavouriteBoardScreen from '../../NewPage/NewFavouriteBoardScreen';
 import NewMyScreen from '../../NewPage/NewMyScreen';
 
 import {
@@ -66,7 +67,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     FavouriteScreen: {
-        screen: NewFavouriteScreen,
+        screen: NewFavouriteBoardScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '收藏',
             tabBarIcon: ({ tintColor, focused }) => (

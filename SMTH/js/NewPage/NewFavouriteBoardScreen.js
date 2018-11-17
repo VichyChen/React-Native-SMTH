@@ -137,6 +137,14 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <NavigationBar title='收藏' showBottomLine={true} rightButtonTitle={this.state.editing == true ? '完成' : '编辑'}
+                    rightButtonOnPress={() => {
+                        this.setState({
+                            editing: !this.state.editing,
+                        });
+                    }}
+                />
+
                 <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                     this.setState({
                         screenStatus: global.screen.loading,
@@ -176,7 +184,7 @@ export default class NewFavouriteBoardScreen extends Component {
                                                     <View style={styles.itemContainer} >
                                                         <Text style={styles.itemTitle} >{item.name}</Text>
                                                         {
-                                                            this.props.editing == true
+                                                            this.state.editing == true
                                                                 ?
                                                                 <ImageButton style={styles.itemImage} width={36} height={36} margin={16} source={global.images.icon_minus}
                                                                     onPress={() => { this.net_DelFav(item); }} />

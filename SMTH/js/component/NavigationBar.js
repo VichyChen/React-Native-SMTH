@@ -25,8 +25,9 @@ export default class NavigationBar extends Component {
     render() {
         return (
             <View style={[
+                { backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor },
+                this.props.style,
                 styles.container,
-                { backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor }
             ]} >
                 <View style={styles.status} ></View>
 
@@ -140,7 +141,6 @@ export default class NavigationBar extends Component {
 var styles = {
     get container() {
         return {
-            backgroundColor: global.colors.whiteColor,
             height: global.constants.NavigationBarHeight
         }
     },

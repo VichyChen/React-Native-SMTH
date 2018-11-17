@@ -147,7 +147,23 @@ export default class NewHotScreen extends Component {
           }}
         >
           <View style={styles.page}>
-            <TabPageView titles={titles} pages={pages} notification={'NewHotScreenNotification'} />
+            {/* <TabPageView titles={titles} pages={pages} notification={'NewHotScreenNotification'} /> */}
+            <TabPageView
+              titles={['全站', '社区管理', '国内院校', '休闲娱乐', '五湖四海', '游戏运动', '社会信息', '知性感性', '文化人文', '学术科学', '电脑技术']}
+              pages={[
+                (<NewHotListScreen navigation={this.props.navigation} section={''} index={0} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'7fba65e45f678eb8c605d4107de04185'} index={1} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'4fcab28694a0be93d9297d8cede052d9'} index={2} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'3497e48bb537373d0f738b41fe53a41b'} index={3} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'353fdfda1dfe7a714e592bab99c762cd'} index={4} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'c8d614e56acb8a192ec4af8b375a5eea'} index={5} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'5b634fdc9ecddf6042561c959176c077'} index={6} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'1c455a5dccf4242008d188f9676e3f4e'} index={7} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'12af235486fde6684e4b9e83f5d2b779'} index={8} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'4ed7f0d8b621c8ccf9e11eca9991d6dc'} index={9} />),
+                (<NewHotListScreen navigation={this.props.navigation} section={'4dda79c64b3ffb61f8048d745292ff5d'} index={10} />),
+              ]}
+              notification={'NewHotScreenNotification'} />
           </View>
           <View style={styles.page}>
             {
