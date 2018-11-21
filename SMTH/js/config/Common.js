@@ -1,5 +1,6 @@
 
 import NetworkManager from '../util/NetworkManager';
+import HTMLParseManager from '../util/HTMLParseManager';
 
 import DateUtil from '../util/DateUtil';
 import ToastUtil from '../util/ToastUtil';
@@ -61,6 +62,7 @@ import NewMessageAtListScreen from '../NewPage/NewMessageAtListScreen';
 
 export {
     NetworkManager,
+    HTMLParseManager,
     DateUtil,
     ToastUtil,
     SeperatorLine,

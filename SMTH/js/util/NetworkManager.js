@@ -1102,6 +1102,16 @@ export default class NetworkManager {
         });
     }
 
+    static getNewSearchAccount(keyword, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/search?mode=Account&keyword=' + keyword, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
     //个人信息页+主题列表
     static getNewAccountArticles(account_id, page, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/account/articles/' + account_id + '/' + page, null, result => {
@@ -1180,6 +1190,7 @@ export default class NetworkManager {
             captcha: captcha,
             url: ''
         }, result => {
+            console.log('12312312312312123'+result);
             success(result._bodyInit);
         }, error => {
             failure(error);

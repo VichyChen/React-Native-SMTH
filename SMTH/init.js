@@ -46,7 +46,7 @@ global.colors = {
     gray2Color: '#999999',
     gray3Color: '#b4b4b4',
     gray4Color: '#dcdcdc',
-    backgroundGrayColor: '#F5F5F5',
+    backgroundGrayColor: '#F7F7FA',
     seperatorColor: '#F1F1F1',
 };
 
@@ -68,11 +68,14 @@ global.images = {
     get icon_advice() { return require('./js/image/icon_advice.png') },
     get icon_collect_filled() { return require('./js/image/icon_collect_filled.png') },
     get icon_collect() { return require('./js/image/icon_collect.png') },
+    get icon_close() { return require('./js/image/icon_close.png') },
     get icon_edit() { return require('./js/image/icon_edit.png') },
     get icon_forward_arrow() { return require('./js/image/icon_forward_arrow.png') },
+    get icon_right_arrow() { return require('./js/image/icon_right_arrow.png') },
     get icon_message() { return require('./js/image/icon_message.png') },
     get icon_minus() { return require('./js/image/icon_minus.png') },
     get icon_more() { return require('./js/image/icon_more.png') },
+    get icon_moreif() { return require('./js/image/icon_moreif.png') },
     get icon_replycount() { return require('./js/image/icon_replycount.png') },
     get icon_search() { return require('./js/image/icon_search.png') },
     get icon_setting() { return require('./js/image/icon_setting.png') },
@@ -81,8 +84,10 @@ global.images = {
     get icon_update() { return require('./js/image/icon_update.png') },
     get tabbar_home_filled() { return require('./js/image/tabbar_home_filled.png') },
     get tabbar_home() { return require('./js/image/tabbar_home.png') },
-    get tabbar_tree_filled() { return require('./js/image/tabbar_tree_filled.png') },
-    get tabbar_tree() { return require('./js/image/tabbar_tree.png') },
+    get tabbar_group_filled() { return require('./js/image/tabbar_group_filled.png') },
+    get tabbar_group() { return require('./js/image/tabbar_group.png') },
+    get tabbar_favourite_filled() { return require('./js/image/tabbar_favourite_filled.png') },
+    get tabbar_favourite() { return require('./js/image/tabbar_favourite.png') },
     get tabbar_user_filled() { return require('./js/image/tabbar_user_filled.png') },
     get tabbar_user() { return require('./js/image/tabbar_user.png') },
 
@@ -92,6 +97,13 @@ global.images = {
     get icon_message_sendmail() { return require('./js/image/icon_message_sendmail.png') },
     get icon_message_reply() { return require('./js/image/icon_message_reply.png') },
     get icon_message_at() { return require('./js/image/icon_message_at.png') },
+
+    get icon_male() { return require('./js/image/icon_male.png') },
+    get icon_female() { return require('./js/image/icon_female.png') },
+
+    get icon_login_account() { return require('./js/image/icon_login_account.png') },
+    get icon_login_password() { return require('./js/image/icon_login_password.png') },
+    get icon_login_captcha() { return require('./js/image/icon_login_captcha.png') },
 };
 
 global.storageKeys = {

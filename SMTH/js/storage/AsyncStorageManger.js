@@ -30,6 +30,15 @@ export default class AsyncStorageManger {
         return username ? username : '';
     }
 
+    static setID(id) {
+        AsyncStorageKit.set('id', id);
+    }
+
+    static getID() {
+        var id = AsyncStorageKit.get('id');
+        return id ? id : '';
+    }
+
     static setPassword(password) {
         AsyncStorageKit.set('password', password);
     }

@@ -65,6 +65,25 @@ export default class NavigationBar extends Component {
                     }
 
                     {
+                        this.props.showCloseButton == true
+                            ?
+                            <ImageButton
+                                style={styles.closeButton}
+                                color={global.colors.fontColor}
+                                width={44}
+                                height={44}
+                                margin={28}
+                                source={global.images.icon_close}
+                                onPress={() => {
+                                    if (this.props.closeButtonOnPress != null) {
+                                        this.props.closeButtonOnPress();
+                                    }
+                                }} />
+                            :
+                            null
+                    }
+
+                    {
                         this.props.title == null ? null :
                             <TouchableWithoutFeedback onPress={this.props.titleOnPress} >
                                 <View style={{ flexDirection: 'column', alignItems: 'center' }}>
@@ -116,6 +135,7 @@ export default class NavigationBar extends Component {
                                 style={styles.rightTitleButton}
                                 height={44}
                                 text={this.props.rightButtonTitle}
+                                fontColor={this.props.rightButtonTitleColor}
                                 onPress={() => {
                                     if (this.props.rightButtonOnPress != null) {
                                         this.props.rightButtonOnPress();
@@ -186,6 +206,15 @@ var styles = {
             width: 44,
         }
     },
+    get closeButton() {
+        return {
+            position: 'absolute',
+            left: 10,
+            top: 0,
+            bottom: 0,
+            width: 44,
+        }
+    },
     get title() {
         return {
             fontSize: 18,
@@ -222,6 +251,7 @@ var styles = {
             top: 0,
             bottom: 0,
             width: 44,
+            backgroundColor: global.colors.clearColor,
         }
     },
 }

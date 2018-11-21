@@ -28,7 +28,7 @@ const SMTHTabNavigator = TabNavigator({
     HotScreen: {
         screen: NewHotScreen,
         navigationOptions: ({ navigation }) => ({
-            tabBarLabel: '热点',
+            tabBarLabel: '首页',
             tabBarIcon: ({ tintColor, focused }) => (
                 <CustomDoubleClick style={{ width: 44, height: 48, alignItems: 'center', justifyContent: 'center', }}
                     onDoubleClick={() => {
@@ -41,7 +41,7 @@ const SMTHTabNavigator = TabNavigator({
                         }
                     }}>
                     <Image source={focused == true ? global.images.tabbar_home_filled : global.images.tabbar_home}
-                        style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]} />
+                        style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray2Color }]} />
                 </CustomDoubleClick>
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
@@ -56,8 +56,8 @@ const SMTHTabNavigator = TabNavigator({
             tabBarLabel: '板块',
             tabBarIcon: ({ tintColor, focused }) => (
                 <Image
-                    source={focused == true ? global.images.tabbar_tree_filled : global.images.tabbar_tree}
-                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
+                    source={focused == true ? global.images.tabbar_group_filled : global.images.tabbar_group}
+                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray2Color }]}
                 />
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
@@ -72,8 +72,8 @@ const SMTHTabNavigator = TabNavigator({
             tabBarLabel: '收藏',
             tabBarIcon: ({ tintColor, focused }) => (
                 <Image
-                    source={focused == true ? global.images.icon_collect_filled : global.images.icon_collect}
-                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
+                    source={focused == true ? global.images.tabbar_favourite_filled : global.images.tabbar_favourite}
+                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray2Color }]}
                 />
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
@@ -87,14 +87,14 @@ const SMTHTabNavigator = TabNavigator({
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '我的',
             tabBarOnPress: () => {
-                StatusBar.setBarStyle('dark-content');
+                StatusBar.setBarStyle('light-content');
                 DeviceEventEmitter.emit('ClickMyScreenNotification', null);
                 navigation.navigate('MyScreen')
             },
             tabBarIcon: ({ tintColor, focused }) => (
                 <Image
                     source={focused == true ? global.images.tabbar_user_filled : global.images.tabbar_user}
-                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray1Color }]}
+                    style={[{ width: 22, height: 22, tintColor: focused == true ? global.colors.themeColor : global.colors.gray2Color }]}
                 />
             ),
             lazy: false,
@@ -108,7 +108,7 @@ const SMTHTabNavigator = TabNavigator({
         tabBarOptions: {
             showIcon: true,
             activeTintColor: global.colors.themeColor,
-            inactiveTintColor: global.colors.gray1Color,
+            inactiveTintColor: global.colors.gray2Color,
             labelStyle: [{
                 fontSize: 11,
             }, global.bool.iOS ? {} : { marginTop: 2 }],

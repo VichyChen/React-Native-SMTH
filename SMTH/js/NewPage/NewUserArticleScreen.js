@@ -12,7 +12,8 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    Dimensions
+    Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -45,12 +46,13 @@ export default class NewUserArticleScreen extends Component {
             screenText: null,
             dataArray: [],
         }
-
+        console.log('this.props.id:' + this.props.id);
+        console.log('this.props.navigation.state.params.id:' + this.props.navigation.state.params.id);
         this.getNewAccountArticles(this._page);
     }
 
     getNewAccountArticles(page) {
-        NetworkManager.getNewAccountArticles(this.props.id, page, (result) => {
+        NetworkManager.getNewAccountArticles(this.props.id != null ? this.props.id : this.props.navigation.state.params.id, page, (result) => {
             this.$ = cio.load(result, { decodeEntities: false });
             this.$ = cio.load(this.$('ul[class=pagination]').html());
             this._currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
@@ -153,7 +155,6 @@ export default class NewUserArticleScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    console.log('item.iditem.iditem.id' + item.id);
                     this.props.navigation.navigate('newThreadDetailScreen', { id: item.id, type: 'article' });
                 }}
             >
@@ -198,41 +199,54 @@ export default class NewUserArticleScreen extends Component {
 
     render() {
         return (
-            <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
-                this.setState({
-                    screenStatus: global.screen.loading,
-                });
-                this._page = 1;
-                this.getNewAccountArticles(this._page);
-            }} >
-                <FlatList
-                    removeClippedSubviews={false}
-                    extraData={this.state}
-                    data={this.state.dataArray}
-                    renderItem={this._renderItem}
-                    style={styles.flatList}
-                    onRefresh={() => {
-                        this.setState({
-                            pullLoading: true
-                        });
-                        this._page = 1;
-                        this.getNewAccountArticles(this._page);
-                    }
-                    }
-                    onEndReached={() => {
-                        if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < this._totalPage) {
+            <View style={{ flex: 1 }}>
+                <StatusBar barStyle="dark-content" />
+                {
+                    this.props.id != null ? null :
+                        <NavigationBar
+                            title={'我的文章'}
+                            navigation={this.props.navigation}
+                            showBackButton={true}
+                            showBottomLine={true}
+                        />
+
+                }
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this._page = 1;
+                    this.getNewAccountArticles(this._page);
+                }} >
+                    <FlatList
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        style={styles.flatList}
+                        onRefresh={() => {
                             this.setState({
-                                pullMoreLoading: true
+                                pullLoading: true
                             });
-                            this._page = this._page + 1;
+                            this._page = 1;
                             this.getNewAccountArticles(this._page);
                         }
-                    }
-                    }
-                    onEndReachedThreshold={2}
-                    refreshing={this.state.pullLoading}
-                />
-            </Screen>
+                        }
+                        onEndReached={() => {
+                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < this._totalPage) {
+                                this.setState({
+                                    pullMoreLoading: true
+                                });
+                                this._page = this._page + 1;
+                                this.getNewAccountArticles(this._page);
+                            }
+                        }
+                        }
+                        onEndReachedThreshold={2}
+                        refreshing={this.state.pullLoading}
+                    />
+                </Screen>
+            </View>
         )
     }
 }

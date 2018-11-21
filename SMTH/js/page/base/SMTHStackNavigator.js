@@ -32,6 +32,7 @@ import NewFavouriteBoardScreen from '../../NewPage/NewFavouriteBoardScreen';
 import NewFavouriteThreadScreen from '../../NewPage/NewFavouriteThreadScreen';
 
 import NewUserScreen from '../../NewPage/NewUserScreen';
+import NewUserArticleScreen from '../../NewPage/NewUserArticleScreen';
 
 import NewMessageScreen from '../../NewPage/NewMessageScreen';
 import NewMessageMailDetailScreen from '../../NewPage/NewMessageMailDetailScreen';
@@ -75,6 +76,7 @@ const SMTHStackNavigator = StackNavigator({
     newFavouriteBoardScreen: { screen: NewFavouriteBoardScreen },
     newFavouriteThreadScreen: { screen: NewFavouriteThreadScreen },
     newUserScreen: { screen: NewUserScreen },
+    newUserArticleScreen: { screen: NewUserArticleScreen },
     newMessageScreen: { screen: NewMessageScreen },
     newMessageMailDetailScreen: { screen: NewMessageMailDetailScreen },
     newMessageSendMailDetailScreen: { screen: NewMessageSendMailDetailScreen },

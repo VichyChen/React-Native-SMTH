@@ -28,7 +28,7 @@ export default class Button extends Component {
                     height: this.props.height ? this.props.height : 40,
                     backgroundColor: (this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor)
                 }, this.props.style]}
-                underlayColor={(this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.whiteColor)}
+                underlayColor={(this.props.backgroundColor != null ? this.props.backgroundColor : global.colors.clearColor)}
                 onHideUnderlay={() => this.setState({ press: false })}
                 onShowUnderlay={() => this.setState({ press: true })}
                 onPress={this.props.onPress}

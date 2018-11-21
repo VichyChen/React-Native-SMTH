@@ -252,7 +252,7 @@ export default class ThreadDetailScreen extends Component {
             borderRadius={15}
             widthAndHeight={30}
             onPressClick={() => {
-              this.props.navigation.navigate('userScreen', { id: item.author_id });
+              this.props.navigation.navigate('newUserScreen', { id: null, name: item.author_id });
             }}
             uri={NetworkManager.net_getFace(item.author_id)} />
 
@@ -274,7 +274,7 @@ export default class ThreadDetailScreen extends Component {
                 width={44}
                 height={44}
                 margin={24}
-                source={global.images.icon_more}
+                source={global.images.icon_moreif}
                 onPress={() => {
                   this.selectMoreItemIndex = item.floor;
                   this.selectMoreItemName = item.author_id;

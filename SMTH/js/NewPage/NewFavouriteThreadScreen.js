@@ -12,7 +12,8 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -102,6 +103,7 @@ export default class NewFavouriteThreadScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <StatusBar barStyle="dark-content" />
                 <NavigationBar
                     navigation={this.props.navigation}
                     title='我的收藏'

@@ -19,7 +19,8 @@ import {
     SectionList,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -42,6 +43,10 @@ export default class NewMessageScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                          <StatusBar
+          barStyle="dark-content"
+        />
+
                 <NavigationBar
                     navigation={this.props.navigation}
                     title='消息'

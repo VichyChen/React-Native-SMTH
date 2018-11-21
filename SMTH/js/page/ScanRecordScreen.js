@@ -12,7 +12,8 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -92,6 +93,7 @@ export default class ScanRecordScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
+                <StatusBar barStyle="dark-content" />
 
                 <NavigationBar
                     title={'浏览记录'}

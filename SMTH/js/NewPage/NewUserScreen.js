@@ -12,11 +12,13 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    Dimensions
+    Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {
     NetworkManager,
+    HTMLParseManager,
     SectionBlankHeader,
     AvatorImage,
     TitleValueItem,
@@ -43,16 +45,32 @@ export default class NewUserScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: this.props.navigation.state.params.id,
             nick: '',
             isLoading: true,
             dataArray: [],
             screenText: null
+        }
+
+        if (this.props.navigation.state.params.id == null) {
+            NetworkManager.getNewSearchAccount(this.props.navigation.state.params.name, (html) => {
+                HTMLParseManager.parseNewSearchAccount(html, this.props.navigation.state.params.name, (id) => {
+                    this.setState({
+                        id: id
+                    });
+                });
+            }, (error) => {
+
+            }, (errorMessage) => {
+
+            });
         }
     }
 
     render() {
         return (
             <View style={styles.container} >
+                <StatusBar barStyle="dark-content" />
                 <NavigationBar
                     navigation={this.props.navigation}
                     showBackButton={true}
@@ -105,21 +123,24 @@ export default class NewUserScreen extends Component {
                 <TabPageView
                     style={{}}
                     titles={[/*'资料', */'文章', '版面', '关注', '粉丝']}
-                    pages={[
-                        // (<NewUserInfoScreen
-                        //     navigation={this.props.navigation}
-                        //     id={this.props.navigation.state.params.id}
-                        //     callback={(nick) => {
-                        //         this.setState({
-                        //             nick: nick,
-                        //         });
-                        //     }}
-                        // />),
-                        (<NewUserArticleScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
-                        (<NewUserMemberScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
-                        (<NewUserFriendsScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
-                        (<NewUserfansScreen navigation={this.props.navigation} id={this.props.navigation.state.params.id} />),
-                    ]} />
+                    pages={
+                        this.state.id == null ? [] :
+                            [
+                                // (<NewUserInfoScreen
+                                //     navigation={this.props.navigation}
+                                //     id={this.props.navigation.state.params.id}
+                                //     callback={(nick) => {
+                                //         this.setState({
+                                //             nick: nick,
+                                //         });
+                                //     }}
+                                // />),
+                                (<NewUserArticleScreen navigation={this.props.navigation} id={this.state.id} />),
+                                (<NewUserMemberScreen navigation={this.props.navigation} id={this.state.id} />),
+                                (<NewUserFriendsScreen navigation={this.props.navigation} id={this.state.id} />),
+                                (<NewUserfansScreen navigation={this.props.navigation} id={this.state.id} />),
+                            ]
+                    } />
             </View>
         )
     }

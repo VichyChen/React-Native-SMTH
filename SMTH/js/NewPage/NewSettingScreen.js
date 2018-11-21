@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Slider,
   DeviceEventEmitter,
+  StatusBar
 } from 'react-native';
 
 import {
@@ -58,6 +59,7 @@ export default class NewSettingScreen extends Component {
   render() {
     return (
       <View>
+        <StatusBar barStyle="dark-content" />
 
         <NavigationBar title='设置' showBackButton={true} navigation={this.props.navigation} />
 
@@ -150,6 +152,7 @@ export default class NewSettingScreen extends Component {
           <Button onPress={() => {
             Cookie.clear();
             AsyncStorageManger.setAccessToken('');
+            AsyncStorageManger.setID('');
             AsyncStorageManger.setLogin(false);
             global.login = false;
             global.current.username = '';

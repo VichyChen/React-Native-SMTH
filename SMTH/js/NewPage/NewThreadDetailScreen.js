@@ -24,7 +24,8 @@ import {
   Modal,
   Linking,
   Clipboard,
-  WebView
+  WebView,
+  StatusBar
 } from 'react-native';
 
 import { NativeModules } from 'react-native';
@@ -534,7 +535,7 @@ export default class NewThreadDetailScreen extends Component {
             width={44}
             height={44}
             margin={24}
-            source={global.images.icon_more}
+            source={global.images.icon_moreif}
             onPress={() => {
               this.selectMoreItemIndex = item.index;
               this.selectMoreItemName = item.name;
@@ -597,7 +598,7 @@ export default class NewThreadDetailScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-
+        <StatusBar barStyle="dark-content" />
         <NavigationBar
           title={this.boardTitle}
           message={this.boardName}

@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   DeviceEventEmitter,
   Dimensions,
+  StatusBar
 } from 'react-native';
 
 import {
@@ -51,6 +52,7 @@ export default class NewMyScreen extends Component {
     atMeCount = 0;
 
     this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', (username) => {
+      StatusBar.setBarStyle('light-content');
       this.setState({
         username: username,
         notificationCount: 0,
@@ -69,18 +71,41 @@ export default class NewMyScreen extends Component {
       this.setState({});
     });
 
-    AsyncStorageManger.getUsername().then(username => {
-      this.setState({
-        username: username,
-      });
-    });
-
     if (global.login == true) {
-      this.network();
+      AsyncStorageManger.getUsername().then(username => {
+        this.setState({
+          username: username,
+        });
+
+        this.network();
+      });
     }
   }
 
   network() {
+    NetworkManager.net_QueryUser(this.state.username, (result) => {
+      this.setState({
+        isLoading: false,
+        id: result['user'].id,
+        nick: result['user'].nick,
+        uid: result['user'].uid,
+        gender: result['user'].gender,
+        title: result['user'].title,
+        posts: result['user'].posts,
+        logins: result['user'].logins,
+        level: result['user'].level,
+        score: result['user'].score,
+        first_login: result['user'].first_login,
+        last_login: result['user'].last_login,
+        age: result['user'].age,
+        life: result['user'].life,
+      });
+    }, (error) => {
+
+    }, (errorMessage) => {
+
+    });
+
     NetworkManager.net_GetMailCount((result) => {
       if (result['new_count'] != null) {
         mailCount = result['new_count'];
@@ -143,196 +168,367 @@ export default class NewMyScreen extends Component {
 
   componentWillUnmount() {
     this.loginSuccessNotification.remove();
+    this.loginCloseNotification.remove();
     this.logoutNotification.remove();
     this.clickMyScreenNotification.remove();
     this.refreshViewNotification.remove();
   }
 
-  componentWillUpdate() {
-    // StatusBar.setBarStyle('light-content');
+  showLogin() {
+    StatusBar.setBarStyle('dark-content');
+    DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
   }
 
   render() {
     return (
-      <View style={{ backgroundColor: global.colors.whiteColor }}>
+      <View style={{ backgroundColor: 'green' }}>
+        <StatusBar barStyle="light-content" />
         <NavigationBar
-          style={{ position: 'absolute', zIndex: 999, top: 0, left: 0, right: 0, height: global.constants.NavigationBarHeight, backgroundColor: global.colors.clearColor }}
+          showBackButton={false}
           showBottomLine={false}
-          rightButtonTitle={'设置'}
-          rightButtonOnPress={() => {
-            this.props.navigation.navigate('newSettingScreen')
-          }}
+          style={{ backgroundColor: global.colors.themeColor }}
+          rightButtonTitle='设置'
+          rightButtonTitleColor={global.colors.whiteColor}
+          rightButtonOnPress={() => { this.props.navigation.navigate('newSettingScreen') }}
         />
-        <View style={{ height: global.constants.TopSaveArea, backgroundColor: global.colors.clearColor }} />
 
-        <ScrollView style={{
-          marginTop: global.constants.TopSaveArea,
-          paddingTop: 44,
-          backgroundColor: global.colors.whiteColor,
-          height: global.constants.ScreenHeight - global.constants.TabBarHeight - global.constants.TopSaveArea,
-        }}>
-          <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-
-            <AvatorImage
-              borderRadius={30}
-              widthAndHeight={60}
-              uri={NetworkManager.net_getFace(this.state.username)} />
-
-            <Text style={{
-              marginTop: 10,
-              fontSize: global.configures.fontSize17,
-              color: global.colors.fontColor
-            }}>
-              {this.state.username}
-            </Text>
+        <ScrollView
+          scrollEnabled={false}
+          style={{
+            backgroundColor: global.colors.backgroundGrayColor
+          }}
+        >
+          <View style={{
+            height: global.constants.ScreenHeight - global.constants.TabBarHeight - global.constants.NavigationBarHeight,
+            flexDirection: 'column',
+          }}>
 
             <View style={{
-              height: 100,
-              width: global.constants.ScreenWidth - global.constants.Padding * 4,
-              marginTop: 20,
-              flexDirection: 'row',
-              backgroundColor: global.colors.whiteColor,
-              borderRadius: 6,
-              shadowColor: global.colors.backgroundGrayColor,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 1,
-              shadowRadius: 10,
-            }} >
+              height: 190,
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: global.colors.themeColor,
+            }}>
+
+              <CellBackground
+                showSelect={false}
+                onPress={() => {
+                  if (global.login == true) {
+                    AsyncStorageManger.getID().then(id => {
+                      this.props.navigation.navigate('newUserScreen', { id: id, name: this.state.username });
+                    });
+                  }
+                  else {
+                    this.showLogin();
+                  }
+                }}
+              >
+                <View style={{
+                  height: 64,
+                  width: global.constants.ScreenWidth - 40,
+                  marginBottom: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                }} >
+                  <AvatorImage
+                    borderRadius={30}
+                    widthAndHeight={60}
+                    uri={(global.login == true && this.state.username.length > 0 ? NetworkManager.net_getFace(this.state.username) : null)} />
+
+                  <Text style={{
+                    marginLeft: 10,
+                    fontSize: global.configures.fontSize20,
+                    fontWeight: 'bold',
+                    color: global.colors.whiteColor
+                  }}>
+                    {global.login == true ? '' : '未登录'}
+                  </Text>
+
+                  <View style={{
+                    flex: 1,
+                    marginLeft: 10,
+                  }} >
+                    <View style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                      <Text style={{
+                        fontSize: global.configures.fontSize20,
+                        fontWeight: 'bold',
+                        color: global.colors.whiteColor
+                      }}>
+                        {global.login == true && this.state.username.length > 0 ? this.state.username : ''}
+                      </Text>
+
+                      {/* {
+                        global.login == true && this.state.gender != null ?
+                          <Image style={{ marginLeft: 10, width: 16, height: 16, tintColor: global.colors.whiteColor }} source={this.state.gender == 1 ? global.images.icon_female : global.images.icon_male} />
+                          :
+                          null
+                      } */}
+
+                    </View>
+
+                    <Text style={{
+                      marginTop: 10,
+                      fontSize: global.configures.fontSize12,
+                      color: global.colors.whiteColor,
+                      textAlign: 'left',
+                    }}>
+                      {global.login == true && this.state.nick != null ? this.state.nick : ''}
+                    </Text>
+
+                  </View>
+
+                  <Image style={[styles.arrow, { marginRight: 15, tintColor: global.colors.whiteColor }]} source={global.images.icon_right_arrow} />
+
+                </View>
+              </CellBackground>
+              <HorizontalSeperatorLine color={global.colors.whiteColor} width={global.constants.ScreenWidth - 40} />
+
               <View style={{
-                flex: 1,
+                height: 60,
+                width: global.constants.ScreenWidth - 40,
                 flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
               }} >
-                <CellBackground
-                  showSelect={false}
-                  onPress={() => {
-                    this.props.navigation.navigate('newMessageScreen', { selectedIndex: 0 })
-                  }}
-                >
-                  <View style={[styles.messageItem]}>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_mail} />
-                      <Text style={styles.messageTextItem}>{'收信箱'}</Text>
-                      {
-                        this.state.mailCount > 0 ?
-                          <View style={styles.messageCountViewItem} >
-                            <Text style={styles.messageCountTextItem} >{this.state.mailCount}</Text>
-                          </View>
-                          : null
-                      }
-                    </View>
-                  </View>
-                </CellBackground>
+                <Text style={{
+                  fontSize: global.configures.fontSize17,
+                  color: global.colors.whiteColor,
+                  fontWeight: '500',
+                }}>
+                  {global.login == true && this.state.title != null ? this.state.title : '无'}
+                </Text>
+                <Text style={{
+                  fontSize: global.configures.fontSize10,
+                  color: global.colors.whiteColor,
+                  marginBottom: -4,
+                }}>
+                  {' 身份  |  '}
+                </Text>
+                <Text style={{
+                  fontSize: global.configures.fontSize17,
+                  color: global.colors.whiteColor,
+                  fontWeight: '500',
+                }}>
+                  {global.login == true && this.state.score != null ? this.state.score : '0'}
+                </Text>
+                <Text style={{
+                  fontSize: global.configures.fontSize10,
+                  color: global.colors.whiteColor,
+                  marginBottom: -4,
+                }}>
+                  {' 积分  |  '}
+                </Text>
+                <Text style={{
+                  fontSize: global.configures.fontSize17,
+                  color: global.colors.whiteColor,
+                  fontWeight: '500',
+                }}>
+                  {global.login == true && this.state.life != null ? this.state.life + '(' + this.state.level + ')' : '无'}
+                </Text>
+                <Text style={{
+                  fontSize: global.configures.fontSize10,
+                  color: global.colors.whiteColor,
+                  marginBottom: -4,
+                }}>
+                  {' 等级'}
+                </Text>
 
-                <CellBackground
-                  showSelect={false}
-                  onPress={() => {
-                    this.props.navigation.navigate('newMessageScreen', { selectedIndex: 1 })
-                  }}
-                >
-                  <View style={[styles.messageItem]}>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_sendmail} />
-                      <Text style={styles.messageTextItem}>发信箱</Text>
-                      {
-                        this.state.sentMailCount > 0 ?
-                          <View style={styles.messageCountViewItem} >
-                            <Text style={styles.messageCountTextItem} >{this.state.sentMailCount}</Text>
-                          </View>
-                          :
-                          null
-                      }
-                    </View>
-                  </View>
-                </CellBackground>
-
-                <CellBackground
-                  showSelect={false}
-                  onPress={() => {
-                    this.props.navigation.navigate('newMessageScreen', { selectedIndex: 2 })
-                  }}
-                >
-                  <View style={[styles.messageItem]}>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_reply} />
-                      <Text style={styles.messageTextItem}>回复我</Text>
-                      {
-                        this.state.sentMailCount > 0 ?
-                          <View style={styles.messageCountViewItem} >
-                            <Text style={styles.messageCountTextItem} >{this.state.replyMeCount}</Text>
-                          </View>
-                          :
-                          null
-                      }
-                    </View>
-                  </View>
-                </CellBackground>
-
-                <CellBackground
-                  showSelect={false}
-                  onPress={() => {
-                    this.props.navigation.navigate('newMessageScreen', { selectedIndex: 3 })
-                  }}
-                >
-                  <View style={[styles.messageItem]}>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
-                      <Text style={styles.messageTextItem}>@我</Text>
-                      {
-                        this.state.sentMailCount > 0 ?
-                          <View style={styles.messageCountViewItem} >
-                            <Text style={styles.messageCountTextItem} >{this.state.atMeCount}</Text>
-                          </View>
-                          :
-                          null
-                      }
-                    </View>
-                  </View>
-                </CellBackground>
               </View>
+
+              <View style={{
+                height: 100,
+                width: global.constants.ScreenWidth - 40,
+                marginTop: 5,
+                flexDirection: 'row',
+                backgroundColor: global.colors.whiteColor,
+                borderRadius: 6,
+                shadowColor: global.colors.whiteColor,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 1,
+                shadowRadius: 5,
+              }} >
+                <View style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                }} >
+                  <CellBackground
+                    showSelect={false}
+                    onPress={() => {
+                      if (global.login == true) {
+                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 0 })
+                      }
+                      else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                      }
+                    }}
+                  >
+                    <View style={[styles.messageItem]}>
+                      <View style={{ alignItems: 'center' }}>
+                        <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_mail} />
+                        <Text style={styles.messageTextItem}>{'收信箱'}</Text>
+                        {
+                          this.state.mailCount > 0 ?
+                            <View style={styles.messageCountViewItem} >
+                              <Text style={styles.messageCountTextItem} >{this.state.mailCount}</Text>
+                            </View>
+                            : null
+                        }
+                      </View>
+                    </View>
+                  </CellBackground>
+
+                  <CellBackground
+                    showSelect={false}
+                    onPress={() => {
+                      if (global.login == true) {
+                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 1 })
+                      }
+                      else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                      }
+                    }}
+                  >
+                    <View style={[styles.messageItem]}>
+                      <View style={{ alignItems: 'center' }}>
+                        <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_sendmail} />
+                        <Text style={styles.messageTextItem}>发信箱</Text>
+                        {
+                          this.state.sentMailCount > 0 ?
+                            <View style={styles.messageCountViewItem} >
+                              <Text style={styles.messageCountTextItem} >{this.state.sentMailCount}</Text>
+                            </View>
+                            :
+                            null
+                        }
+                      </View>
+                    </View>
+                  </CellBackground>
+
+                  <CellBackground
+                    showSelect={false}
+                    onPress={() => {
+                      if (global.login == true) {
+                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 2 })
+                      }
+                      else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                      }
+                    }}
+                  >
+                    <View style={[styles.messageItem]}>
+                      <View style={{ alignItems: 'center' }}>
+                        <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_reply} />
+                        <Text style={styles.messageTextItem}>回复我</Text>
+                        {
+                          this.state.sentMailCount > 0 ?
+                            <View style={styles.messageCountViewItem} >
+                              <Text style={styles.messageCountTextItem} >{this.state.replyMeCount}</Text>
+                            </View>
+                            :
+                            null
+                        }
+                      </View>
+                    </View>
+                  </CellBackground>
+
+                  <CellBackground
+                    showSelect={false}
+                    onPress={() => {
+                      if (global.login == true) {
+                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 3 })
+                      }
+                      else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                      }
+                    }}
+                  >
+                    <View style={[styles.messageItem]}>
+                      <View style={{ alignItems: 'center' }}>
+                        <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
+                        <Text style={styles.messageTextItem}>AT我</Text>
+                        {
+                          this.state.sentMailCount > 0 ?
+                            <View style={styles.messageCountViewItem} >
+                              <Text style={styles.messageCountTextItem} >{this.state.atMeCount}</Text>
+                            </View>
+                            :
+                            null
+                        }
+                      </View>
+                    </View>
+                  </CellBackground>
+                </View>
+              </View>
+
             </View>
 
-            <CellBackground
-              showSelect={false}
-              onPress={() => {
-                this.props.navigation.navigate('userThreadScreen', { id: this.state.username })
-              }}
-            >
-              <View style={[styles.content, { marginTop: 20 }]}>
-                <Text style={styles.board}>我的主题</Text>
-                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
-              </View>
-            </CellBackground>
+            <View style={{
+              flex: 1,
+              marginTop: global.constants.TopMargin + 35 + global.constants.Padding,
+              marginBottom: 20,
+              marginHorizontal: 20,
+              // height: 100,
+              flexDirection: 'column',
+              alignItems: 'center',
+              backgroundColor: global.colors.whiteColor,
+              borderRadius: 6,
+            }} >
 
-            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
+              <CellBackground
+                showSelect={false}
+                onPress={() => {
+                  if (global.login == true) {
+                    AsyncStorageManger.getID().then(id => {
+                      this.props.navigation.navigate('newUserArticleScreen', { id: id });
+                    });
+                  }
+                  else {
+                    DeviceEventEmitter.emit('LoginNotification', null);
+                  }
+                }}
+              >
+                <View style={[styles.content]}>
+                  <Text style={styles.board}>我的文章</Text>
+                  <Image style={styles.arrow} source={global.images.icon_right_arrow} />
+                </View>
+              </CellBackground>
 
-            <CellBackground
-              showSelect={false}
-              onPress={() => {
-                this.props.navigation.navigate('newFavouriteThreadScreen')
-              }}
-            >
-              <View style={[styles.content]}>
-                <Text style={styles.board}>我的收藏</Text>
-                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
-              </View>
-            </CellBackground>
+              <HorizontalSeperatorLine width={global.constants.ScreenWidth - 40 - global.constants.Padding * 2} />
 
-            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
+              <CellBackground
+                showSelect={false}
+                onPress={() => {
+                  this.props.navigation.navigate('newFavouriteThreadScreen')
+                }}
+              >
+                <View style={[styles.content]}>
+                  <Text style={styles.board}>帖子收藏</Text>
+                  <Image style={styles.arrow} source={global.images.icon_right_arrow} />
+                </View>
+              </CellBackground>
 
-            <CellBackground
-              showSelect={false}
-              onPress={() => {
-                this.props.navigation.navigate('scanRecordScreen', { id: this.state.username })
-              }}
-            >
-              <View style={[styles.content]}>
-                <Text style={styles.board}>浏览记录</Text>
-                <Image style={styles.arrow} source={global.images.icon_forward_arrow} />
-              </View>
-            </CellBackground>
+              <HorizontalSeperatorLine width={global.constants.ScreenWidth - 40 - global.constants.Padding * 2} />
 
-            <HorizontalSeperatorLine width={global.constants.ScreenWidth - global.constants.Padding * 2} />
+              <CellBackground
+                showSelect={false}
+                onPress={() => {
+                  this.props.navigation.navigate('scanRecordScreen', { id: this.state.username })
+                }}
+              >
+                <View style={[styles.content]}>
+                  <Text style={styles.board}>浏览记录</Text>
+                  <Image style={styles.arrow} source={global.images.icon_right_arrow} />
+                </View>
+              </CellBackground>
 
+              <HorizontalSeperatorLine width={global.constants.ScreenWidth - 40 - global.constants.Padding * 2} />
+
+            </View>
           </View>
 
         </ScrollView>
@@ -362,7 +558,7 @@ var styles = {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      width: (global.constants.ScreenWidth - global.constants.Padding * 4) / 4,
+      width: (global.constants.ScreenWidth - 40) / 4,
       // backgroundColor: 'yellow'
     }
   },
@@ -396,7 +592,7 @@ var styles = {
     return {
       marginTop: 8,
       color: global.colors.gray1Color,
-      fontSize: global.fontSize.fontSize15,
+      fontSize: global.fontSize.fontSize13,
     }
   },
   get content() {
@@ -406,6 +602,7 @@ var styles = {
       alignItems: 'center',
       height: 50,
       width: global.constants.ScreenWidth - global.constants.Padding * 2,
+      backgroundColor: global.colors.clearColor,
     }
   },
   get board() {
@@ -413,14 +610,13 @@ var styles = {
       paddingLeft: 20,
       fontSize: global.configures.fontSize17,
       color: global.colors.fontColor,
-      backgroundColor: global.colors.whiteColor,
     }
   },
   get arrow() {
     return {
       marginRight: 20,
       width: 10,
-      height: 17,
+      height: 15,
     }
   },
 }

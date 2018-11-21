@@ -19,7 +19,8 @@ import {
   SectionList,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  StatusBar
 } from 'react-native';
 
 import codePush from 'react-native-code-push'
@@ -49,18 +50,25 @@ export default class NewHotScreen extends Component {
       screenText: null,
       dataArray: [],
       showLogin: false,
+      closeCallback: null,
       selectedIndex: 0,
     }
 
-    this.loginNotification = DeviceEventEmitter.addListener('LoginNotification', () => {
+    this.loginNotification = DeviceEventEmitter.addListener('LoginNotification', (closeCallback) => {
       this.setState({
         showLogin: true,
+        closeCallback: closeCallback,
       });
     });
     this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
       this.setState({
         showLogin: false,
         viewLoading: true
+      });
+    });
+    this.loginCloseNotification = DeviceEventEmitter.addListener('LoginCloseNotification', () => {
+      this.setState({
+        showLogin: false,
       });
     });
     this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
@@ -110,7 +118,7 @@ export default class NewHotScreen extends Component {
 
     return (
       <View style={styles.container}>
-        {/* <NavigationBar title='热点' showBottomLine={false} > */}
+        <StatusBar barStyle="dark-content" />
         <NavigationBar showBottomLine={false} >
           <SegmentedControl
             values={['热点', '十大', '图览']}
@@ -176,7 +184,11 @@ export default class NewHotScreen extends Component {
             }
           </View>
         </ScrollView>
-        <NewLoginView visible={this.state.showLogin} />
+        {
+          this.state.showLogin == false ? null : (
+            <NewLoginView visible={true} closeCallback={this.state.closeCallback} />
+          )
+        }
       </View>
     )
   }
