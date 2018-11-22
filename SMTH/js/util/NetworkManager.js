@@ -1190,8 +1190,24 @@ export default class NetworkManager {
             captcha: captcha,
             url: ''
         }, result => {
-            console.log('12312312312312123'+result);
-            success(result._bodyInit);
+            if (result.code == 0) {
+                AsyncStorageManger.setID(result.data.account.id);
+                success(result);
+            }
+            else {
+                if (result.code == 9 && result.message == 'CAPTCHA_CODE_INVALID') {
+                    failure('验证码错误');
+                }
+                else if (result.code == 9 && result.message == '您的密码错误或所在区域被暂时禁止登陆，请重试或联系管理员') {
+                    failure('账号或密码错误');
+                }
+                else if (result.code == 3 && result.message == '您输入的用户不存在') {
+                    failure('用户不存在');
+                }
+                else {
+                    failure('未知错误');
+                }
+            }
         }, error => {
             failure(error);
         }, errorMessage => {

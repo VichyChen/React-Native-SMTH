@@ -52,7 +52,6 @@ export default class NewMyScreen extends Component {
     atMeCount = 0;
 
     this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', (username) => {
-      StatusBar.setBarStyle('light-content');
       this.setState({
         username: username,
         notificationCount: 0,
@@ -168,7 +167,6 @@ export default class NewMyScreen extends Component {
 
   componentWillUnmount() {
     this.loginSuccessNotification.remove();
-    this.loginCloseNotification.remove();
     this.logoutNotification.remove();
     this.clickMyScreenNotification.remove();
     this.refreshViewNotification.remove();
@@ -363,7 +361,7 @@ export default class NewMyScreen extends Component {
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 0 })
                       }
                       else {
-                        DeviceEventEmitter.emit('LoginNotification', null);
+                        this.showLogin();
                       }
                     }}
                   >
@@ -389,7 +387,7 @@ export default class NewMyScreen extends Component {
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 1 })
                       }
                       else {
-                        DeviceEventEmitter.emit('LoginNotification', null);
+                        this.showLogin();
                       }
                     }}
                   >
@@ -416,7 +414,7 @@ export default class NewMyScreen extends Component {
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 2 })
                       }
                       else {
-                        DeviceEventEmitter.emit('LoginNotification', null);
+                        this.showLogin();
                       }
                     }}
                   >
@@ -443,7 +441,7 @@ export default class NewMyScreen extends Component {
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 3 })
                       }
                       else {
-                        DeviceEventEmitter.emit('LoginNotification', null);
+                        this.showLogin();
                       }
                     }}
                   >
@@ -488,7 +486,7 @@ export default class NewMyScreen extends Component {
                     });
                   }
                   else {
-                    DeviceEventEmitter.emit('LoginNotification', null);
+                    this.showLogin();
                   }
                 }}
               >

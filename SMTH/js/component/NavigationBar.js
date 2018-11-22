@@ -38,11 +38,11 @@ export default class NavigationBar extends Component {
                             ?
                             <ImageButton
                                 style={styles.backButton}
-                                color={global.colors.fontColor}
+                                color={global.colors.gray1Color}
                                 width={44}
                                 height={44}
-                                margin={12}
-                                source={global.images.ic_return_b_90x90}
+                                margin={24}
+                                source={global.images.icon_left_arrow}
                                 onPress={() => {
                                     this.props.navigation.goBack();
                                 }} />
@@ -72,7 +72,7 @@ export default class NavigationBar extends Component {
                                 color={global.colors.fontColor}
                                 width={44}
                                 height={44}
-                                margin={28}
+                                margin={30}
                                 source={global.images.icon_close}
                                 onPress={() => {
                                     if (this.props.closeButtonOnPress != null) {
@@ -114,10 +114,10 @@ export default class NavigationBar extends Component {
                             ?
                             <ImageButton
                                 style={styles.rightButton}
-                                color={global.colors.fontColor}
+                                color={global.colors.gray1Color}
                                 width={44}
                                 height={44}
-                                margin={12}
+                                margin={14}
                                 source={this.props.rightButtonImage}
                                 onPress={() => {
                                     if (this.props.rightButtonOnPress != null) {

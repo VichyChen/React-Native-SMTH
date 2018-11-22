@@ -119,6 +119,7 @@ export default class NewTopTenScreen extends Component {
             this.setState({
                 pullLoading: false,
                 screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenText: error,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);
@@ -176,7 +177,7 @@ export default class NewTopTenScreen extends Component {
                 {
                     global.login == false
                         ?
-                        <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 1, bottom: 0, left: 0, right: 0 }} />
+                        <LoginButtonView text={'需登陆才能查看十大'} style={{ zIndex: 999, position: 'absolute', top: 1, bottom: 0, left: 0, right: 0 }} />
                         :
                         <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                             this.setState({

@@ -29,9 +29,9 @@ import {
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
-var _username;
-var _password;
-var _captcha;
+var _username = '';
+var _password = '';
+var _captcha = '';
 
 export default class NewLoginView extends Component {
     constructor(props) {
@@ -39,7 +39,7 @@ export default class NewLoginView extends Component {
 
         this.state = {
             isLoading: false,
-            loadingType: 'clear',
+            screenText: '',
             username: '',
             password: '',
             captcha: '',
@@ -55,16 +55,7 @@ export default class NewLoginView extends Component {
 
         NetworkManager.getNewAuthorize((result) => {
 
-            NetworkManager.getNewCaptcha((result1) => {
-
-                this.setState({
-                    image: 'data:image/png;base64,' + result1
-                });
-            }, (error) => {
-
-            }, (errorMessage) => {
-
-            });
+            this.refreshCaptcha();
 
         }, (error) => {
 
@@ -72,6 +63,71 @@ export default class NewLoginView extends Component {
 
         });
 
+    }
+
+    refreshCaptcha() {
+        NetworkManager.getNewCaptcha((result1) => {
+
+            this.setState({
+                image: 'data:image/png;base64,' + result1
+            });
+        }, (error) => {
+
+        }, (errorMessage) => {
+
+        });
+    }
+
+    login() {
+        if (_username.length == 0 || _password.length == 0 || _captcha.length == 0) {
+            this.setState({
+                screenText: '',
+            })
+            return
+        };
+        this.setState({
+            isLoading: true,
+        })
+
+        NetworkManager.postNewSignIn(_username, _password, _captcha, (result) => {
+
+            NetworkManager.login(_username, _password, () => {
+
+                AsyncStorageManger.setLogin(true);
+                global.login = true;
+                global.current.username = _username;
+
+                DeviceEventEmitter.emit('LoginSuccessNotification', _username);
+                if (this.props.closeCallback != null) {
+                    this.props.closeCallback();
+                }
+
+                this.setState({
+                    isLoading: false,
+                })
+            }, (error) => {
+                this.setState({
+                    isLoading: false,
+                })
+            }, (errorMessage) => {
+                this.setState({
+                    isLoading: false,
+                })
+            });
+
+        }, (error) => {
+            this.refreshCaptcha();
+            _captcha = '';
+            this.setState({
+                captcha: '',
+                screenText: error,
+                isLoading: false,
+            })
+        }, (errorMessage) => {
+            this.setState({
+                isLoading: false,
+            })
+        });
     }
 
     componentWillUnmount() {
@@ -103,6 +159,7 @@ export default class NewLoginView extends Component {
                 {/* <View> */}
 
                 <NavigationBar
+                    title={'天天水木'}
                     showCloseButton={true}
                     closeButtonOnPress={() => {
                         DeviceEventEmitter.emit('LoginCloseNotification', null);
@@ -114,6 +171,9 @@ export default class NewLoginView extends Component {
                 />
 
                 <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'}>
+
+                    <Text style={styles.text} >{this.state.screenText}</Text>
+
                     <View style={styles.contain}>
                         <View style={[styles.textInputView, styles.textInputViewShadow]}>
                             <Image style={[styles.textInputLeftImage]} source={global.images.icon_login_account} />
@@ -188,70 +248,34 @@ export default class NewLoginView extends Component {
 
                         </View>
 
-                        {/* <Text style={styles.text} >{this.state.text}</Text> */}
-
-
-                        <Button style={styles.login}
-                            text={'登陆'}
-                            fontColor={global.colors.whiteColor}
-                            backgroundColor={global.colors.themeColor}
-                            width={100}
-                            height={44}
-                            onPress={() => {
-                                if (_username.length == 0 || _password.length == 0) return;
-
-
-                                NetworkManager.postNewSignIn(_username, _password, _captcha, (result) => {
-
-                                    NetworkManager.login(_username, _password, () => {
-
-                                        NetworkManager.getNewSearchAccount(_username, (html) => {
-
-                                            HTMLParseManager.parseNewSearchAccount(html, _username, (id) => {
-                                                AsyncStorageManger.setID(id);
-                                            });
-                                        }, (error) => {
-
-                                        }, (errorMessage) => {
-
-                                        });
-
-                                        AsyncStorageManger.setLogin(true);
-                                        global.login = true;
-                                        global.current.username = _username;
-
-                                        DeviceEventEmitter.emit('LoginSuccessNotification', _username);
-                                        if (this.props.closeCallback != null) {
-                                            this.props.closeCallback();
-                                        }                
-
-                                    }, (error) => {
-
-                                    }, (errorMessage) => {
-
-                                    });
-
-                                }, (error) => {
-
-                                }, (errorMessage) => {
-
-                                });
-
-                            }} />
+                        {
+                            this.state.isLoading == true ?
+                                (
+                                    <View style={[styles.login, { flex: 1, flexDirection: 'row', justifyContent: 'center', height: 44 }]}>
+                                        <ActivityIndicator animating={true} size="small" />
+                                    </View>
+                                )
+                                :
+                                (
+                                    <Button style={styles.login}
+                                        text={'登陆'}
+                                        fontColor={global.colors.whiteColor}
+                                        backgroundColor={global.colors.themeColor}
+                                        width={100}
+                                        height={44}
+                                        onPress={() => { this.login(); }} />
+                                )
+                        }
 
                         <View style={[styles.textInputView, { marginTop: 20 }]}>
                             <Text style={styles.regist}
                                 onPress={() => {
                                     Linking.openURL('http://www.newsmth.net/nForum/#!reg');
                                 }} >
-                                {'没账号？点这里注册'}
+                                {'没账号？点击注册'}
                             </Text>
                         </View>
-                        <ActivityIndicator
-                            animating={this.state.isLoading}
-                            style={styles.indicator}
-                            size="small"
-                        />
+
                     </View>
                 </ScrollView>
                 {/* </View> */}
@@ -311,20 +335,14 @@ var styles = {
     },
     get text() {
         return {
-            marginTop: 20,
-            marginBottom: 60,
-            marginLeft: 40,
-            marginRight: 40,
+            position: 'absolute',
+            top: 44,
+            left: 0,
+            right: 0,
             height: 20,
             textAlign: 'center',
-            color: global.colors.blueColor,
+            color: 'red',
             fontSize: global.configures.fontSize17,
-        }
-    },
-    get indicator() {
-        return {
-            marginTop: 20,
-            height: 44,
         }
     },
     get login() {

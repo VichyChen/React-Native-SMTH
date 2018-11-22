@@ -14,7 +14,7 @@ import {
 // import {
 // } from '../config/Common';
 
-export default class LoadingViewText extends Component {
+export default class LoadingViewNetworkError extends Component {
     constructor(props) {
         super(props);
 
@@ -30,12 +30,9 @@ export default class LoadingViewText extends Component {
                         height: global.constants.ScreenWidth / 3,
                         tintColor: global.colors.backgroundGrayColor,
                     }]}
-                        source={global.images.icon_error} />
-                    <Text style={{ marginTop: 10, color: global.colors.gray1Color, fontSize: global.fontSize.fontSize17 }}>
-                        {'出错了'}
-                    </Text>
-                    <Text style={{ marginTop: 10, color: global.colors.gray2Color, fontSize: global.fontSize.fontSize15 }}>
-                        {this.props.text}
+                        source={global.images.icon_network_error} />
+                    <Text style={{ marginTop: 20, color: global.colors.gray1Color, fontSize: global.fontSize.fontSize17 }}>
+                        {'网络出问题了，点击重试'}
                     </Text>
                 </View>
 

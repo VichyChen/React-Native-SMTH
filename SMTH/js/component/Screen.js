@@ -8,6 +8,7 @@ import {
 import {
     LoadingView,
     LoadingViewText,
+    LoadingViewNetworkError,
     ToastView,
 } from '../config/Common';
 import CellBackground from '../component/CellBackground'
@@ -33,19 +34,30 @@ export default class Screen extends Component {
                 {
                     this.props.status == global.screen.none ? null :
                         (
-                            this.props.status == global.screen.none || this.props.status == global.screen.loading || this.props.status == global.screen.loadingClear
+                                this.props.status == global.screen.loading ||
+                                this.props.status == global.screen.loadingClear
                                 ?
-                                <LoadingView hidden={this.props.status == global.screen.none ? true : false} clear={this.props.status == global.screen.loadingClear ? true : false} />
+                                <LoadingView hidden={false}
+                                    clear={this.props.status == global.screen.loadingClear ? true : false} />
                                 :
                                 (
-                                    this.props.status == global.screen.text || this.props.status == global.screen.textImage || this.props.status == global.screen.networkError ?
-                                        <LoadingViewText text={this.props.text} onPress={() => {
-                                            if (this.props.onPress == null ||
-                                                (this.props.status == global.screen.loading || this.props.status == global.screen.loadingClear)) return;
-                                            this.props.onPress();
-                                        }} />
+                                    this.props.status == global.screen.text ||
+                                        this.props.status == global.screen.textImage ?
+                                        <LoadingViewText text={this.props.text}
+                                            onPress={() => {
+                                                if (this.props.onPress == null) return;
+                                                this.props.onPress();
+                                            }} />
                                         :
-                                        null
+                                        (
+                                            this.props.status == global.screen.networkError ? (
+                                                <LoadingViewNetworkError text={this.props.text}
+                                                    onPress={() => {
+                                                        if (this.props.onPress == null) return;
+                                                        this.props.onPress();
+                                                    }} />
+                                            ) : null
+                                        )
                                 )
                         )
                 }

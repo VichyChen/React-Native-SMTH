@@ -5,7 +5,8 @@ import {
     View,
     TouchableWithoutFeedback,
     Text,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Image
 } from 'react-native';
 
 
@@ -25,11 +26,21 @@ export default class LoginButtonView extends Component {
         return (
             <View style={[this.props.style]}>
                 <View style={styles.container}>
-                    <Button
+                    <Image style={[{
+                        marginTop: -40, 
+                        width: global.constants.ScreenWidth / 2,
+                        height: global.constants.ScreenWidth / 2,
+                    }]}
+                        source={global.images.logo} />
+                    <Text style={{ color: global.colors.gray2Color, fontSize: global.fontSize.fontSize17 }}>{this.props.text}</Text>
+                    <Button style={{ marginTop: 40, width: 100, borderRadius: 20, }}
+                        text={'去登陆'}
+                        fontColor={global.colors.whiteColor}
+                        backgroundColor={global.colors.themeColor}
+                        height={40}
                         onPress={() => {
                             DeviceEventEmitter.emit('LoginNotification', null);
                         }}
-                        text={'登陆'}
                     />
                 </View>
             </View >

@@ -127,6 +127,7 @@ export default class NewPictureListScreen extends Component {
                 pullLoading: false,
                 pullMoreLoading: false,
                 screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenText: error,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);

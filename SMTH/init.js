@@ -64,6 +64,7 @@ global.fontSize = {
 };
 
 global.images = {
+    get logo() { return require('./js/image/logo.png') },
     get face_default_m() { return require('./js/image/face_default_m.jpg') },
     get icon_advice() { return require('./js/image/icon_advice.png') },
     get icon_collect_filled() { return require('./js/image/icon_collect_filled.png') },
@@ -91,7 +92,7 @@ global.images = {
     get tabbar_user_filled() { return require('./js/image/tabbar_user_filled.png') },
     get tabbar_user() { return require('./js/image/tabbar_user.png') },
 
-    get ic_return_b_90x90() { return require('./js/image/ic_return_b_90x90.png') },
+    get icon_left_arrow() { return require('./js/image/icon_left_arrow.png') },
 
     get icon_message_mail() { return require('./js/image/icon_message_mail.png') },
     get icon_message_sendmail() { return require('./js/image/icon_message_sendmail.png') },
@@ -104,10 +105,12 @@ global.images = {
     get icon_login_account() { return require('./js/image/icon_login_account.png') },
     get icon_login_password() { return require('./js/image/icon_login_password.png') },
     get icon_login_captcha() { return require('./js/image/icon_login_captcha.png') },
+
+    get icon_network_error() { return require('./js/image/icon_network_error.png') },
+    get icon_error() { return require('./js/image/icon_error.png') },
 };
 
 global.storageKeys = {
-    pageSize: 'pageSize',
     fontSize: 'fontSize',
 };
 
@@ -180,11 +183,6 @@ function init() {
 }
 
 async function configure() {
-    //每页回复数
-    var pageSize = await AsyncStorageManger.get(global.storageKeys.pageSize);
-    if (pageSize.length > 0) {
-        global.configures.pageSize = parseInt(pageSize);
-    }
 
     //字体大小
     var fontSize = await AsyncStorageManger.get(global.storageKeys.fontSize);

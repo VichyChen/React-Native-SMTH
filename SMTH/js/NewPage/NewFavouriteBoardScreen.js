@@ -97,6 +97,7 @@ export default class NewFavouriteBoardScreen extends Component {
             this.setState({
                 pullLoading: false,
                 screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenText: error,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);
@@ -137,7 +138,7 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <NavigationBar title='收藏' showBottomLine={true} rightButtonTitle={this.state.editing == true ? '完成' : '编辑'}
+                <NavigationBar title='收藏' showBottomLine={true} rightButtonTitle={global.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}
                     rightButtonOnPress={() => {
                         this.setState({
                             editing: !this.state.editing,
@@ -154,7 +155,7 @@ export default class NewFavouriteBoardScreen extends Component {
                     {
                         global.login == false
                             ?
-                            <LoginButtonView style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
+                            <LoginButtonView text={'需登陆才能查看收藏内容'} style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
                             :
                             <ScrollView
                                 refreshControl={

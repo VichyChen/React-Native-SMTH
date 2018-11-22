@@ -142,7 +142,7 @@ export default class NetworkUtil {
     return new Promise(function (resolve, reject) {
       const timeoutId = setTimeout(function () {
         reject(new Error("Timeout"))
-      }, 20000)
+      }, 15000)
       promise.then(
         (result) => {
           clearTimeout(timeoutId);

@@ -58,7 +58,7 @@ export default class NewSettingScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <StatusBar barStyle="dark-content" />
 
         <NavigationBar title='设置' showBackButton={true} navigation={this.props.navigation} />
@@ -67,47 +67,30 @@ export default class NewSettingScreen extends Component {
 
           <SectionBlankHeader />
 
-          <CellBackground
-            onPress={() => {
-              this.setState({
-                selectPageSizeViewHidden: false,
-              });
-            }}
-          >
-            <View style={{ flexDirection: 'column', backgroundColor: global.colors.whiteColor }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44, }}>
-                <Text
-                  style={{
-                    paddingLeft: 13,
-                    paddingRight: 13,
-                    fontSize: global.configures.fontSize17,
-                    color: global.colors.fontColor,
-                  }}>
-                  帖子详情页每页回复数：
-              </Text>
-                <Image
-                  style={{
-                    marginRight: 13,
-                    width: 10,
-                    height: 17,
-                  }}
-                  source={global.images.icon_forward_arrow} />
-                <Text
-                  style={{
-                    position: 'absolute',
-                    top: 13,
-                    right: 30,
-                    fontSize: global.configures.fontSize17,
-                    color: global.colors.fontColor,
-                  }}>
-                  {this.state.pageSize}
-                </Text>
-              </View>
+          <CellBackground onPress={() => {
+
+          }} >
+            <View style={styles.rowView}>
+              <Text style={styles.leftText} >意见反馈</Text>
+              <Image style={styles.rightArrow} source={global.images.icon_right_arrow} />
+            </View>
+          </CellBackground>
+
+          <SeperatorLine />
+
+          <CellBackground onPress={() => {
+
+          }} >
+            <View style={styles.rowView}>
+              <Text style={styles.leftText} >分享天天水木</Text>
+              <Image style={styles.rightArrow} source={global.images.icon_right_arrow} />
             </View>
           </CellBackground>
 
           <SectionBlankHeader />
 
+
+          {/* 字体大小 
           <View style={{ backgroundColor: global.colors.whiteColor }}>
             <Text style={[{ fontSize: global.configures.fontSize17, color: global.colors.fontColor, marginLeft: 13, marginTop: 13 }]} >字体大小：</Text>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: global.constants.ScreenWidth, height: 60, }}>
@@ -148,7 +131,9 @@ export default class NewSettingScreen extends Component {
           </View>
 
           <SectionBlankHeader />
+*/}
 
+          {/* 退出 */}
           <Button onPress={() => {
             Cookie.clear();
             AsyncStorageManger.setAccessToken('');
@@ -159,33 +144,10 @@ export default class NewSettingScreen extends Component {
             DeviceEventEmitter.emit('LogoutNotification', null);
 
             this.props.navigation.goBack();
-          }} text='退出' />
+          }} text='退出登录' />
 
-          <PickerSelectView
-            hidden={this.state.selectPageSizeViewHidden}
-            array={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-            selectedValue={this.state.selectPageSize}
-            onCancelClick={() => {
-              this.setState({
-                selectPageSizeViewHidden: true,
-              });
-            }}
-            onCompleteClick={(pageSize) => {
-              this.setState({
-                selectPageSizeViewHidden: true,
-                pageSize: pageSize,
-              });
 
-              AsyncStorageManger.set(global.storageKeys.pageSize, (pageSize));
-              DeviceEventEmitter.emit('RefreshConfigureNotification', null);
-            }}
-            onValueChange={(pageSize) => {
-              this.setState({
-                selectPageSize: pageSize,
-              });
-            }}
-          />
-        </ScrollView>     
+        </ScrollView>
       </View>
 
     );
@@ -204,6 +166,29 @@ var styles = {
       width: 50,
       textAlign: 'center',
       color: global.colors.fontColor,
+    }
+  },
+  get rowView() {
+    return {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      height: 50,
+      backgroundColor: global.colors.whiteColor,
+    }
+  },
+  get leftText() {
+    return {
+      marginLeft: global.constants.Padding,
+      fontSize: global.configures.fontSize17,
+      color: global.colors.fontColor,
+    }
+  },
+  get rightArrow() {
+    return {
+      marginRight: global.constants.Padding,
+      width: 10,
+      height: 15,
     }
   },
 }

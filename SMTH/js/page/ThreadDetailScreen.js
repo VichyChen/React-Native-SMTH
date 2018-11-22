@@ -24,7 +24,8 @@ import {
   Modal,
   Linking,
   Clipboard,
-  WebView
+  WebView,
+  StatusBar
 } from 'react-native';
 import { NativeModules } from 'react-native';
 
@@ -157,10 +158,15 @@ export default class ThreadDetailScreen extends Component {
           screenStatus: global.screen.none,
         });
 
-        this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
-        setTimeout(() => {
-          this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
-        }, 50);
+        if (this.refs.flatList != null) {
+          this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
+          setTimeout(() => {
+            if (this.refs.flatList != null) {
+              this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
+            }
+          }, 50);
+        }
+
       }
 
       if (this.scanRecord == false) {
@@ -182,6 +188,7 @@ export default class ThreadDetailScreen extends Component {
       ToastUtil.info(error);
       this.setState({
         screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+        screenText: error,
       });
     }, (errorMessage) => {
       ToastUtil.info(errorMessage);
@@ -318,10 +325,11 @@ export default class ThreadDetailScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <StatusBar barStyle="dark-content" />
 
         <NavigationBar
-          title={global.boards.all[unescape(this.props.navigation.state.params.board)] == null ? this.props.navigation.state.params.board : global.boards.all[unescape(this.props.navigation.state.params.board)].name}
-          message={unescape(this.props.navigation.state.params.board)}
+          title={this.state.screenStatus == global.screen.loading ? '' : global.boards.all[unescape(this.props.navigation.state.params.board)] == null ? this.props.navigation.state.params.board : global.boards.all[unescape(this.props.navigation.state.params.board)].name}
+          message={this.state.screenStatus == global.screen.loading ? '' : unescape(this.props.navigation.state.params.board)}
           titleOnPress={() => {
             if (global.boards.all[unescape(this.props.navigation.state.params.board)] == null) {
               return;
@@ -333,8 +341,9 @@ export default class ThreadDetailScreen extends Component {
             });
           }}
           showBackButton={true}
+          showBottomLine={true}
           navigation={this.props.navigation}
-          rightButtonImage={global.images.icon_more}
+          rightButtonImage={this.state.screenStatus == global.screen.loading ? null : global.images.icon_more}
           rightButtonOnPress={() => {
             this.moreActionSheet.show();
           }}
