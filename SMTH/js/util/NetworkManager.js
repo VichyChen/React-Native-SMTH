@@ -990,7 +990,12 @@ export default class NetworkManager {
             success(result);
         }).catch(error => {
             console.log(error);
-            failure(error.message);
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
         });
     }
 
@@ -999,7 +1004,12 @@ export default class NetworkManager {
         ).then(async result => {
             success(result);
         }).catch(error => {
-            failure(error.message);
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
         });
     }
 

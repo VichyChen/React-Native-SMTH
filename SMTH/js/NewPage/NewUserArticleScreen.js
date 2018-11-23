@@ -104,14 +104,6 @@ export default class NewUserArticleScreen extends Component {
                         boardName: this.$('div[class=article-board-name]').children().first().text(),
                         boardTitle: this.$('div[class=article-board-title]').children().first().text(),
                     };
-                    console.log('object.key:' + object.key);
-                    console.log('object.id:' + object.id);
-                    console.log('object.time:' + object.time);
-                    console.log('object.title:' + object.title);
-                    console.log('object.content:' + object.content);
-                    console.log('object.quote:' + object.quote);
-                    console.log('object.boardName:' + object.boardName);
-                    console.log('object.boardTitle:' + object.boardTitle);
 
                     dataArray.push({
                         key: dataArray.length,
@@ -139,7 +131,7 @@ export default class NewUserArticleScreen extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -201,7 +193,9 @@ export default class NewUserArticleScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar barStyle="dark-content" />
+                {
+                    this.props.id != null ? <StatusBar barStyle="light-content" /> : <StatusBar barStyle="dark-content" />
+                }
                 {
                     this.props.id != null ? null :
                         <NavigationBar
@@ -210,7 +204,6 @@ export default class NewUserArticleScreen extends Component {
                             showBackButton={true}
                             showBottomLine={true}
                         />
-
                 }
                 <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                     this.setState({
@@ -264,7 +257,7 @@ var styles = {
         return {
             marginTop: 10,
             fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },
@@ -278,7 +271,7 @@ var styles = {
     get itemTitle() {
         return {
             fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },

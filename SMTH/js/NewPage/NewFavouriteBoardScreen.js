@@ -41,7 +41,7 @@ export default class NewFavouriteBoardScreen extends Component {
         super(props);
         this.state = {
             pullLoading: false,
-            screenStatus: global.screen.loading,
+            screenStatus: global.login == false ? global.screen.none : global.screen.loading,
             screenText: null,
             isDeleting: false,
             editing: false,
@@ -61,16 +61,7 @@ export default class NewFavouriteBoardScreen extends Component {
             this.setState({});
         });
 
-        //没登录
-        if (global.login == false) {
-            this.setState({
-                screenStatus: global.screen.none,
-            });
-        }
-        else {
-            this.setState({
-                screenStatus: global.screen.loading,
-            });
+        if (global.login == true) {
             this.net_LoadFavorites();
         }
     }
@@ -96,7 +87,7 @@ export default class NewFavouriteBoardScreen extends Component {
             ToastUtil.info(error);
             this.setState({
                 pullLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -138,7 +129,9 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <NavigationBar title='收藏' showBottomLine={true} rightButtonTitle={global.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}
+                <NavigationBar title='收藏'
+                    showBottomLine={true}
+                    rightButtonTitle={global.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}
                     rightButtonOnPress={() => {
                         this.setState({
                             editing: !this.state.editing,
@@ -171,9 +164,9 @@ export default class NewFavouriteBoardScreen extends Component {
                             >
                                 <View style={styles.rightView} >
                                     {
-                                        this.state.dataArray.map((item) => {
+                                        this.state.dataArray.map((item, i) => {
                                             return (
-                                                <CellBackground
+                                                <CellBackground key={i}
                                                     showSelect={false}
                                                     onPress={() => {
                                                         if (global.boards.all[item.id] == null) {
@@ -187,7 +180,12 @@ export default class NewFavouriteBoardScreen extends Component {
                                                         {
                                                             this.state.editing == true
                                                                 ?
-                                                                <ImageButton style={styles.itemImage} width={36} height={36} margin={16} source={global.images.icon_minus}
+                                                                <ImageButton
+                                                                    style={styles.itemImage}
+                                                                    width={36}
+                                                                    height={36}
+                                                                    margin={16}
+                                                                    source={global.images.icon_minus}
                                                                     onPress={() => { this.net_DelFav(item); }} />
                                                                 :
                                                                 null
@@ -275,7 +273,7 @@ var styles = {
     get itemTitle() {
         return {
             fontSize: global.configures.fontSize15,
-            color: global.colors.gray1Color,
+            color: global.colors.fontColor,
         }
     },
     get itemImage() {

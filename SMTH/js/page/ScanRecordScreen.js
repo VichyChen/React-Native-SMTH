@@ -136,7 +136,7 @@ var styles = {
         return {
             lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },

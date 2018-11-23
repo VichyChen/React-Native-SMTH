@@ -220,7 +220,7 @@ var styles = {
     get sectionTitle() {
         return {
             fontSize: global.configures.fontSize16,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },

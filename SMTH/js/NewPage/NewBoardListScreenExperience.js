@@ -87,7 +87,7 @@ export default class NewBoardListScreenExperience extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -215,7 +215,7 @@ var styles = {
             marginTop: 10,
             lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },

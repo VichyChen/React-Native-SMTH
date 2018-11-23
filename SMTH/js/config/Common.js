@@ -31,6 +31,7 @@ import CustomDoubleClick from '../component/CustomDoubleClick';
 import ImageButton from '../component/ImageButton';
 import LoadingView from '../component/LoadingView';
 import LoadingViewText from '../component/LoadingViewText';
+import LoadingViewError from '../component/LoadingViewError';
 import LoadingViewNetworkError from '../component/LoadingViewNetworkError';
 import ToastView from '../component/ToastView';
 import LoginView from '../component/LoginView';
@@ -85,6 +86,7 @@ export {
     ImageButton,
     LoadingView,
     LoadingViewText,
+    LoadingViewError,
     LoadingViewNetworkError,
     ToastView,
     TitleValueItem,

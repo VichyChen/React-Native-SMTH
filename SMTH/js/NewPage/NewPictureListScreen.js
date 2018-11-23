@@ -126,7 +126,7 @@ export default class NewPictureListScreen extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -166,9 +166,9 @@ export default class NewPictureListScreen extends Component {
                                 item.attachment_list.length == 4 ? (
                                     <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.7 }]} >
                                         {
-                                            item.attachment_list.map((image) => {
+                                            item.attachment_list.map((image, i) => {
                                                 return (
-                                                    <Image style={[styles.image, {
+                                                    <Image key={i} style={[styles.image, {
                                                         width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                         height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                     }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
@@ -179,9 +179,9 @@ export default class NewPictureListScreen extends Component {
                                 ) : (
                                         <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8 }]} >
                                             {
-                                                item.attachment_list.map((image) => {
+                                                item.attachment_list.map((image, i) => {
                                                     return (
-                                                        <Image style={[styles.image, {
+                                                        <Image key={i} style={[styles.image, {
                                                             width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                             height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
                                                         }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
@@ -264,7 +264,7 @@ var styles = {
         return {
             lineHeight: global.constants.LineHeight,
             fontSize: global.configures.fontSize17,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor
         }
     },

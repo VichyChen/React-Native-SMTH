@@ -38,7 +38,7 @@ export default class NavigationBar extends Component {
                             ?
                             <ImageButton
                                 style={styles.backButton}
-                                color={global.colors.gray1Color}
+                                color={this.props.backButtonTintColor != null ? this.props.backButtonTintColor : global.colors.gray1Color}
                                 width={44}
                                 height={44}
                                 margin={24}
@@ -114,10 +114,10 @@ export default class NavigationBar extends Component {
                             ?
                             <ImageButton
                                 style={styles.rightButton}
-                                color={global.colors.gray1Color}
+                                color={this.props.rightButtonTintColor != null ? this.props.rightButtonTintColor : global.colors.gray1Color}
                                 width={44}
                                 height={44}
-                                margin={14}
+                                margin={this.props.rightButtonImageMargin == null ? 14 : this.props.rightButtonImageMargin}
                                 source={this.props.rightButtonImage}
                                 onPress={() => {
                                     if (this.props.rightButtonOnPress != null) {

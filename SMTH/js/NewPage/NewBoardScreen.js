@@ -12,7 +12,8 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -143,6 +144,7 @@ export default class NewBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container} >
+                <StatusBar barStyle="dark-content" />
 
                 <NavigationBar title='板块' />
 
@@ -161,9 +163,9 @@ export default class NewBoardScreen extends Component {
                         <ScrollView ref='scrollView' >
                             <View style={styles.rightView} >
                                 {
-                                    this.state.rightDataArray.map((item) => {
+                                    this.state.rightDataArray.map((item, i) => {
                                         return (
-                                            <CellBackground
+                                            <CellBackground key={i}
                                                 showSelect={false}
                                                 onPress={() => {
                                                     this.props.navigation.navigate('newBoardListScreen', {
@@ -233,13 +235,14 @@ var styles = {
     get leftItemTitle() {
         return {
             fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
+            color: global.colors.fontColor,
         }
     },
     get leftItemTitleSelected() {
         return {
             fontSize: global.configures.fontSize15,
-            color: global.colors.themeColor
+            color: global.colors.themeColor,
+            fontWeight: '600',
         }
     },
     get leftItemVerticalLine() {
@@ -282,7 +285,7 @@ var styles = {
     get rightItemTitle() {
         return {
             fontSize: global.configures.fontSize15,
-            color: global.colors.gray1Color,
+            color: global.colors.fontColor,
         }
     },
 }

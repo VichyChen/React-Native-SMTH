@@ -124,7 +124,7 @@ var styles = {
             marginLeft: 13,
             marginRight: 13,
             fontSize: global.configures.fontSize19,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor,
         }
     },

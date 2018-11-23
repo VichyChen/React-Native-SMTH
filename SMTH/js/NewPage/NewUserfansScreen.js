@@ -49,34 +49,39 @@ export default class NewUserfansScreen extends Component {
     getNewAccountFans(page) {
         NetworkManager.getNewAccountFans(this.props.id, page, (result) => {
             this.$ = cio.load(result, { decodeEntities: false });
-            this.$ = cio.load(this.$('ul[class=pagination]').html());
-            this._currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
-            this._totalPage = this.$('li').last().attr('class') == 'disabled' ? this._currentPage : this.$('li').last().children().attr('href').split('/')[4];
-
-            this.$ = cio.load(result, { decodeEntities: false });
-            this.$ = cio.load(this.$('ul[class=list-group]').html());
+            if (this.$('ul[class=pagination]').html() != null) {
+                this.$ = cio.load(this.$('ul[class=pagination]').html());
+                this._currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
+                this._totalPage = this.$('li').last().attr('class') == 'disabled' ? this._currentPage : this.$('li').last().children().attr('href').split('/')[4];
+            }
 
             var dataArray = [];
             if (page != 1) {
                 dataArray = dataArray.concat(this.state.dataArray);
             }
-            this.$('li').each(function (i, elem) {
-                this.$ = cio.load(elem);
 
-                dataArray.push({
-                    key: dataArray.length,
-                    id: this.$('a[class=avatar]').attr('href').split('/')[2],
-                    name: this.$('a[class=name]').text(),
-                    meta: this.$('div[class=meta]').children().first().text(),
-                    avatar: this.$('a[class=avatar]').children().first().attr('src'),
+            this.$ = cio.load(result, { decodeEntities: false });
+            if (this.$('ul[class=list-group]').html() != null) {
+                this.$ = cio.load(this.$('ul[class=list-group]').html());
+                this.$('li').each(function (i, elem) {
+                    this.$ = cio.load(elem);
+
+                    dataArray.push({
+                        key: dataArray.length,
+                        id: this.$('a[class=avatar]').attr('href').split('/')[2],
+                        name: this.$('a[class=name]').text(),
+                        meta: this.$('div[class=meta]').children().first().text(),
+                        avatar: this.$('a[class=avatar]').children().first().attr('src'),
+                    });
                 });
-            });
+            }
 
             this.setState({
                 dataArray: dataArray,
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: global.screen.none,
+                screenStatus: dataArray.length == 0 ? global.screen.text : global.screen.none,
+                screenText: this.props.name + ' 还没有粉丝',
             });
 
         }, (error) => {
@@ -84,7 +89,7 @@ export default class NewUserfansScreen extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -167,7 +172,8 @@ var styles = {
         return {
             flex: 1,
             flexDirection: 'row',
-            padding: global.constants.Padding
+            padding: global.constants.Padding,
+            backgroundColor: global.colors.whiteColor,
         }
     },
     get flatList() {

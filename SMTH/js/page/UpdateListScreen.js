@@ -98,6 +98,6 @@ var styles = {
 //     text: {
 //         color: '#fff',
 //         fontSize: 30,
-//         fontWeight: 'bold',
+//         fontWeight: '600',
 //     }
 // })

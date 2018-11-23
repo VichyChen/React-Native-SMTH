@@ -13,6 +13,7 @@ import {
     SectionList,
     TouchableWithoutFeedback,
     Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -52,6 +53,7 @@ export default class NewBoardListScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar barStyle="dark-content" />
 
                 <NavigationBar
                     title={this.props.navigation.state.params.name}
@@ -84,15 +86,15 @@ export default class NewBoardListScreen extends Component {
                         if (index == 0) {
                             if (global.login == true) {
                                 this.props.navigation.navigate('newPostThreadScreen',
-                                  {
-                                    id: this.props.navigation.state.params.id,
-                                    name: this.props.navigation.state.params.name,
-                                    title: this.props.navigation.state.params.title,
-                                  });
-                              }
-                              else {
+                                    {
+                                        id: this.props.navigation.state.params.id,
+                                        name: this.props.navigation.state.params.name,
+                                        title: this.props.navigation.state.params.title,
+                                    });
+                            }
+                            else {
                                 DeviceEventEmitter.emit('LoginNotification', null);
-                              }                
+                            }
                         }
                         //收藏
                         else if (index == 1) {
@@ -102,7 +104,7 @@ export default class NewBoardListScreen extends Component {
                                 ToastUtil.error('收藏失败');
                             }, (errorMessage) => {
                                 ToastUtil.error(errorMessage);
-                            });    
+                            });
                         }
                         //驻版
                         else if (index == 2) {
@@ -112,7 +114,7 @@ export default class NewBoardListScreen extends Component {
                                 ToastUtil.error('驻版失败');
                             }, (errorMessage) => {
                                 ToastUtil.error(errorMessage);
-                            });    
+                            });
                         }
                         //分享
                         else if (index == 3) {

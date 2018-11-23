@@ -24,7 +24,8 @@ import {
   CellBackground,
   SeperatorLine,
   HorizontalSeperatorLine,
-  NavigationBar
+  NavigationBar,
+  DateUtil
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -59,7 +60,12 @@ export default class NewMyScreen extends Component {
       this.network();
     });
     this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
-      this.setState({});
+      this.setState({
+        mailCount: 0,
+        sentMailCount: 0,
+        replyMeCount: 0,
+        atMeCount: 0,
+      });
     });
     this.clickMyScreenNotification = DeviceEventEmitter.addListener('ClickMyScreenNotification', () => {
       if (global.login == true) {
@@ -187,7 +193,10 @@ export default class NewMyScreen extends Component {
           style={{ backgroundColor: global.colors.themeColor }}
           rightButtonTitle='设置'
           rightButtonTitleColor={global.colors.whiteColor}
-          rightButtonOnPress={() => { this.props.navigation.navigate('newSettingScreen') }}
+          rightButtonOnPress={() => {
+            StatusBar.setBarStyle('dark-content');
+            this.props.navigation.navigate('newSettingScreen');
+          }}
         />
 
         <ScrollView
@@ -202,7 +211,7 @@ export default class NewMyScreen extends Component {
           }}>
 
             <View style={{
-              height: 190,
+              height: 215,
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -236,9 +245,9 @@ export default class NewMyScreen extends Component {
                     uri={(global.login == true && this.state.username.length > 0 ? NetworkManager.net_getFace(this.state.username) : null)} />
 
                   <Text style={{
-                    marginLeft: 10,
+                    marginLeft: 5,
                     fontSize: global.configures.fontSize20,
-                    fontWeight: 'bold',
+                    fontWeight: '600',
                     color: global.colors.whiteColor
                   }}>
                     {global.login == true ? '' : '未登录'}
@@ -246,7 +255,7 @@ export default class NewMyScreen extends Component {
 
                   <View style={{
                     flex: 1,
-                    marginLeft: 10,
+                    marginLeft: 5,
                   }} >
                     <View style={{
                       flexDirection: 'row',
@@ -254,7 +263,7 @@ export default class NewMyScreen extends Component {
                     }}>
                       <Text style={{
                         fontSize: global.configures.fontSize20,
-                        fontWeight: 'bold',
+                        fontWeight: '600',
                         color: global.colors.whiteColor
                       }}>
                         {global.login == true && this.state.username.length > 0 ? this.state.username : ''}
@@ -269,12 +278,7 @@ export default class NewMyScreen extends Component {
 
                     </View>
 
-                    <Text style={{
-                      marginTop: 10,
-                      fontSize: global.configures.fontSize12,
-                      color: global.colors.whiteColor,
-                      textAlign: 'left',
-                    }}>
+                    <Text style={[styles.nick, { marginTop: 10 }]} >
                       {global.login == true && this.state.nick != null ? this.state.nick : ''}
                     </Text>
 
@@ -286,56 +290,42 @@ export default class NewMyScreen extends Component {
               </CellBackground>
               <HorizontalSeperatorLine color={global.colors.whiteColor} width={global.constants.ScreenWidth - 40} />
 
-              <View style={{
-                height: 60,
-                width: global.constants.ScreenWidth - 40,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-              }} >
-                <Text style={{
-                  fontSize: global.configures.fontSize17,
-                  color: global.colors.whiteColor,
-                  fontWeight: '500',
-                }}>
+              <View style={[styles.userInfoView, { marginTop: 10, height: 40 }]} >
+                <Text style={[styles.userInfoSmallText]} >{'身份 '}</Text>
+                <Text style={[styles.userInfoBigText]} >
                   {global.login == true && this.state.title != null ? this.state.title : '无'}
                 </Text>
-                <Text style={{
-                  fontSize: global.configures.fontSize10,
-                  color: global.colors.whiteColor,
-                  marginBottom: -4,
-                }}>
-                  {' 身份  |  '}
-                </Text>
-                <Text style={{
-                  fontSize: global.configures.fontSize17,
-                  color: global.colors.whiteColor,
-                  fontWeight: '500',
-                }}>
+                <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
+                <Text style={[styles.userInfoSmallText]} >{'积分 '}</Text>
+                <Text style={[styles.userInfoBigText]} >
                   {global.login == true && this.state.score != null ? this.state.score : '0'}
                 </Text>
-                <Text style={{
-                  fontSize: global.configures.fontSize10,
-                  color: global.colors.whiteColor,
-                  marginBottom: -4,
-                }}>
-                  {' 积分  |  '}
-                </Text>
-                <Text style={{
-                  fontSize: global.configures.fontSize17,
-                  color: global.colors.whiteColor,
-                  fontWeight: '500',
-                }}>
+                <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
+                <Text style={[styles.userInfoSmallText]} >{'等级 '}</Text>
+                <Text style={[styles.userInfoBigText]} >
                   {global.login == true && this.state.life != null ? this.state.life + '(' + this.state.level + ')' : '无'}
                 </Text>
-                <Text style={{
-                  fontSize: global.configures.fontSize10,
-                  color: global.colors.whiteColor,
-                  marginBottom: -4,
-                }}>
-                  {' 等级'}
+              </View>
+
+              <View style={[styles.userInfoView, { marginTop: 5, marginBottom: 20 }]} >
+                <Text style={[styles.userInfoSmallText, styles.nick]} >
+                  {
+                    '上次登录 ' +
+                    (global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无') +
+                    '  |  注册于 ' +
+                    (global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
+                  }
                 </Text>
 
+                {/* <Text style={[styles.userInfoSmallText, styles.nick]} >{'上次登录 '}</Text>
+                <Text style={[styles.userInfoSmallText]} >
+                  {global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无'}
+                </Text>
+                <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
+                <Text style={[styles.userInfoSmallText]} >{'注册于 '}</Text>
+                <Text style={[styles.userInfoSmallText]} >
+                  {global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无'}
+                </Text> */}
               </View>
 
               <View style={{
@@ -358,6 +348,7 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
+                        StatusBar.setBarStyle('dark-content');
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 0 })
                       }
                       else {
@@ -384,6 +375,7 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
+                        StatusBar.setBarStyle('dark-content');
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 1 })
                       }
                       else {
@@ -411,6 +403,7 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
+                        StatusBar.setBarStyle('dark-content');
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 2 })
                       }
                       else {
@@ -438,6 +431,7 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
+                        StatusBar.setBarStyle('dark-content');
                         this.props.navigation.navigate('newMessageScreen', { selectedIndex: 3 })
                       }
                       else {
@@ -482,6 +476,7 @@ export default class NewMyScreen extends Component {
                 onPress={() => {
                   if (global.login == true) {
                     AsyncStorageManger.getID().then(id => {
+                      StatusBar.setBarStyle('dark-content');
                       this.props.navigation.navigate('newUserArticleScreen', { id: id });
                     });
                   }
@@ -501,6 +496,7 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
+                  StatusBar.setBarStyle('dark-content');
                   this.props.navigation.navigate('newFavouriteThreadScreen')
                 }}
               >
@@ -515,6 +511,7 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
+                  StatusBar.setBarStyle('dark-content');
                   this.props.navigation.navigate('scanRecordScreen', { id: this.state.username })
                 }}
               >
@@ -551,6 +548,12 @@ var styles = {
       backgroundColor: global.colors.whiteColor
     }
   },
+  get nick() {
+    return {
+      fontSize: global.configures.fontSize12,
+      color: global.colors.whiteColor,
+    }
+  },
   get messageItem() {
     return {
       flex: 1,
@@ -567,7 +570,7 @@ var styles = {
       top: -8,
       width: 20,
       height: 20,
-      backgroundColor: 'red',
+      backgroundColor: global.colors.redColor,
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
@@ -615,6 +618,28 @@ var styles = {
       marginRight: 20,
       width: 10,
       height: 15,
+    }
+  },
+  get userInfoView() {
+    return {
+      width: global.constants.ScreenWidth - 40,
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    }
+  },
+  get userInfoSmallText() {
+    return {
+      fontSize: global.configures.fontSize10,
+      color: global.colors.whiteColor,
+      marginBottom: -4,
+    }
+  },
+  get userInfoBigText() {
+    return {
+      fontSize: global.configures.fontSize20,
+      fontWeight: '600',
+      color: global.colors.whiteColor
     }
   },
 }

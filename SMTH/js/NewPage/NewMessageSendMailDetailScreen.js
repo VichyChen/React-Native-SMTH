@@ -58,7 +58,7 @@ export default class NewMessageSendMailDetailScreen extends Component {
         }, (error) => {
             ToastUtil.info(error);
             this.setState({
-                screenStatus: global.screen.textImage,
+                screenStatus: global.screen.error,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);
@@ -126,7 +126,7 @@ var styles = {
             marginLeft: 13,
             marginRight: 13,
             fontSize: global.configures.fontSize19,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor,
         }
     },

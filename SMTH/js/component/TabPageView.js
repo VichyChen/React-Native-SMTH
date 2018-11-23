@@ -67,7 +67,7 @@ export default class TabPageView extends Component {
       <View>
         <Text style={{
           fontSize: global.configures.fontSize15,
-          fontWeight: selected ? 'bold' : 'normal',
+          fontWeight: selected ? '600' : 'normal',
           color: selected ? global.colors.themeColor : global.colors.gray1Color,
         }}>
           {route.title}

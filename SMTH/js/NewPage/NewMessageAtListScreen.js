@@ -65,7 +65,7 @@ export default class NewMessageAtListScreen extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -118,43 +118,41 @@ export default class NewMessageAtListScreen extends Component {
 
     render() {
         return (
-            <View>
-                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
-                    this.setState({
-                        screenStatus: global.screen.loading,
-                    });
-                    this.net_LoadRefer(this.from, this.size);
-                }} >
-                    <View style={[styles.content]}>
-                        <FlatList
-                            ref="flatList"
-                            data={this.state.dataArray}
-                            renderItem={this._renderItem}
-                            removeClippedSubviews={false}
-                            extraData={this.state}
-                            style={[styles.flatList]}
-                            onRefresh={() => {
+            <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                this.setState({
+                    screenStatus: global.screen.loading,
+                });
+                this.net_LoadRefer(this.from, this.size);
+            }} >
+                <View style={[styles.content]}>
+                    <FlatList
+                        ref="flatList"
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        style={[styles.flatList]}
+                        onRefresh={() => {
+                            this.setState({
+                                pullLoading: true
+                            });
+                            this.from = 0;
+                            this.net_LoadRefer(this.from, this.size);
+                        }}
+                        onEndReached={() => {
+                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
                                 this.setState({
-                                    pullLoading: true
+                                    pullMoreLoading: true
                                 });
-                                this.from = 0;
+                                this.from = this.from + this.size;
                                 this.net_LoadRefer(this.from, this.size);
-                            }}
-                            onEndReached={() => {
-                                if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
-                                    this.setState({
-                                        pullMoreLoading: true
-                                    });
-                                    this.from = this.from + this.size;
-                                    this.net_LoadRefer(this.from, this.size);
-                                }
-                            }}
-                            onEndReachedThreshold={0.2}
-                            refreshing={this.state.pullLoading}
-                        />
-                    </View>
-                </Screen>
-            </View>
+                            }
+                        }}
+                        onEndReachedThreshold={0.2}
+                        refreshing={this.state.pullLoading}
+                    />
+                </View>
+            </Screen>
         );
     }
 }

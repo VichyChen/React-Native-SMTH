@@ -18,7 +18,7 @@ export default class CellBackground extends Component {
     render() {
         return (
             <TouchableHighlight
-                style={[(this.props.showSelect == false ? null : { backgroundColor: ((this.state.press == false ? global.colors.clearColor : global.colors.gray3Color)) })]}
+                style={[this.props.style, (this.props.showSelect == false ? null : { backgroundColor: ((this.state.press == false ? global.colors.clearColor : global.colors.gray3Color)) })]}
                 underlayColor={global.colors.clearColor}
                 onHideUnderlay={() => { this.setState({ press: false }); }}
                 onShowUnderlay={() => { this.setState({ press: true }); }}

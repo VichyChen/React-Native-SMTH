@@ -332,7 +332,7 @@ export default class NewThreadDetailScreen extends Component {
     }, (error) => {
       ToastUtil.info(error);
       this.setState({
-        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
         screenText: error,
       });
     }, (errorMessage) => {
@@ -475,7 +475,7 @@ export default class NewThreadDetailScreen extends Component {
                   {
                     item.score.length > 0
                       ?
-                      <Text style={[styles.likeItemReply, { fontWeight: 'bold', color: (item.score > 0 ? 'red' : 'green') }]} >
+                      <Text style={[styles.likeItemReply, { fontWeight: '600', color: (item.score > 0 ? 'red' : 'green') }]} >
                         {(item.score > 0 ? '+' + item.score : item.score) + ' '}
                       </Text>
                       : null
@@ -914,7 +914,7 @@ var styles = {
     return {
       lineHeight: global.constants.LineHeight,
       fontSize: global.configures.fontSize17,
-      fontWeight: 'bold',
+      fontWeight: '600',
       color: global.colors.fontColor
     }
   },
@@ -938,7 +938,7 @@ var styles = {
   get sectionTitle() {
     return {
       fontSize: global.configures.fontSize16,
-      // fontWeight: 'bold',
+      // fontWeight: '600',
       color: global.colors.fontColor
     }
   },
@@ -1047,7 +1047,7 @@ var styles = {
     return {
       marginTop: 10,
       fontSize: global.configures.fontSize17,
-      fontWeight: 'bold',
+      fontWeight: '600',
       color: global.colors.fontColor
     }
   },

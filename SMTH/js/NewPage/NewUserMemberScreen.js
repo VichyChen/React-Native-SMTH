@@ -70,7 +70,8 @@ export default class NewUserMemberScreen extends Component {
                 dataArray: dataArray,
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: global.screen.none,
+                screenStatus: dataArray.length == 0 ? global.screen.text : global.screen.none,
+                screenText: this.props.name + ' 还没有驻版',
             });
 
         }, (error) => {
@@ -78,7 +79,7 @@ export default class NewUserMemberScreen extends Component {
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.textImage : global.screen.none,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
                 screenText: error,
             });
         }, (errorMessage) => {
@@ -104,9 +105,9 @@ export default class NewUserMemberScreen extends Component {
                 <ScrollView>
                     <View style={styles.rightView} >
                         {
-                            this.state.dataArray.map((item) => {
+                            this.state.dataArray.map((item, i) => {
                                 return (
-                                    <CellBackground
+                                    <CellBackground key={i}
                                         showSelect={false}
                                         onPress={() => {
                                             this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.boardName, title: item.boardTitle });

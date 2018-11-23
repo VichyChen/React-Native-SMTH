@@ -24,6 +24,7 @@ import {
     TitleValueItem,
     TitleArrowItem,
     SeperatorLine,
+    HorizontalSeperatorLine,
     DateUtil,
     LoadingView,
     Screen,
@@ -52,6 +53,7 @@ export default class NewUserScreen extends Component {
             screenText: null
         }
 
+        this.queryUser();
         if (this.props.navigation.state.params.id == null) {
             NetworkManager.getNewSearchAccount(this.props.navigation.state.params.name, (html) => {
                 HTMLParseManager.parseNewSearchAccount(html, this.props.navigation.state.params.name, (id) => {
@@ -67,16 +69,148 @@ export default class NewUserScreen extends Component {
         }
     }
 
+    queryUser() {
+        NetworkManager.net_QueryUser(this.props.navigation.state.params.name, (result) => {
+            this.setState({
+                isLoading: false,
+                nick: result['user'].nick,
+                uid: result['user'].uid,
+                gender: result['user'].gender,
+                title: result['user'].title,
+                posts: result['user'].posts,
+                logins: result['user'].logins,
+                level: result['user'].level,
+                score: result['user'].score,
+                first_login: result['user'].first_login,
+                last_login: result['user'].last_login,
+                age: result['user'].age,
+                life: result['user'].life,
+            });
+        }, (error) => {
+
+        }, (errorMessage) => {
+
+        });
+    }
+
     render() {
         return (
             <View style={styles.container} >
-                <StatusBar barStyle="dark-content" />
+                <StatusBar barStyle="light-content" />
                 <NavigationBar
                     navigation={this.props.navigation}
+                    backgroundColor={global.colors.themeColor}
                     showBackButton={true}
+                    backButtonTintColor={global.colors.whiteColor}
                     showBottomLine={false}
+                    rightButtonImage={global.images.icon_share}
+                    rightButtonTintColor={global.colors.whiteColor}
+                    rightButtonImageMargin={28}
+                    rightButtonOnPress={() => {
+
+                    }}
                 />
+
+                <CellBackground
+                    style={{ position: 'absolute', top: global.constants.NavigationBarHeight - 35, right: 110 }}
+                    showSelect={false}
+                    onPress={() => {
+                        this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
+                    }}
+                >
+                    <View style={[styles.buttonView, {}]} >
+                        <Text style={styles.buttonViewTitle} >私信</Text>
+                    </View>
+                </CellBackground>
+                <CellBackground
+                    style={{ position: 'absolute', top: global.constants.NavigationBarHeight - 35, right: 50 }}
+                    showSelect={false}
+                    onPress={() => {
+                        NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
+                            ToastUtil.info("关注成功");
+                        }, (error) => {
+                            ToastUtil.info(error);
+                        }, (errorMessage) => {
+
+                        });
+
+                    }}
+                >
+                    <View style={[styles.buttonView, { }]} >
+                        <Text style={styles.buttonViewTitle} >关注</Text>
+                    </View>
+                </CellBackground>
+
                 <View style={styles.header} >
+
+                    <View style={{
+                        height: 64,
+                        width: global.constants.ScreenWidth - 40,
+                        marginBottom: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                    }} >
+                        <AvatorImage
+                            borderRadius={30}
+                            widthAndHeight={60}
+                            uri={NetworkManager.net_getFace(this.props.navigation.state.params.name)} />
+
+                        <View style={{
+                            flex: 1,
+                            marginLeft: 10,
+                        }} >
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}>
+                                <Text style={{
+                                    fontSize: global.configures.fontSize20,
+                                    fontWeight: '600',
+                                    color: global.colors.whiteColor
+                                }}>
+                                    {this.props.navigation.state.params.name}
+                                </Text>
+                            </View>
+
+                            <Text style={[styles.nick, { marginTop: 10 }]} >
+                                {this.props.navigation.state.params.name == this.state.nick ? '未设置昵称' : this.state.nick}
+                            </Text>
+
+                        </View>
+
+                    </View>
+                    <HorizontalSeperatorLine />
+
+                    <View style={[styles.userInfoView, { marginTop: 10, height: 40 }]} >
+                        <Text style={[styles.userInfoSmallText]} >{'身份 '}</Text>
+                        <Text style={[styles.userInfoBigText]} >
+                            {global.login == true && this.state.title != null ? this.state.title : '无'}
+                        </Text>
+                        <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
+                        <Text style={[styles.userInfoSmallText]} >{'积分 '}</Text>
+                        <Text style={[styles.userInfoBigText]} >
+                            {global.login == true && this.state.score != null ? this.state.score : '0'}
+                        </Text>
+                        <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
+                        <Text style={[styles.userInfoSmallText]} >{'等级 '}</Text>
+                        <Text style={[styles.userInfoBigText]} >
+                            {global.login == true && this.state.life != null ? this.state.life + '(' + this.state.level + ')' : '无'}
+                        </Text>
+                    </View>
+
+                    <View style={[styles.userInfoView, { marginTop: 5, marginBottom: 20 }]} >
+                        <Text style={[styles.userInfoSmallText, styles.nick]} >
+                            {
+                                '上次登录 ' +
+                                (global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无') +
+                                '  |  注册于 ' +
+                                (global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
+                            }
+                        </Text>
+                    </View>
+
+                    {/*
                     <AvatorImage
                         style={styles.avator}
                         borderRadius={35}
@@ -118,7 +252,7 @@ export default class NewUserScreen extends Component {
                             </CellBackground>
 
                         </View>
-                    </View>
+                        */}
                 </View>
                 <TabPageView
                     style={{}}
@@ -135,13 +269,13 @@ export default class NewUserScreen extends Component {
                                 //         });
                                 //     }}
                                 // />),
-                                (<NewUserArticleScreen navigation={this.props.navigation} id={this.state.id} />),
-                                (<NewUserMemberScreen navigation={this.props.navigation} id={this.state.id} />),
-                                (<NewUserFriendsScreen navigation={this.props.navigation} id={this.state.id} />),
-                                (<NewUserfansScreen navigation={this.props.navigation} id={this.state.id} />),
+                                (<NewUserArticleScreen navigation={this.props.navigation} id={this.state.id} name={this.props.navigation.state.params.name} />),
+                                (<NewUserMemberScreen navigation={this.props.navigation} id={this.state.id} name={this.props.navigation.state.params.name} />),
+                                (<NewUserFriendsScreen navigation={this.props.navigation} id={this.state.id} name={this.props.navigation.state.params.name} />),
+                                (<NewUserfansScreen navigation={this.props.navigation} id={this.state.id} name={this.props.navigation.state.params.name} />),
                             ]
                     } />
-            </View>
+            </View >
         )
     }
 }
@@ -169,11 +303,25 @@ var styles = {
     },
     get header() {
         return {
-            height: 100,
-            padding: global.constants.Padding + 5,
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
+            height: 165,
+            flexDirection: 'column',
+            paddingHorizontal: global.constants.Padding,
+            // justifyContent: 'flex-start',
+            backgroundColor: global.colors.themeColor,
+        }
+    },
+    get name() {
+        return {
+            marginLeft: 10,
+            fontSize: global.configures.fontSize20,
+            fontWeight: '600',
+            color: global.colors.whiteColor
+        }
+    },
+    get nick() {
+        return {
+            fontSize: global.configures.fontSize12,
+            color: global.colors.whiteColor,
         }
     },
     get headerRight() {
@@ -189,7 +337,7 @@ var styles = {
         return {
             marginTop: 5,
             fontSize: global.configures.fontSize19,
-            fontWeight: 'bold',
+            fontWeight: '600',
             color: global.colors.fontColor,
         }
     },
@@ -207,12 +355,12 @@ var styles = {
     },
     get buttonView() {
         return {
-            height: 30,
-            width: 60,
+            height: 25,
+            width: 50,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: global.colors.whiteColor,
-            borderColor: global.colors.gray1Color,
+            backgroundColor: global.colors.clearColor,
+            borderColor: global.colors.whiteColor,
             borderWidth: 1,
             borderRadius: 4,
         }
@@ -220,7 +368,28 @@ var styles = {
     get buttonViewTitle() {
         return {
             fontSize: global.configures.fontSize15,
-            color: global.colors.gray1Color,
+            color: global.colors.whiteColor,
+        }
+    },
+    get userInfoView() {
+        return {
+            width: global.constants.ScreenWidth - 40,
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+        }
+    },
+    get userInfoSmallText() {
+        return {
+            fontSize: global.configures.fontSize10,
+            color: global.colors.whiteColor,
+            marginBottom: -4,
+        }
+    },
+    get userInfoBigText() {
+        return {
+            fontSize: global.configures.fontSize18,
+            color: global.colors.whiteColor
         }
     },
 }
