@@ -13,7 +13,8 @@ import {
     SectionList,
     TouchableWithoutFeedback,
     Dimensions,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -25,7 +26,7 @@ import {
     Button,
     NavigationBar,
     SeperatorLine,
-    HorizontalSeperatorLine
+    HorizontalSeperatorLine,
 } from '../config/Common';
 
 var _title;
@@ -88,7 +89,7 @@ export default class NewReplyThreadScreen extends Component {
 
             NetworkManager.postReplSave(this.props.navigation.state.params.id, _content, (result) => {
 
-                DeviceEventEmitter.emit('ThreadRefreshNotification', this.props.navigation.state.params.mid);
+                DeviceEventEmitter.emit('NewThreadRefreshNotification', this.props.navigation.state.params.threadID);
                 this.props.navigation.goBack();
 
             }, (error) => {
@@ -119,56 +120,58 @@ export default class NewReplyThreadScreen extends Component {
 
     render() {
         return (
-            <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
-
+            <View style={{ flex: 1, }}>
+                <StatusBar barStyle="dark-content" />
                 <NavigationBar title='回复'
-                    navigation={this.props.navigation}
-                    showCancelButton={true}
-                    showBottomLine={true}
-                    rightButtonTitle={'确定'}
-                    rightButtonOnPress={() => {
-                        this.save();
-                    }}
-                />
+                        navigation={this.props.navigation}
+                        showBackButton={true}
+                        showBottomLine={true}
+                        rightButtonTitle={'确定'}
+                        rightButtonOnPress={() => {
+                            this.save();
+                        }}
+                    />
 
-                <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
-                    <View style={styles.container} >
+                <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
+                    <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
+                        <View style={styles.container} >
 
-                        <Text style={styles.title} >{'Re: ' + this.props.navigation.state.params.title}</Text>
-                        <HorizontalSeperatorLine />
+                            <Text style={styles.title} >{'Re: ' + this.props.navigation.state.params.title}</Text>
+                            <HorizontalSeperatorLine />
 
-                        <TextInput
-                            style={styles.contentInput}
-                            underlineColorAndroid={'transparent'}
-                            multiline={true}
-                            autoFocus={true}
-                            autoCorrect={false}
-                            spellCheck={false}
-                            placeholder={'输入文章正文...'}
-                            placeholderTextColor={global.colors.gray3Color}
-                            autoCapitalize={'none'}
-                            selection={this.state.selection}
-                            onSelectionChange={(event) => {
-                                this.setState({
-                                    selection: event.nativeEvent.selection
-                                })
-                            }}
-                            onFocus={() => {
-                                this.setState({
-                                    selection: { start: 0, end: 0 }
-                                })
-                            }}
-                            onChangeText={(text) => {
-                                this.setState({
-                                    content: text
-                                });
-                                _content = text;
-                            }}
-                            value={this.state.content}
-                        />
-                    </View>
-                </ScrollView>
-            </Screen>
+                            <TextInput
+                                style={styles.contentInput}
+                                underlineColorAndroid={'transparent'}
+                                multiline={true}
+                                autoFocus={true}
+                                autoCorrect={false}
+                                spellCheck={false}
+                                placeholder={'输入文章正文...'}
+                                placeholderTextColor={global.colors.gray3Color}
+                                autoCapitalize={'none'}
+                                selection={this.state.selection}
+                                onSelectionChange={(event) => {
+                                    this.setState({
+                                        selection: event.nativeEvent.selection
+                                    })
+                                }}
+                                onFocus={() => {
+                                    this.setState({
+                                        selection: { start: 0, end: 0 }
+                                    })
+                                }}
+                                onChangeText={(text) => {
+                                    this.setState({
+                                        content: text
+                                    });
+                                    _content = text;
+                                }}
+                                value={this.state.content}
+                            />
+                        </View>
+                    </ScrollView>
+                </Screen>
+            </View>
         )
     }
 }

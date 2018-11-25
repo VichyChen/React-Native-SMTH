@@ -109,19 +109,18 @@ export default class ThreadDetailScreen extends Component {
   }
 
   componentWillMount() {
-    this.subscription = DeviceEventEmitter.addListener('ThreadRefreshNotification', (mid) => {
+    this.threadRefreshNotification = DeviceEventEmitter.addListener('ThreadRefreshNotification', (mid) => {
       if (mid == this.props.navigation.state.params.id) {
         this.setState({
           screenStatus: global.screen.loading,
         });
-        this.from = 0;
         this.net_GetThread(this.from, this.size);
       }
     });
   }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    this.threadRefreshNotification.remove();
     DeviceEventEmitter.emit('RefreshScanRecordNotification', null);
   }
 

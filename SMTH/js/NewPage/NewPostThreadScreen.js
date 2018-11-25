@@ -13,6 +13,7 @@ import {
     SectionList,
     TouchableWithoutFeedback,
     Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -21,7 +22,7 @@ import {
     ToastUtil,
     Screen,
     NavigationBar,
-    HorizontalSeperatorLine
+    HorizontalSeperatorLine,
 } from '../config/Common';
 
 var _title;
@@ -33,40 +34,6 @@ export default class NewPostThreadScreen extends Component {
         this.state = {
             isLoading: false,
         }
-    }
-
-    setBarItemButton(title) {
-        this.props.navigation.setParams({
-            headerRight: (
-                <NavigatorTitleButton
-                    color={global.colors.whiteColor}
-                    fontSize={16}
-                    onPressClick={() => {
-                        if (_title == null || _content == null) {
-                            ToastUtil.info('请输入标题和内容');
-                            return;
-                        }
-                        if (this.state.isLoading == true) return;
-                        this.setState({
-                            isLoading: true,
-                        });
-                        NetworkManager.net_PostArticle(this.props.navigation.state.params.board, _title, _content, (result) => {
-                            this.props.navigation.goBack();
-                        }, (error) => {
-                            this.setState({
-                                isLoading: false,
-                            });
-                            ToastUtil.error(error);
-                        }, (errorMessage) => {
-                            this.setState({
-                                isLoading: false,
-                            });
-                            ToastUtil.error(errorMessage);
-                        });
-                    }}
-                    title='发布' />
-            )
-        })
     }
 
     save() {
@@ -114,11 +81,11 @@ export default class NewPostThreadScreen extends Component {
 
     render() {
         return (
-            <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
-
+            <View style={{ flex: 1, }}>
+                <StatusBar barStyle="dark-content" />
                 <NavigationBar title='发帖'
                     navigation={this.props.navigation}
-                    showCancelButton={true}
+                    showBackButton={true}
                     showBottomLine={true}
                     rightButtonTitle={'确定'}
                     rightButtonOnPress={() => {
@@ -126,42 +93,43 @@ export default class NewPostThreadScreen extends Component {
                     }}
                 />
 
-                <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
+                <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
+                    <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
 
-                    <View style={styles.container} >
+                        <View style={styles.container} >
+                            <TextInput
+                                ref="titleTextInput"
+                                style={styles.titleInput}
+                                underlineColorAndroid={'transparent'}
+                                autoFocus={true}
+                                autoCorrect={false}
+                                spellCheck={false}
+                                placeholder={'输入文章主题'}
+                                placeholderTextColor={global.colors.gray3Color}
+                                autoCapitalize={'none'}
+                                onChangeText={(text) => { this.setState({ title: text }); _title = text; }}
+                                value={this.state.title}
+                            />
 
-                        <TextInput
-                            ref="titleTextInput"
-                            style={styles.titleInput}
-                            underlineColorAndroid={'transparent'}
-                            autoFocus={true}
-                            autoCorrect={false}
-                            spellCheck={false}
-                            placeholder={'输入文章主题'}
-                            placeholderTextColor={global.colors.gray3Color}
-                            autoCapitalize={'none'}
-                            onChangeText={(text) => { this.setState({ title: text }); _title = text; }}
-                            value={this.state.title}
-                        />
+                            <HorizontalSeperatorLine />
 
-                        <HorizontalSeperatorLine />
-
-                        <TextInput
-                            style={styles.contentInput}
-                            underlineColorAndroid={'transparent'}
-                            multiline={true}
-                            autoCorrect={false}
-                            spellCheck={false}
-                            placeholder={'输入文章正文'}
-                            placeholderTextColor={global.colors.gray3Color}
-                            autoCapitalize={'none'}
-                            onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
-                            onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
-                            value={this.state.content}
-                        />
-                    </View>
-                </ScrollView>
-            </Screen>
+                            <TextInput
+                                style={styles.contentInput}
+                                underlineColorAndroid={'transparent'}
+                                multiline={true}
+                                autoCorrect={false}
+                                spellCheck={false}
+                                placeholder={'输入文章正文'}
+                                placeholderTextColor={global.colors.gray3Color}
+                                autoCapitalize={'none'}
+                                onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
+                                onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
+                                value={this.state.content}
+                            />
+                        </View>
+                    </ScrollView>
+                </Screen>
+            </View>
         )
     }
 }

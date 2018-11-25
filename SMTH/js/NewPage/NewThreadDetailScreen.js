@@ -108,8 +108,21 @@ export default class NewThreadDetailScreen extends Component {
     this.getNewTopic(this.page);
   }
 
+  componentWillMount() {
+    this.newThreadRefreshNotification = DeviceEventEmitter.addListener('NewThreadRefreshNotification', (id) => {
+      console.log('id:' + id);
+      console.log('this.props.navigation.state.params.id:' + this.props.navigation.state.params.id);
+      if (id == this.props.navigation.state.params.id) {
+        this.setState({
+          screenStatus: global.screen.loading,
+        });
+        this.getNewTopic(this.page);
+      }
+    });
+  }
+
   componentWillUnmount() {
-    // this.subscription.remove();
+    this.newThreadRefreshNotification.remove();
     DeviceEventEmitter.emit('RefreshScanRecordNotification', null);
   }
 
@@ -669,6 +682,7 @@ export default class NewThreadDetailScreen extends Component {
               if (global.login == true) {
                 this.props.navigation.navigate('newReplyThreadScreen',
                   {
+                    threadID: this.props.navigation.state.params.id,
                     id: this.hostArticleId,
                     title: this.title,
                     body: '',
@@ -830,6 +844,7 @@ export default class NewThreadDetailScreen extends Component {
                 if (global.login == true) {
                   this.props.navigation.navigate('newReplyThreadScreen',
                     {
+                      threadID: this.props.navigation.state.params.id,
                       id: this.selectMoreItemReplyID,
                       author: this.selectMoreItemName,
                       title: this.title,

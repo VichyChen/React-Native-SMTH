@@ -1242,7 +1242,12 @@ export default class NetworkManager {
             articleId: articleId,
             body: body,
         }, result => {
-            success(result._bodyInit);
+            if (result.code == 0) {
+                success(result._bodyInit);
+            }
+            else {
+                failure(result.message);
+            }
         }, error => {
             failure(error);
         }, errorMessage => {
@@ -1268,7 +1273,12 @@ export default class NetworkManager {
             subject: subject,
             body: body,
         }, result => {
-            success(result._bodyInit);
+            if (result.code == 0) {
+                success(result._bodyInit);
+            }
+            else {
+                failure(result.message);
+            }
         }, error => {
             failure(error);
         }, errorMessage => {
