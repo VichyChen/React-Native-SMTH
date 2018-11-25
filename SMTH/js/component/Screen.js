@@ -10,6 +10,7 @@ import {
     LoadingViewText,
     LoadingViewError,
     LoadingViewNetworkError,
+    LoadingViewTry,
     ToastView,
 } from '../config/Common';
 import CellBackground from '../component/CellBackground'
@@ -21,6 +22,7 @@ global.screen = {
     text: 3,
     error: 4,
     networkError: 5,
+    try: 6,
 };
 
 export default class Screen extends Component {
@@ -63,7 +65,18 @@ export default class Screen extends Component {
                                                                 }} />
                                                         )
                                                         :
-                                                        null
+                                                        (
+                                                            this.props.status == global.screen.try ?
+                                                                (
+                                                                    <LoadingViewTry text={this.props.text}
+                                                                        onPress={() => {
+                                                                            if (this.props.onPress == null) return;
+                                                                            this.props.onPress();
+                                                                        }} />
+                                                                )
+                                                                :
+                                                                null
+                                                        )
                                                 )
                                         )
                                 )

@@ -33,6 +33,7 @@ import LoadingView from '../component/LoadingView';
 import LoadingViewText from '../component/LoadingViewText';
 import LoadingViewError from '../component/LoadingViewError';
 import LoadingViewNetworkError from '../component/LoadingViewNetworkError';
+import LoadingViewTry from '../component/LoadingViewTry';
 import ToastView from '../component/ToastView';
 import LoginView from '../component/LoginView';
 
@@ -88,6 +89,7 @@ export {
     LoadingViewText,
     LoadingViewError,
     LoadingViewNetworkError,
+    LoadingViewTry,
     ToastView,
     TitleValueItem,
     LeftImageTitleValueArrowItem,

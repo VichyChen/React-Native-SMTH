@@ -115,11 +115,11 @@ export default class NewTopTenScreen extends Component {
             });
 
         }, (error) => {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
                 pullLoading: false,
-                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
-                screenText: error,
+                screenStatus: this.state.screenStatus == global.screen.loading ? (error.error == 10010 ? global.screen.try : global.screen.error) : global.screen.none,
+                screenText: error.message,
             });
         }, (errorMessage) => {
             ToastUtil.info(errorMessage);

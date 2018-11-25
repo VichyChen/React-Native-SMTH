@@ -45,31 +45,32 @@ export default class NetworkManager {
                 }
                 //{"error":10010,"error_description":"无效的access_token"}
                 else if (result['error'] == 10010) {
-                    var username = await AsyncStorageManger.getUsername();
-                    var password = await AsyncStorageManger.getPassword();
-                    if (username.length > 0 && password.length > 0) {
-                        NetworkManager.login(username, password, () => {
-                            //登陆成功再调用一次刚才的方法（有问题，总是登陆不成功）
-                            NetworkManager.post(url, params, needLogin, success, failure);
-                        }, () => {
-                            //还是登陆不成功（换密码之类的），则弹出登陆界面
-                            DeviceEventEmitter.emit('LoginNotification', null);
-                            failure('');
-                        });
-                    }
-                    //本地没有保存账户密码
-                    else {
-                        DeviceEventEmitter.emit('LoginNotification', null);
-                        failure('');
-                    }
+                    // var username = await AsyncStorageManger.getUsername();
+                    // var password = await AsyncStorageManger.getPassword();
+                    // if (username.length > 0 && password.length > 0) {
+                    //     NetworkManager.login(username, password, () => {
+                    //         //登陆成功再调用一次刚才的方法（有问题，总是登陆不成功）
+                    //         NetworkManager.post(url, params, needLogin, success, failure);
+                    //     }, () => {
+                    //         //还是登陆不成功（换密码之类的），则弹出登陆界面
+                    //         DeviceEventEmitter.emit('LoginNotification', null);
+                    //         failure('');
+                    //     });
+                    // }
+                    // //本地没有保存账户密码
+                    // else {
+                    //     DeviceEventEmitter.emit('LoginNotification', null);
+                    //     failure('');
+                    // }
+                    failure({ error: result['error'], message: result['error_description']});
                 }
                 //其他情况？？？
                 else {
                     if (result['error'] != null && result['error_description'] != null) {
-                        failure(result['error_description']);
+                        failure({ error: result['error'], message: result['error_description']});
                     }
                     else {
-                        failure('未知错误');
+                        failure({ error: 99999, message: '未知错误'});
                     }
                 }
 

@@ -159,7 +159,7 @@ export default class HotScreen extends Component {
         });
       }
       else {
-        ToastUtil.info(error);
+        ToastUtil.info(error.message);
         this.setState({
           pullLoading: false,
           viewLoading: false,

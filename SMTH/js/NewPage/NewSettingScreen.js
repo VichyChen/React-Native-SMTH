@@ -42,9 +42,6 @@ export default class NewSettingScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectPageSizeViewHidden: true,
-      selectPageSize: global.configures.pageSize,
-      pageSize: global.configures.pageSize,
       fontSizeValue: global.configures.currentFontSize,
       fontSizeSlideValue: (global.configures.currentFontSize - minFontSize) * step,
     }

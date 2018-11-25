@@ -132,7 +132,7 @@ export default class BoardScreen extends Component {
         });
       }
       else {
-        ToastUtil.info(error);
+        ToastUtil.info(error.message);
         this.setState({
           pullLoading: false,
           viewLoading: false,

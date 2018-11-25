@@ -77,22 +77,6 @@ export default class AsyncStorageManger {
             });
     }
 
-    static setFavouriteArray(favouriteArray) {
-        var array = JSON.stringify(favouriteArray);
-        AsyncStorageKit.set('favouriteArray', array);
-
-        global.current.favouriteArray = favouriteArray;
-    }
-
-    static getFavouriteArray() {
-        return AsyncStorage.getItem('favouriteArray')
-            .then(req => JSON.parse(req))
-            .then((json) => {
-                return json;
-            });
-    }
-
-
     static setLogin(login) {
         AsyncStorageKit.set('Login', login == true ? '1' : '0');
     }

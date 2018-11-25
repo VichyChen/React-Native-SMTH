@@ -91,7 +91,7 @@ export default class MessageScreen extends Component {
             });
           }
           else {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
               pullLoading1: false,
               viewLoading1: false,
@@ -138,7 +138,7 @@ export default class MessageScreen extends Component {
             });
           }
           else {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
               pullLoading2: false,
               viewLoading2: false,
@@ -185,7 +185,7 @@ export default class MessageScreen extends Component {
             });
           }
           else {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
               pullLoading3: false,
               viewLoading3: false,
@@ -232,7 +232,7 @@ export default class MessageScreen extends Component {
             });
           }
           else {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
               pullLoading4: false,
               viewLoading4: false,

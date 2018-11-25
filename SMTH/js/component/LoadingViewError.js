@@ -32,7 +32,7 @@ export default class LoadingViewError extends Component {
                     }]}
                         source={global.images.icon_error} />
                     <Text style={{ marginTop: 10, color: global.colors.gray1Color, fontSize: global.fontSize.fontSize17 }}>
-                        {'出错了'}
+                        {'出错啦'}
                     </Text>
                     <Text style={{ marginTop: 10, color: global.colors.gray2Color, fontSize: global.fontSize.fontSize15 }}>
                         {this.props.text}

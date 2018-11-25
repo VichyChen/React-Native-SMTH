@@ -12,7 +12,8 @@ import {
     FlatList,
     SectionList,
     TouchableWithoutFeedback,
-    Dimensions
+    Dimensions,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -76,6 +77,8 @@ export default class NewMessageSendScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <StatusBar barStyle="dark-content" />
+
                 <NavigationBar
                     navigation={this.props.navigation}
                     title='消息'

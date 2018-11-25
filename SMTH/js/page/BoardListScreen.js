@@ -99,11 +99,11 @@ export default class BoardListScreen extends Component {
                     pullLoading: false,
                     pullMoreLoading: false,
                     viewLoading: false,
-                    screenText: error
+                    screenText: error.message
                 });
             }
             else {
-                ToastUtil.info(error);
+                ToastUtil.info(error.message);
                 this.setState({
                     pullLoading: false,
                     pullMoreLoading: false,

@@ -114,7 +114,7 @@ export default class FavouriteScreen extends Component {
         });
       }
       else {
-        ToastUtil.info(error);
+        ToastUtil.info(error.message);
         this.setState({
           pullLoading: false,
           viewLoading: false,
@@ -152,7 +152,7 @@ export default class FavouriteScreen extends Component {
         isDeleting: false,
       });
     }, (error) => {
-      ToastUtil.info(error);
+      ToastUtil.info(error.message);
       this.setState({
         isDeleting: false,
       });

@@ -13,7 +13,8 @@ import {
     SectionList,
     TouchableWithoutFeedback,
     Dimensions,
-    StatusBar
+    StatusBar,
+    DeviceEventEmitter
 } from 'react-native';
 
 import {
@@ -115,7 +116,13 @@ export default class NewUserScreen extends Component {
                     style={{ position: 'absolute', top: global.constants.NavigationBarHeight - 35, right: 110 }}
                     showSelect={false}
                     onPress={() => {
-                        this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
+                        if (global.login == true) {
+                            this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
+                        }
+                        else {
+                            StatusBar.setBarStyle('dark-content');
+                            DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
+                        }
                     }}
                 >
                     <View style={[styles.buttonView, {}]} >
@@ -126,17 +133,22 @@ export default class NewUserScreen extends Component {
                     style={{ position: 'absolute', top: global.constants.NavigationBarHeight - 35, right: 50 }}
                     showSelect={false}
                     onPress={() => {
-                        NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
-                            ToastUtil.info("关注成功");
-                        }, (error) => {
-                            ToastUtil.info(error);
-                        }, (errorMessage) => {
+                        if (global.login == true) {
+                            NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
+                                ToastUtil.info("关注成功");
+                            }, (error) => {
+                                ToastUtil.info(error.message);
+                            }, (errorMessage) => {
 
-                        });
-
+                            });
+                        }
+                        else {
+                            StatusBar.setBarStyle('dark-content');
+                            DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
+                        }
                     }}
                 >
-                    <View style={[styles.buttonView, { }]} >
+                    <View style={[styles.buttonView, {}]} >
                         <Text style={styles.buttonViewTitle} >关注</Text>
                     </View>
                 </CellBackground>
@@ -239,7 +251,7 @@ export default class NewUserScreen extends Component {
                                     NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
                                         ToastUtil.info("关注成功");
                                     }, (error) => {
-                                        ToastUtil.info(error);
+                                        ToastUtil.info(error.message);
                                     }, (errorMessage) => {
 
                                     });

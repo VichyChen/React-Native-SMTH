@@ -115,7 +115,6 @@ global.storageKeys = {
 };
 
 global.configures = {
-    pageSize: 20,
     currentFontSize: 16,
     standandFontSize: 17,
     fontSize20: 20,
@@ -171,10 +170,6 @@ function init() {
     AsyncStorageManger.getSectionArray().then((sectionArray) => {
         global.current.sectionArray = sectionArray;
     });
-    //收藏
-    AsyncStorageManger.getFavouriteArray().then((favouriteArray) => {
-        global.current.favouriteArray = favouriteArray;
-    });
 
     configure();
     this.subscription = DeviceEventEmitter.addListener('RefreshConfigureNotification', () => {
@@ -184,20 +179,20 @@ function init() {
 
 async function configure() {
 
-    //字体大小
-    var fontSize = await AsyncStorageManger.get(global.storageKeys.fontSize);
-    if (fontSize.length > 0) {
-        global.configures.currentFontSize = parseInt(fontSize);
-    }
-    var diff = global.configures.currentFontSize - global.configures.standandFontSize;
-    global.configures.fontSize20 = 20 + diff;
-    global.configures.fontSize19 = 19 + diff;
-    global.configures.fontSize18 = 18 + diff;
-    global.configures.fontSize17 = 17 + diff;
-    global.configures.fontSize16 = 16 + diff;
-    global.configures.fontSize15 = 15 + diff;
-    global.configures.fontSize14 = 14 + diff;
-    global.configures.fontSize13 = 13 + diff;
+    // //字体大小
+    // var fontSize = await AsyncStorageManger.get(global.storageKeys.fontSize);
+    // if (fontSize.length > 0) {
+    //     global.configures.currentFontSize = parseInt(fontSize);
+    // }
+    // var diff = global.configures.currentFontSize - global.configures.standandFontSize;
+    // global.configures.fontSize20 = 20 + diff;
+    // global.configures.fontSize19 = 19 + diff;
+    // global.configures.fontSize18 = 18 + diff;
+    // global.configures.fontSize17 = 17 + diff;
+    // global.configures.fontSize16 = 16 + diff;
+    // global.configures.fontSize15 = 15 + diff;
+    // global.configures.fontSize14 = 14 + diff;
+    // global.configures.fontSize13 = 13 + diff;
 }
 
 init();

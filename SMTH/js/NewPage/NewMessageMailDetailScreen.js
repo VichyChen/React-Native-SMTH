@@ -56,7 +56,7 @@ export default class NewMessageMailDetailScreen extends Component {
                 body: result['mail'].body.trim(),
             });
         }, (error) => {
-            ToastUtil.info(error);
+            ToastUtil.info(error.message);
             this.setState({
                 screenStatus: global.screen.error,
             });

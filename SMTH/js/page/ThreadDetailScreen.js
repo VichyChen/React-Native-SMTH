@@ -96,7 +96,7 @@ export default class ThreadDetailScreen extends Component {
       totalPage: 1,
       // selectedValue: '1',
     }
-    this.size = global.configures.pageSize;
+    this.size = 20;
     this.board = unescape(this.props.navigation.state.params.board);
     this.boardName = global.configures.boards[unescape(this.props.navigation.state.params.board)];
     this.scanRecord = false;
@@ -184,10 +184,10 @@ export default class ThreadDetailScreen extends Component {
       }
 
     }, (error) => {
-      ToastUtil.info(error);
+      ToastUtil.info(error.message);
       this.setState({
         screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
-        screenText: error,
+        screenText: error.message,
       });
     }, (errorMessage) => {
       ToastUtil.info(errorMessage);
