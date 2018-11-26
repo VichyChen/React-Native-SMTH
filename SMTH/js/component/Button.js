@@ -55,7 +55,7 @@ var styles = {
     },
     get text() {
         return {
-            fontSize: global.configures.fontSize17,
+            fontSize: global.configures.fontSize16,
             textAlign: 'center'
         }
     },
