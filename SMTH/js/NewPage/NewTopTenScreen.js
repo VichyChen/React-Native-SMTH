@@ -38,6 +38,8 @@ import {
     LoginButtonView
 } from '../config/Common';
 
+import { CommonCSS } from 'CommonCSS';
+
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 var _array;
@@ -139,29 +141,17 @@ export default class NewTopTenScreen extends Component {
             <View>
                 <View style={styles.itemContainer}>
 
-                    {/* <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                        <AvatorImage
-                            borderRadius={15}
-                            widthAndHeight={30}
-                            onPressClick={() => {
-                                // this.props.navigation.navigate('userScreen', { id: item.author_id });
-                            }}
-                            uri={NetworkManager.net_getFace(item.author_id)} />
-
-                        <Text style={styles.itemName} >{item.author_id}</Text>
-                    </View> */}
-                    {/* <Text style={styles.itemTime} >{item.time}</Text> */}
-                    <Text style={styles.itemTitle} >{item.subject}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                        <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.board}</Text>
+                    <Text style={CommonCSS.listOnlyTitle} >{item.subject}</Text>
+                    <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                        <Text style={[CommonCSS.listBoardEN]} >{item.board}</Text>
                         {
                             global.boards.all[item.board] == null ? null :
                                 (
-                                    <Text style={[styles.itemBoard, { marginLeft: 8, paddingTop: 3 }]} >{global.boards.all[item.board].name}</Text>
+                                    <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board].name}</Text>
                                 )
                         }
-                        <Text style={styles.itemName} >{item.author_id}</Text>
-                        <Text style={[styles.itemDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
+                        <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.author_id}</Text>
+                        <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
                     </View>
 
                 </View>
@@ -327,16 +317,8 @@ var styles = {
     },
     get itemName() {
         return {
-            marginTop: 10,
             marginLeft: 10,
             fontSize: global.configures.fontSize15,
-            color: global.colors.gray2Color
-        }
-    },
-    get itemTime() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
             color: global.colors.gray2Color
         }
     },
@@ -350,7 +332,6 @@ var styles = {
     },
     get itemBoard() {
         return {
-            marginTop: 10,
             // marginRight: 8,
             paddingLeft: 4,
             paddingRight: 4,
@@ -362,13 +343,6 @@ var styles = {
             borderRadius: 2,
             height: 18,
             textAlign: 'center'
-        }
-    },
-    get itemDescript() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
         }
     },
 }

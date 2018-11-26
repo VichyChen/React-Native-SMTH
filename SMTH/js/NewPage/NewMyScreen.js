@@ -609,7 +609,7 @@ var styles = {
   get board() {
     return {
       paddingLeft: 20,
-      fontSize: global.configures.fontSize17,
+      fontSize: global.configures.fontSize16,
       color: global.colors.fontColor,
     }
   },

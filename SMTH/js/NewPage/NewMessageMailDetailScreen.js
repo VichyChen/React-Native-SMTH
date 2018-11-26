@@ -27,6 +27,7 @@ import {
     HorizontalSeperatorLine,
     NavigationBar
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -76,41 +77,32 @@ export default class NewMessageMailDetailScreen extends Component {
                     title='消息'
                     showBackButton={true}
                     showBottomLine={true} />
-                <Screen
-                    showLoading={this.state.viewLoading}
-                    loadingType={'background'}
-                    text={this.state.screenText}
-                    onPress={() => {
-                        this.setState({
-                            viewLoading: true,
-                            loadingType: 'background',
-                            screenText: null
-                        });
-                        this.net_GetMail();
-                    }}
+                <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
+                    this.setState({
+                        screenStatus: global.screen.loading,
+                    });
+                    this.net_GetMail();
+                }}
                 >
                     <ScrollView style={{ height: Dimensions.get('window').height - 64, }}>
-                        <Text style={styles.subject}>
-                            {this.state.subject}
-                        </Text>
-                        <HorizontalSeperatorLine />
-                        <View style={{ flexDirection: 'row', padding: 13, backgroundColor: global.colors.whiteColor }}>
-                            <AvatorImage
-                                style={styles.avator}
-                                widthAndHeight={40}
-                                borderRadius={20}
-                                onPressClick={() => {
-                                    this.props.navigation.navigate('userScreen', { id: this.state.author_id });
-                                }}
-                                uri={NetworkManager.net_getFace(this.state.author_id)} />
-                            <View style={{ height: 42 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                    <Text style={styles.author}>{this.state.author_id}</Text>
-                                </View>
-                                <Text style={styles.time}>{DateUtil.formatTimeStamp(this.state.time)}</Text>
-                            </View>
+                        <View style={{ flex: 1, padding: global.constants.Padding }}>
+                            <Text style={CommonCSS.listTitle}>{this.state.subject}</Text>
                         </View>
-                        <Text style={styles.body}>{this.state.body}</Text>
+                        <HorizontalSeperatorLine />
+                        <View style={{ flex: 1, padding: global.constants.Padding }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: global.colors.whiteColor }}>
+                                <AvatorImage style={styles.avator}
+                                    borderRadius={15}
+                                    widthAndHeight={30}
+                                    onPressClick={() => {
+                                        this.props.navigation.navigate('newUserScreen', { id: null, name: this.state.author_id });
+                                    }}
+                                    uri={NetworkManager.net_getFace(this.state.author_id)} />
+                                <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{this.state.author_id}</Text>
+                            </View>
+                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(this.state.time)}</Text>
+                            <Text style={[CommonCSS.content, { marginTop: 10 }]}>{this.state.body}</Text>
+                        </View>
                     </ScrollView>
                 </Screen>
             </View>

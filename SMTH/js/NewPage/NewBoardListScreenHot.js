@@ -28,6 +28,8 @@ import {
     AvatorImage
 } from '../config/Common';
 
+import { CommonCSS } from 'CommonCSS';
+
 import cio from 'cheerio-without-node-native';
 
 export default class NewBoardListScreenHot extends Component {
@@ -108,7 +110,6 @@ export default class NewBoardListScreenHot extends Component {
             >
                 <View>
                     <View style={styles.itemContainer}>
-
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <AvatorImage
                                 borderRadius={15}
@@ -118,15 +119,14 @@ export default class NewBoardListScreenHot extends Component {
                                 }}
                                 uri={'https://exp.newsmth.net/' + item.avatar} />
 
-                            <Text style={styles.itemName} >{item.name}</Text>
+                            <Text style={CommonCSS.listName} >{item.name}</Text>
                         </View>
-                        <Text style={styles.itemTime} >{item.time}</Text>
-                        <Text style={styles.itemTitle} >{item.title}</Text>
-                        {item.content.length > 0 ? <Text style={styles.itemContent} >{item.content}</Text> : null}
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
+                        <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
+                        {item.content.length > 0 ? <Text style={[CommonCSS.listContent, { marginTop: 10 }]} >{item.content}</Text> : null}
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                            <Text style={styles.itemDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
+                            <Text style={[CommonCSS.listDescript, { marginTop: 10, marginLeft: -2, }]} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
                         </View>
-
                     </View>
                     <SeperatorLine />
                 </View>

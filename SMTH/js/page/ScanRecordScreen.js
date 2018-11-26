@@ -29,6 +29,7 @@ import {
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import { CommonCSS } from 'CommonCSS';
 
 import ScanRecordModel from '../models/ScanRecordModel';
 
@@ -78,11 +79,17 @@ export default class ScanRecordScreen extends Component {
             >
                 <View>
                     <View style={styles.container}>
-                        <Text style={styles.subject}>{item.subject}</Text>
+                        <Text style={CommonCSS.listOnlyTitle}>{item.subject}</Text>
                         <View style={styles.other}>
-                            <Text style={styles.board}>{unescape(item.board_id)}</Text>
-                            <Text style={styles.author}>{item.author}</Text>
-                        </View>
+                                <Text style={CommonCSS.listBoardEN}>{unescape(item.board_id)}</Text>
+                                {
+                                    global.boards.all[item.board_id] == null ? null :
+                                        (
+                                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board_id].name}</Text>
+                                        )
+                                }
+                                <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]}>{item.author}</Text>
+                            </View>
                     </View>
                     <SeperatorLine />
                 </View>
@@ -132,17 +139,10 @@ var styles = {
             backgroundColor: global.colors.whiteColor
         }
     },
-    get subject() {
-        return {
-            lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize17,
-            fontWeight: '600',
-            color: global.colors.fontColor
-        }
-    },
     get other() {
         return {
             flexDirection: 'row',
+            alignItems: 'center',
             paddingTop: 13,
             backgroundColor: global.colors.whiteColor
         }

@@ -27,6 +27,7 @@ import {
     ToastUtil,
     NavigationBar
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import FavouriteThreadModel from '../models/FavouriteThreadModel';
 
@@ -87,10 +88,16 @@ export default class NewFavouriteThreadScreen extends Component {
                                 null
                         }
                         <View style={styles.container}>
-                            <Text style={styles.subject}>{item.subject}</Text>
+                            <Text style={CommonCSS.listOnlyTitle}>{item.subject}</Text>
                             <View style={styles.other}>
-                                <Text style={styles.board}>{unescape(item.board_id)}</Text>
-                                <Text style={styles.author}>{item.author}</Text>
+                                <Text style={CommonCSS.listBoardEN}>{unescape(item.board_id)}</Text>
+                                {
+                                    global.boards.all[item.board_id] == null ? null :
+                                        (
+                                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board_id].name}</Text>
+                                        )
+                                }
+                                <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]}>{item.author}</Text>
                             </View>
                         </View>
                     </View>
@@ -106,7 +113,7 @@ export default class NewFavouriteThreadScreen extends Component {
                 <StatusBar barStyle="dark-content" />
                 <NavigationBar
                     navigation={this.props.navigation}
-                    title='我的收藏'
+                    title='帖子收藏'
                     showBottomLine={true}
                     showBackButton={true}
                     rightButtonTitle={this.state.editing == true ? '完成' : '编辑'}
@@ -153,17 +160,10 @@ var styles = {
             paddingLeft: global.constants.Padding,
         }
     },
-    get subject() {
-        return {
-            lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize17,
-            fontWeight: '600',
-            color: global.colors.fontColor
-        }
-    },
     get other() {
         return {
             flexDirection: 'row',
+            alignItems: 'center',
             paddingTop: 13,
             backgroundColor: global.colors.whiteColor
         }
@@ -188,13 +188,6 @@ var styles = {
         return {
             width: 40,
             height: 40,
-        }
-    },
-    get author() {
-        return {
-            fontSize: global.configures.fontSize15,
-            height: 20,
-            color: global.colors.gray2Color,
         }
     },
     get time() {

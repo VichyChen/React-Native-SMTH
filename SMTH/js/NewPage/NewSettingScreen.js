@@ -29,6 +29,7 @@ import {
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import Cookie from 'react-native-cookie';
+import { NativeModules } from 'react-native';
 
 var maxFontSize = 20;
 var minFontSize = 14;
@@ -76,7 +77,8 @@ export default class NewSettingScreen extends Component {
           <SeperatorLine />
 
           <CellBackground onPress={() => {
-
+            var shareManager = NativeModules.ShareManager;
+            shareManager.share('天天水木 - 水木社区客户端', 'https://itunes.apple.com/us/app/t%E6%B0%B4%E6%9C%A8/id1330286243?l=zh&ls=1&mt=8');
           }} >
             <View style={styles.rowView}>
               <Text style={styles.leftText} >分享天天水木</Text>
@@ -177,7 +179,7 @@ var styles = {
   get leftText() {
     return {
       marginLeft: global.constants.Padding,
-      fontSize: global.configures.fontSize17,
+      fontSize: global.configures.fontSize16,
       color: global.colors.fontColor,
     }
   },

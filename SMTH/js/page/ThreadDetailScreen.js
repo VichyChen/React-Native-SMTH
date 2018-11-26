@@ -53,6 +53,7 @@ import {
   ToastUtil,
   NavigationBar
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import {
   ScanRecordModel,
@@ -218,8 +219,8 @@ export default class ThreadDetailScreen extends Component {
         item.floor == 0 ?
           <View>
             <View style={styles.container}>
-              <Text style={styles.subject}>{this.props.navigation.state.params.subject}</Text>
-              <Text style={styles.replyCount}> {(parseInt(this.threadCount) - 1) + '回复'} </Text>
+              <Text style={CommonCSS.listTitle}>{this.props.navigation.state.params.subject}</Text>
+              <Text style={[CommonCSS.listDescript, { marginTop: 10, }]} >{(parseInt(this.threadCount) - 1) + '回复'}</Text>
             </View>
             <HorizontalSeperatorLine />
           </View>
@@ -228,18 +229,6 @@ export default class ThreadDetailScreen extends Component {
       }
 
       <View style={styles.container}>
-
-        {/* {
-          item.floor == 0 ?
-            <View style={{ marginBottom: global.constants.Margin }}>
-              <Text style={styles.subject}>{this.props.navigation.state.params.subject}</Text>
-              <Text style={styles.replyCount}> {(parseInt(this.threadCount) - 1) + '回复'} </Text>
-              <HorizontalSeperatorLine />
-            </View>
-            :
-            null
-        } */}
-
         {
           item.floor == 1
             ?
@@ -262,11 +251,11 @@ export default class ThreadDetailScreen extends Component {
             }}
             uri={NetworkManager.net_getFace(item.author_id)} />
 
-          <Text style={styles.author} >{item.author_id}</Text>
+          <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.author_id}</Text>
           {
             item.author_id == this.hostID
               ?
-              <Text style={styles.host} >{'楼主'}</Text>
+              <Text style={[CommonCSS.listHost, { marginLeft: 6 }]} >{'楼主'}</Text>
               :
               null
           }
@@ -296,8 +285,8 @@ export default class ThreadDetailScreen extends Component {
           }
 
         </View>
-        <Text style={styles.time} >{(item.floor == 0 ? '' : (item.floor + '楼') + '  ') + item.time}</Text>
-        <Text style={styles.body}>{item.body.trim()}</Text>
+        <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{(item.floor == 0 ? '' : (item.floor + '楼') + '  ') + item.time}</Text>
+        <Text style={[CommonCSS.content, { marginTop: 10 }]}>{item.body.trim()}</Text>
         <FlatList
           data={item.attachment_list}
           renderItem={this._attachmentImageItem}
@@ -737,21 +726,6 @@ var styles = {
       padding: global.constants.Padding,
     }
   },
-  get subject() {
-    return {
-      lineHeight: global.constants.LineHeight,
-      fontSize: global.configures.fontSize17,
-      fontWeight: '600',
-      color: global.colors.fontColor,
-    }
-  },
-  get replyCount() {
-    return {
-      marginTop: 10,
-      color: global.colors.gray1Color,
-      fontSize: global.configures.fontSize15,
-    }
-  },
   get sectionView() {
     return {
       height: 30, flexDirection: 'row',
@@ -791,48 +765,11 @@ var styles = {
       height: 40,
     }
   },
-  get author() {
-    return {
-      marginLeft: 10,
-      fontSize: global.configures.fontSize16,
-      color: global.colors.fontColor
-    }
-  },
-  get host() {
-    return {
-      marginLeft: 6,
-      paddingLeft: 3,
-      paddingRight: 3,
-      paddingTop: 3,
-      paddingBottom: 2,
-      fontSize: global.configures.fontSize10,
-      color: global.colors.redColor,
-      borderColor: global.colors.redColor,
-      borderWidth: 1,
-      borderRadius: 2,
-      textAlign: 'center'
-    }
-  },
   get imageButton() {
     return {
       position: 'absolute',
       top: -global.constants.Padding,
       right: -global.constants.Padding + 4,
-    }
-  },
-  get time() {
-    return {
-      marginTop: 10,
-      fontSize: global.configures.fontSize13,
-      color: global.colors.gray2Color
-    }
-  },
-  get body() {
-    return {
-      marginTop: 10,
-      lineHeight: global.constants.LineHeight,
-      fontSize: global.configures.fontSize17,
-      color: global.colors.fontColor,
     }
   },
   get image() {

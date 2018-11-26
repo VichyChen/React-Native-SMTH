@@ -218,6 +218,7 @@ var styles = {
     get title() {
         return {
             fontSize: 18,
+            fontWeight: '600',
             color: global.colors.fontColor,
         }
     },

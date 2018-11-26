@@ -26,6 +26,7 @@ import {
     NavigationBar,
     ToastUtil
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import cio from 'cheerio-without-node-native';
 import HTMLView from 'react-native-htmlview';
@@ -153,27 +154,27 @@ export default class NewUserArticleScreen extends Component {
             >
                 <View>
                     <View style={styles.container} >
-                        <Text style={styles.itemTitle} >{item.title}</Text>
+                        <Text style={[CommonCSS.listTitle]} >{item.title}</Text>
                         <FlatList
                             data={item.attachment_list}
                             renderItem={this._attachmentImageItem}
                         />
                         <View style={[styles.itemReplyView, (item.quote == null ? styles.itemReplyViewNoQuote : null)]} >
-                            <HTMLView value={item.content} stylesheet={styles.itemReply} />
+                            <HTMLView stylesheet={styles.itemReply} value={item.content} />
                         </View>
                         {(
                             item.quote != null
                                 ?
                                 <View style={styles.itemQuoteView} >
-                                    <HTMLView value={item.quote.trim()} stylesheet={styles.itemQuote} />
+                                    <HTMLView stylesheet={styles.itemQuote} value={item.quote.trim()} />
                                 </View>
                                 :
                                 null
                         )}
-                        <Text style={styles.itemTime} >{item.time}</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                            <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.boardName}</Text>
-                            <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
+                        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                            <Text style={[CommonCSS.listBoardEN]} >{item.boardName}</Text>
+                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
                         </View>
                     </View>
                     <SeperatorLine />
@@ -253,28 +254,6 @@ var styles = {
             backgroundColor: global.colors.whiteColor
         }
     },
-    get itemTitle() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize17,
-            fontWeight: '600',
-            color: global.colors.fontColor
-        }
-    },
-    get itemTime() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
-        }
-    },
-    get itemTitle() {
-        return {
-            fontSize: global.configures.fontSize17,
-            fontWeight: '600',
-            color: global.colors.fontColor
-        }
-    },
     get itemImage() {
         return {
             marginTop: 15,
@@ -319,21 +298,6 @@ var styles = {
                 fontSize: global.configures.fontSize15,
                 color: global.colors.gray2Color,
             },
-        }
-    },
-    get itemBoard() {
-        return {
-            marginTop: 10,
-            paddingLeft: 4,
-            paddingRight: 4,
-            alignItems: 'center',
-            fontSize: global.configures.fontSize14,
-            color: global.colors.redColor,
-            borderColor: global.colors.redColor,
-            borderWidth: 1,
-            borderRadius: 2,
-            height: 18,
-            textAlign: 'center'
         }
     },
 }

@@ -26,8 +26,7 @@ import {
     NavigatorTitleButton,
     ToastUtil
 } from '../config/Common';
-
-import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
+import { CommonCSS } from 'CommonCSS';
 
 export default class NewMessageSendMailListScreen extends Component {
 
@@ -60,7 +59,6 @@ export default class NewMessageSendMailListScreen extends Component {
                 screenStatus: global.screen.none,
                 screenText: result['mails'].length == 0 ? '您没有任何邮件' : null
             });
-            this.refs.flatList.scrollToOffset({ offset: 0, animated: true });
         }, (error) => {
             this.setState({
                 pullLoading: false,
@@ -86,28 +84,19 @@ export default class NewMessageSendMailListScreen extends Component {
                 }}
             >
                 <View>
-                    <View style={{ backgroundColor: global.colors.whiteColor }}>
-                        <View style={{ flexDirection: 'row', padding: 13 }}>
-                            <AvatorImage
-                                style={styles.avator}
-                                borderRadius={20}
-                                widthAndHeight={40}
+                    <View style={{ padding: global.constants.Padding, backgroundColor: global.colors.whiteColor }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <AvatorImage style={styles.avator}
+                                borderRadius={15}
+                                widthAndHeight={30}
                                 onPressClick={() => {
-                                    this.props.navigation.navigate('userScreen', { id: item.author_id });
+                                    this.props.navigation.navigate('newUserScreen', { id: null, name: item.author_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.author_id)} />
-                            <View style={{ height: 42 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                    <Text style={styles.author}>
-                                        {item.author_id}
-                                    </Text>
-                                </View>
-                                <Text style={styles.time}>
-                                    {DateUtil.formatTimeStamp(item.time)}
-                                </Text>
-                            </View>
+                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.author_id}</Text>
                         </View>
-                        <Text style={styles.body}>{item.subject}</Text>
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(item.time)}</Text>
+                        <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
                     </View>
                     <SeperatorLine />
                 </View>

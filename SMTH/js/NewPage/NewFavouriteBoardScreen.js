@@ -29,6 +29,7 @@ import {
     NavigationBar,
     LoginButtonView,
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import cio from 'cheerio-without-node-native';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -166,32 +167,29 @@ export default class NewFavouriteBoardScreen extends Component {
                                     {
                                         this.state.dataArray.map((item, i) => {
                                             return (
-                                                <CellBackground key={i}
-                                                    showSelect={false}
-                                                    onPress={() => {
+                                                <View key={i} >
+                                                    <Text style={CommonCSS.itemBoard} onPress={() => {
                                                         if (global.boards.all[item.id] == null) {
                                                             return;
                                                         }
                                                         this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
-                                                    }}
-                                                >
-                                                    <View style={styles.itemContainer} >
-                                                        <Text style={styles.itemTitle} >{item.name}</Text>
-                                                        {
-                                                            this.state.editing == true
-                                                                ?
-                                                                <ImageButton
-                                                                    style={styles.itemImage}
-                                                                    width={36}
-                                                                    height={36}
-                                                                    margin={16}
-                                                                    source={global.images.icon_minus}
-                                                                    onPress={() => { this.net_DelFav(item); }} />
-                                                                :
-                                                                null
-                                                        }
-                                                    </View>
-                                                </CellBackground>
+                                                    }}>
+                                                        {item.name}
+                                                    </Text>
+                                                    {
+                                                        this.state.editing == true
+                                                            ?
+                                                            <ImageButton
+                                                                style={styles.itemImage}
+                                                                width={36}
+                                                                height={36}
+                                                                margin={16}
+                                                                source={global.images.icon_minus}
+                                                                onPress={() => { this.net_DelFav(item); }} />
+                                                            :
+                                                            null
+                                                    }
+                                                </View>
                                             );
                                         })
                                     }
@@ -270,19 +268,11 @@ var styles = {
             borderRadius: 4,
         }
     },
-    get itemTitle() {
-        return {
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor,
-        }
-    },
     get itemImage() {
         return {
             position: 'absolute',
-            top: -15,
-            right: -15,
-            // width: 15,
-            // height: 15
+            top: -5,
+            right: -5,
         }
     },
 }

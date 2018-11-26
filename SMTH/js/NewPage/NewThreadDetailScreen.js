@@ -57,6 +57,7 @@ import {
   NavigationBar,
   SectionBlankHeader
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import {
   ScanRecordModel,
@@ -362,15 +363,13 @@ export default class NewThreadDetailScreen extends Component {
       return (
         <View>
           <View style={[styles.container, {}]} >
-            <Text style={styles.title} >{item.title}</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-              <Text style={styles.wordage} >
-                {
-                  (this.wordage.length > 0 ? (this.wordage.split(' ')[1] + '字数 ') : '') +
-                  (this.threadCount.length > 0 ? (this.threadCount.split(' ')[0] + '回复 ') : '')
-                }
-              </Text>
-            </View>
+            <Text style={CommonCSS.listTitle} >{item.title}</Text>
+            <Text style={[CommonCSS.listDescript, { marginTop: 10, }]} >
+              {
+                (this.wordage.length > 0 ? (this.wordage.split(' ')[1] + '字数 ') : '') +
+                (this.threadCount.length > 0 ? (this.threadCount.split(' ')[0] + '回复 ') : '')
+              }
+            </Text>
           </View>
           <HorizontalSeperatorLine />
         </View>
@@ -392,23 +391,23 @@ export default class NewThreadDetailScreen extends Component {
                   uri={NetworkManager.net_getFace(item.name)}
                 />
 
-                <Text style={styles.itemName} >{item.name}</Text>
-                <Text style={styles.itemMeta} >{item.meta}</Text>
+                <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
+                <Text style={[CommonCSS.listMeta, { marginLeft: 5 }]} >{item.meta}</Text>
                 {
                   item.name == this.hostID
                     ?
-                    <Text style={styles.itemHost} >{'楼主'}</Text>
+                    <Text style={[CommonCSS.listHost, { marginLeft: 6 }]} >{'楼主'}</Text>
                     :
                     null
                 }
               </View>
-              <Text style={styles.itemTime} >{item.time}</Text>
+              <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
               <FlatList
                 data={item.attachment_list}
                 renderItem={this._attachmentImageItem}
               />
               <View style={[styles.itemReplyView, styles.itemReplyViewNoQuote]} >
-                <HTMLView value={item.reply} stylesheet={styles.itemReply} />
+                <HTMLView stylesheet={styles.itemReply} value={item.reply} />
               </View>
             </View>
             <HorizontalSeperatorLine />
@@ -519,30 +518,29 @@ export default class NewThreadDetailScreen extends Component {
                 }}
                 uri={NetworkManager.net_getFace(item.name)}
               />
-
-              <Text style={styles.itemName} >{item.name}</Text>
-              <Text style={styles.itemMeta} >{item.meta}</Text>
+              <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
+              <Text style={[CommonCSS.listMeta, { marginLeft: 5 }]} >{item.meta}</Text>
               {
                 item.name == this.hostID
                   ?
-                  <Text style={styles.itemHost} >{'楼主'}</Text>
+                  <Text style={[CommonCSS.listHost, { marginLeft: 6 }]} >{'楼主'}</Text>
                   :
                   null
               }
             </View>
-            <Text style={styles.itemTime} >{(item.index + '楼') + '  ' + item.time}</Text>
+            <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{(item.index + '楼') + '  ' + item.time}</Text>
             <FlatList
               data={item.attachment_list}
               renderItem={this._attachmentImageItem}
             />
             <View style={[styles.itemReplyView, (item.quote == null ? styles.itemReplyViewNoQuote : null)]} >
-              <HTMLView value={item.reply} stylesheet={styles.itemReply} />
+              <HTMLView stylesheet={styles.itemReply} value={item.reply} />
             </View>
             {(
               item.quote != null
                 ?
                 <View style={styles.itemQuoteView} >
-                  <HTMLView value={item.quote} stylesheet={styles.itemQuote} />
+                  <HTMLView stylesheet={styles.itemQuote} value={item.quote} />
                 </View>
                 :
                 null
@@ -925,14 +923,6 @@ var styles = {
       backgroundColor: global.colors.whiteColor
     }
   },
-  get title() {
-    return {
-      lineHeight: global.constants.LineHeight,
-      fontSize: global.configures.fontSize17,
-      fontWeight: '600',
-      color: global.colors.fontColor
-    }
-  },
   get sectionView() {
     return {
       height: 30, flexDirection: 'row',
@@ -972,16 +962,9 @@ var styles = {
       textAlign: 'center'
     }
   },
-  get wordage() {
-    return {
-      marginTop: 10,
-      fontSize: global.configures.fontSize13,
-      color: global.colors.gray2Color
-    }
-  },
   get likeItemName() {
     return {
-      fontSize: global.configures.fontSize15,
+      fontSize: global.configures.fontSize14,
       color: global.colors.fontColor
     }
   },
@@ -1004,7 +987,7 @@ var styles = {
       marginTop: 5,
       marginBottom: 5,
       lineHeight: global.constants.LineHeight - 2,
-      fontSize: global.configures.fontSize15,
+      fontSize: global.configures.fontSize14,
       color: global.colors.fontColor
     }
   },
@@ -1020,42 +1003,6 @@ var styles = {
       flexDirection: 'column',
       padding: global.constants.Padding,
       backgroundColor: global.colors.whiteColor
-    }
-  },
-  get itemName() {
-    return {
-      marginLeft: 10,
-      fontSize: global.configures.fontSize16,
-      color: global.colors.fontColor
-    }
-  },
-  get itemMeta() {
-    return {
-      marginLeft: 5,
-      fontSize: global.configures.fontSize13,
-      color: global.colors.gray1Color
-    }
-  },
-  get itemHost() {
-    return {
-      marginLeft: 6,
-      paddingLeft: 3,
-      paddingRight: 3,
-      paddingTop: 3,
-      paddingBottom: 2,
-      fontSize: global.configures.fontSize10,
-      color: global.colors.redColor,
-      borderColor: global.colors.redColor,
-      borderWidth: 1,
-      borderRadius: 2,
-      textAlign: 'center'
-    }
-  },
-  get itemTime() {
-    return {
-      marginTop: 10,
-      fontSize: global.configures.fontSize13,
-      color: global.colors.gray2Color
     }
   },
   get itemTitle() {

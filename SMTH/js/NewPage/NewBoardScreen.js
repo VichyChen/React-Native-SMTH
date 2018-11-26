@@ -32,6 +32,7 @@ import {
     NavigationBar,
     CellBackground
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
 
 import {
     BoardListModel
@@ -165,20 +166,15 @@ export default class NewBoardScreen extends Component {
                                 {
                                     this.state.rightDataArray.map((item, i) => {
                                         return (
-                                            <CellBackground key={i}
-                                                showSelect={false}
-                                                onPress={() => {
-                                                    this.props.navigation.navigate('newBoardListScreen', {
-                                                        id: item.id,
-                                                        name: item.name,
-                                                        title: item.title
-                                                    });
-                                                }}
-                                            >
-                                                <View style={styles.rightItemContainer} >
-                                                    <Text style={styles.rightItemTitle} >{item.name}</Text>
-                                                </View>
-                                            </CellBackground>
+                                            <Text key={i} style={CommonCSS.itemBoard} onPress={() => {
+                                                this.props.navigation.navigate('newBoardListScreen', {
+                                                    id: item.id,
+                                                    name: item.name,
+                                                    title: item.title
+                                                });
+                                            }}>
+                                                {item.name}
+                                            </Text>
                                         );
                                     })
                                 }
@@ -265,27 +261,6 @@ var styles = {
             paddingLeft: 15,
             paddingTop: 5,
             paddingBottom: 15,
-        }
-    },
-    get rightItemContainer() {
-        return {
-            height: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 10,
-            marginTop: 10,
-            paddingLeft: 10,
-            paddingRight: 10,
-            backgroundColor: global.colors.whiteColor,
-            borderColor: '#EBEBEB',
-            borderWidth: 1,
-            borderRadius: 4,
-        }
-    },
-    get rightItemTitle() {
-        return {
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor,
         }
     },
 }

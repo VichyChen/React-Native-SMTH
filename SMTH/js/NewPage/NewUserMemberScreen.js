@@ -25,6 +25,8 @@ import {
     NavigationBar,
     ToastUtil
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
+
 import cio from 'cheerio-without-node-native';
 
 export default class NewUserMemberScreen extends Component {
@@ -107,16 +109,11 @@ export default class NewUserMemberScreen extends Component {
                         {
                             this.state.dataArray.map((item, i) => {
                                 return (
-                                    <CellBackground key={i}
-                                        showSelect={false}
-                                        onPress={() => {
-                                            this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.boardName, title: item.boardTitle });
-                                        }}
-                                    >
-                                        <View style={styles.rightItemContainer} >
-                                            <Text style={styles.rightItemTitle} >{item.boardName}</Text>
-                                        </View>
-                                    </CellBackground>
+                                    <Text key={i} style={CommonCSS.itemBoard} onPress={() => {
+                                        this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.boardName, title: item.boardTitle });
+                                    }}>
+                                        {item.boardName}
+                                    </Text>
                                 );
                             })
                         }

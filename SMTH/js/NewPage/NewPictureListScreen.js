@@ -40,6 +40,7 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import cio from 'cheerio-without-node-native';
 import AutoHeightImage from 'react-native-auto-height-image';
+import { CommonCSS } from 'CommonCSS';
 
 var _array;
 
@@ -147,7 +148,7 @@ export default class NewPictureListScreen extends Component {
         >
             <View>
                 <View style={styles.itemContainer}>
-                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={CommonCSS.listOnlyTitle}>{item.title}</Text>
                     {
 
                         item.attachment_list.length == 1 ? (
@@ -193,10 +194,10 @@ export default class NewPictureListScreen extends Component {
                                     )
                             )
                     }
-                    <Text style={styles.itemTime} >{item.time}</Text>
+                    <Text style={[CommonCSS.listTime, { marginTop: 5 }]} >{item.time}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                        <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.boardName}</Text>
-                        <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
+                        <Text style={[CommonCSS.listBoardEN]} >{item.boardName}</Text>
+                        <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
                     </View>
                 </View>
                 <SeperatorLine />
@@ -285,26 +286,4 @@ var styles = {
             backgroundColor: global.colors.backgroundGrayColor,
         }
     },
-    get itemTime() {
-        return {
-            marginTop: 5,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
-        }
-    },
-    get itemBoard() {
-        return {
-            paddingLeft: 4,
-            paddingRight: 4,
-            alignItems: 'center',
-            fontSize: global.configures.fontSize14,
-            color: global.colors.redColor,
-            borderColor: global.colors.redColor,
-            borderWidth: 1,
-            borderRadius: 2,
-            height: 18,
-            textAlign: 'center'
-        }
-    },
-
 }

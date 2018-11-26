@@ -40,9 +40,9 @@ import {
     AvatorImage,
     NavigationBar
 } from '../config/Common';
+import { CommonCSS } from 'CommonCSS';
+
 import AsyncStorageManger from '../storage/AsyncStorageManger';
-
-
 
 export default class NewHotListScreen extends Component {
     _page = 1;
@@ -199,15 +199,15 @@ export default class NewHotListScreen extends Component {
                                 }}
                                 uri={'https://exp.newsmth.net/' + item.avatar} />
 
-                            <Text style={styles.itemName} >{item.name}</Text>
+                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
                         </View>
-                        <Text style={styles.itemTime} >{item.time}</Text>
-                        <Text style={styles.itemTitle} >{item.title}</Text>
-                        {item.content.length > 0 ? <Text style={styles.itemContent} >{item.content}</Text> : null}
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                            <Text style={[styles.itemBoard, { paddingTop: 1 }]} >{item.boardName}</Text>
-                            <Text style={[styles.itemBoard, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
-                            <Text style={styles.itemDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
+                        <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
+                        {item.content.length > 0 ? <Text style={[CommonCSS.listContent, { marginTop: 10 }]} >{item.content}</Text> : null}
+                        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                            <Text style={[CommonCSS.listBoardEN, { paddingTop: 1 }]} >{item.boardName}</Text>
+                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
+                            <Text style={CommonCSS.listDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
                         </View>
 
                     </View>
@@ -278,59 +278,6 @@ var styles = {
             flexDirection: 'column',
             padding: global.constants.Padding,
             backgroundColor: global.colors.whiteColor
-        }
-    },
-    get itemName() {
-        return {
-            marginLeft: 10,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
-        }
-    },
-    get itemTime() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
-        }
-    },
-    get itemTitle() {
-        return {
-            marginTop: 10,
-            lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize17,
-            fontWeight: '600',
-            color: global.colors.fontColor
-        }
-    },
-    get itemContent() {
-        return {
-            marginTop: 10,
-            lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize15,
-            color: global.colors.fontColor
-        }
-    },
-    get itemBoard() {
-        return {
-            marginTop: 10,
-            paddingLeft: 4,
-            paddingRight: 4,
-            alignItems: 'center',
-            fontSize: global.configures.fontSize14,
-            color: global.colors.redColor,
-            borderColor: global.colors.redColor,
-            borderWidth: 1,
-            borderRadius: 2,
-            height: 18,
-            textAlign: 'center'
-        }
-    },
-    get itemDescript() {
-        return {
-            marginTop: 10,
-            fontSize: global.configures.fontSize13,
-            color: global.colors.gray2Color
         }
     },
 }

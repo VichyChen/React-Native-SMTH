@@ -26,8 +26,7 @@ import {
     NavigatorTitleButton,
     ToastUtil
 } from '../config/Common';
-
-
+import { CommonCSS } from 'CommonCSS';
 
 export default class NewMessageAtListScreen extends Component {
 
@@ -60,7 +59,6 @@ export default class NewMessageAtListScreen extends Component {
                 screenStatus: global.screen.none,
                 screenText: result['refers'].length == 0 ? '不存在任何文章' : null
             });
-            this.refs.flatList.scrollToOffset({ offset: 0, animated: true });
         }, (error) => {
             this.setState({
                 pullLoading: false,
@@ -86,31 +84,31 @@ export default class NewMessageAtListScreen extends Component {
                 }}
             >
                 <View>
-                    <View style={{ backgroundColor: global.colors.whiteColor }}>
-                        <View style={{ flexDirection: 'row', padding: 13 }}>
-                            <AvatorImage
-                                style={styles.avator}
-                                borderRadius={20}
-                                widthAndHeight={40}
+                    <View style={{ padding: global.constants.Padding, backgroundColor: global.colors.whiteColor }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <AvatorImage style={styles.avator}
+                                borderRadius={15}
+                                widthAndHeight={30}
                                 onPressClick={() => {
-                                    this.props.navigation.navigate('userScreen', { id: item.user_id });
+                                    this.props.navigation.navigate('newUserScreen', { id: null, name: item.user_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.user_id)} />
-                            <View style={{ height: 42 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', height: 24 }}>
-                                    <Text style={styles.author}>
-                                        {item.user_id}
-                                    </Text>
-                                </View>
-                                <Text style={styles.time}>
-                                    {DateUtil.formatTimeStamp(item.time)}
-                                </Text>
-                            </View>
+                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.user_id}</Text>
                         </View>
-                        <Text style={styles.body}>{item.subject}</Text>
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(item.time)}</Text>
+                        <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
+
+                        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                            <Text style={[CommonCSS.listBoardEN]} >{item.board_id}</Text>
+                            {
+                                global.boards.all[item.board_id] == null ? null :
+                                    (
+                                        <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board_id].name}</Text>
+                                    )
+                            }
+                        </View>
                     </View>
                     <SeperatorLine />
-                    <Text style={styles.board}>{item.board_id}</Text>
                 </View>
             </CellBackground>
         )

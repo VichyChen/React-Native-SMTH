@@ -82,7 +82,7 @@ export default class NewMessageSendScreen extends Component {
                 <NavigationBar
                     navigation={this.props.navigation}
                     title='消息'
-                    showCancelButton={true}
+                    showBackButton={true}
                     showBottomLine={true}
                     rightButtonTitle={'确定'}
                     rightButtonOnPress={() => {

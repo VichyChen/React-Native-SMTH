@@ -41,6 +41,7 @@ import {
     ToastUtil
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import { NativeModules } from 'react-native';
 
 export default class NewUserScreen extends Component {
 
@@ -108,7 +109,10 @@ export default class NewUserScreen extends Component {
                     rightButtonTintColor={global.colors.whiteColor}
                     rightButtonImageMargin={28}
                     rightButtonOnPress={() => {
-
+                        if (this.props.navigation.state.params.id != null) {
+                            var shareManager = NativeModules.ShareManager;
+                            shareManager.share(this.props.navigation.state.params.name + ' - 水木社区', 'https://exp.newsmth.net/account/' + this.props.navigation.state.params.id);                
+                        }
                     }}
                 />
 
@@ -379,7 +383,7 @@ var styles = {
     },
     get buttonViewTitle() {
         return {
-            fontSize: global.configures.fontSize15,
+            fontSize: global.configures.fontSize14,
             color: global.colors.whiteColor,
         }
     },
