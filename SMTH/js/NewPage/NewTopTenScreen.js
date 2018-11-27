@@ -46,36 +46,43 @@ import AsyncStorageManger from '../storage/AsyncStorageManger';
 export default class NewTopTenScreen extends Component {
 
     _array;
+    _page = 0;
 
     constructor(props) {
         super(props);
         this.state = {
             pullLoading: false,
+            pullMoreLoading: false,
             screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
             showLogin: false,
         }
 
-        this._array = [
-            { 'index': '0', 'key': '本日十大', 'data': [] },
-            { 'index': '1', 'key': '社区管理', 'data': [] },
-            { 'index': '2', 'key': '国内院校', 'data': [] },
-            { 'index': '3', 'key': '休闲娱乐', 'data': [] },
-            { 'index': '4', 'key': '五湖四海', 'data': [] },
-            { 'index': '5', 'key': '游戏运动', 'data': [] },
-            { 'index': '6', 'key': '社会信息', 'data': [] },
-            { 'index': '7', 'key': '知性感性', 'data': [] },
-            { 'index': '8', 'key': '文化人文', 'data': [] },
-            { 'index': '9', 'key': '学术科学', 'data': [] },
-            { 'index': '10', 'key': '电脑技术', 'data': [] },
-        ];
+        // this._array = [
+        //     { 'key': 0, 'value': '本日十大' },
+        //     { 'key': 1, 'value': '社区管理' },
+        //     { 'key': 2, 'value': '国内院校' },
+        //     { 'key': 3, 'value': '休闲娱乐' },
+        //     { 'key': 4, 'value': '五湖四海' },
+        //     { 'key': 5, 'value': '游戏运动' },
+        //     { 'key': 6, 'value': '社会信息' },
+        //     { 'key': 7, 'value': '知性感性' },
+        //     { 'key': 8, 'value': '文化人文' },
+        //     { 'key': 9, 'value': '学术科学' },
+        //     { 'key': 10, 'value': '电脑技术' },
+        // ];
+        this._array = {
+            0: '本日十大', 1: '社区管理', 2: '国内院校', 3: '休闲娱乐', 4: '五湖四海',
+            5: '游戏运动', 6: '社会信息', 7: '知性感性', 8: '文化人文', 9: '学术科学', 10: '电脑技术'
+        };
+
 
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({
                 screenStatus: global.screen.loading,
             });
-            this.net_LoadSectionHot();
+            this.net_LoadSectionHot(this._page);
         });
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
             this.setState({});
@@ -87,29 +94,10 @@ export default class NewTopTenScreen extends Component {
                         pullLoading: true,
                     });
                     setTimeout(() => {
-                        // this.sectionListRef.scrollToLocation({
-                        //     animated: true,
-                        //     sectionIndex: 0,
-                        //     itemIndex: 0,
-                        //     viewPosition: 0
-                        //   });
-
-                        // this.refs.sectionList.scrollToLocation(({
-                        //     sectionIndex: 0,
-                        //     itemIndex: 0,
-                        //     animated: true,
-                        //   }));
-                        //   this.sectionList.scrollToLocation(
-                        //     {
-                        //       sectionIndex: 0,
-                        //       itemIndex: 0,
-                        //       animated: true,
-                        //     }
-                        //   );
-
-                        // this.refs.sectionList.scrollToOffset({ offset: -64, animated: true })
+                        this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
                     }, 50);
                     setTimeout(() => {
+                        this._page = 0;
                         this.net_LoadSectionHot(this._page);
                     }, 1000);
                 }
@@ -125,7 +113,7 @@ export default class NewTopTenScreen extends Component {
                 this.setState({
                     screenStatus: global.screen.loading,
                 });
-                this.net_LoadSectionHot();
+                this.net_LoadSectionHot(this._page);
             }
         });
     }
@@ -136,60 +124,38 @@ export default class NewTopTenScreen extends Component {
         this.doubleClickHotScreenNotification.remove();
     }
 
-    // net_LoadSectionHot() {
-    //     NetworkManager.net_LoadSectionHot(0, (result) => {
-    //         for (var i = 0; i < result['threads'].length; i++) {
-    //             result['threads'][i].key = i;
-    //             result['threads'][i].board = unescape(result['threads'][i].board);
-    //             result['threads'][i].boardName = global.configures.boards[result['threads'][i].board];
-    //             // result['threads'][i].time = DateUtil.formatTimeStamp(result['threads'][i].time);
-    //         }
-
-    //         this.setState({
-    //             dataArray: result['threads'],
-    //             pullLoading: false,
-    //             screenStatus: global.screen.none,
-    //         });
-
-    //     }, (error) => {
-    //         ToastUtil.info(error.message);
-    //         this.setState({
-    //             pullLoading: false,
-    //             screenStatus: this.state.screenStatus == global.screen.loading ? (error.error == 10010 ? global.screen.try : global.screen.error) : global.screen.none,
-    //             screenText: error.message,
-    //         });
-    //     }, (errorMessage) => {
-    //         ToastUtil.info(errorMessage);
-    //         this.setState({
-    //             pullLoading: false,
-    //             screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
-    //         });
-    //     });
-    // }
-
-    net_LoadSectionHot() {
-        NetworkManager.net_LoadSectionHot(0, (result) => {
+    net_LoadSectionHot(section) {
+        NetworkManager.net_LoadSectionHot(section, (result) => {
             for (var i = 0; i < result['threads'].length; i++) {
-                result['threads'][i].key = i;
+                result['threads'][i].key = section * 10 + i;
+                result['threads'][i].type = 'row';
                 result['threads'][i].board = unescape(result['threads'][i].board);
                 result['threads'][i].boardName = global.configures.boards[result['threads'][i].board];
             }
 
-            this._array[0].data = result['threads'];
+            var array = [];
+            if (section != 0) {
+                array = this.state.dataArray;
+            }
+            array.push({
+                key: 'section' + section,
+                type: 'section',
+                title: this._array[section],
+            });
+            array = array.concat(result['threads']);
+
             this.setState({
-                dataArray: this._array,
+                dataArray: array,
                 pullLoading: false,
+                pullMoreLoading: false,
                 screenStatus: global.screen.none,
             });
-
-            for (var j = 1; j < 11; j++) {
-                this.loadMore(j);
-            }
 
         }, (error) => {
             ToastUtil.info(error.message);
             this.setState({
                 pullLoading: false,
+                pullMoreLoading: false,
                 screenStatus: this.state.screenStatus == global.screen.loading ? (error.error == 10010 ? global.screen.try : global.screen.error) : global.screen.none,
                 screenText: error.message,
             });
@@ -197,70 +163,66 @@ export default class NewTopTenScreen extends Component {
             ToastUtil.info(errorMessage);
             this.setState({
                 pullLoading: false,
+                pullMoreLoading: false,
                 screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
             });
         });
     }
 
-    loadMore(index) {
-        NetworkManager.net_LoadSectionHot(index, (result) => {
-            for (var k = 0; k < result['threads'].length; k++) {
-                result['threads'][k].key = k;
-                result['threads'][k].board = unescape(result['threads'][k].board);
-                result['threads'][k].boardName = global.configures.boards[result['threads'][k].board];
-            }
-            this._array[index].data = result['threads'];
-            this.setState({
-                dataArray: this._array,
-            });
-        }, (error) => {
-        }, (timeout) => {
-        });
-    }
-
     _renderHeader = ({ section }) => section.data.length > 0 ?
         (
-            // <View>
-            //     <SectionHeader title={section.key} color={global.colors.whiteColor} />
+            <View>
+                <SectionHeader title={section.key} color={global.colors.backgroundGrayColor} />
+            </View>
+
+            // <View style={CommonCSS.sectionView} >
+            //     <View style={CommonCSS.sectionVerticalLine} />
+            //     <Text style={CommonCSS.sectionTitle} >
+            //         {section.key}
+            //     </Text>
             // </View>
 
-            <View style={CommonCSS.sectionView} >
-                <View style={CommonCSS.sectionVerticalLine} />
-                <Text style={CommonCSS.sectionTitle} >
-                    {section.key}
-                </Text>
-            </View>
-    
         )
         : null;
 
-    _renderItem = ({ item }) => (
-        <CellBackground
-            onPress={() => {
-                this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board, subject: item.subject })
-            }}
-        >
-            <View>
-                <View style={styles.itemContainer}>
-
-                    <Text style={CommonCSS.listOnlyTitle} >{item.subject}</Text>
-                    <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                        <Text style={[CommonCSS.listBoardEN]} >{item.board}</Text>
-                        {
-                            global.boards.all[item.board] == null ? null :
-                                (
-                                    <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board].name}</Text>
-                                )
-                        }
-                        {/* <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.author_id}</Text> */}
-                        <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
-                    </View>
-
+    _renderItem = ({ item }) => {
+        if (item.type == 'section') {
+            return (
+                <View>
+                    <SectionHeader title={item.title} color={global.colors.backgroundGrayColor} />
                 </View>
-                <SeperatorLine />
-            </View>
-        </CellBackground>
-    );
+            );
+        }
+        else {
+            return (
+                <CellBackground
+                    onPress={() => {
+                        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board, subject: item.subject })
+                    }}
+                >
+                    <View>
+                        <View style={styles.itemContainer}>
+
+                            <Text style={CommonCSS.listOnlyTitle} >{item.subject}</Text>
+                            <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                                <Text style={[CommonCSS.listBoardEN]} >{item.board}</Text>
+                                {
+                                    global.boards.all[item.board] == null ? null :
+                                        (
+                                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board].name}</Text>
+                                        )
+                                }
+                                {/* <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.author_id}</Text> */}
+                                <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.count + '回复 '}</Text>
+                            </View>
+
+                        </View>
+                        <SeperatorLine />
+                    </View>
+                </CellBackground>
+            );
+        }
+    };
 
     render() {
         return (
@@ -275,41 +237,32 @@ export default class NewTopTenScreen extends Component {
                             this.setState({
                                 screenStatus: global.screen.loading,
                             });
-                            this.net_LoadSectionHot();
+                            this._page = 0;
+                            this.net_LoadSectionHot(this._page);
                         }} >
-                            {/* <FlatList
+                            <FlatList
                                 ref="flatList"
                                 data={this.state.dataArray}
                                 renderItem={this._renderItem}
                                 removeClippedSubviews={false}
                                 extraData={this.state}
-                                style={styles.flatList}
                                 onRefresh={() => {
                                     this.setState({
                                         pullLoading: true
                                     });
-                                    this.net_LoadSectionHot();
+                                    this._page = 0;
+                                    this.net_LoadSectionHot(this._page);
                                 }}
-                                refreshing={this.state.pullLoading}
-                            /> */}
-
-                            <SectionList
-                                // ref="sectionList"
-                                ref={ref => (this.sectionListRef = ref)}
-                                sections={this.state.dataArray}
-                                renderItem={this._renderItem}
-                                renderSectionHeader={this._renderHeader}
-                                removeClippedSubviews={false}
-                                style={{
+                                onEndReached={() => {
+                                    if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this._page < 10) {
+                                        this.setState({
+                                            pullMoreLoading: true
+                                        });
+                                        this._page = this._page + 1;
+                                        this.net_LoadSectionHot(this._page);
+                                    }
                                 }}
-                                onRefresh={() => {
-                                    this.setState({
-                                        pullLoading: true
-                                    });
-
-                                    this.net_LoadSectionHot();
-                                }
-                                }
+                                onEndReachedThreshold={4}
                                 refreshing={this.state.pullLoading}
                             />
 

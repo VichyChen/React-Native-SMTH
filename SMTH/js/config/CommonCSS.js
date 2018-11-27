@@ -135,8 +135,8 @@ var CommonCSS = {
             left: 0,
             top: 0,
             bottom: 0,
-            width: 4,
-            backgroundColor: global.colors.themeColor,
+            width: 3,
+            backgroundColor: global.colors.clearColor,
         }
     },
     get sectionTitle() {
