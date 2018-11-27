@@ -22,7 +22,6 @@ import {
     DeviceEventEmitter
 } from 'react-native';
 
-import codePush from 'react-native-code-push'
 import cio from 'cheerio-without-node-native';
 
 import {

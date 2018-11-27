@@ -147,7 +147,7 @@ export default class NewBoardScreen extends Component {
             <View style={styles.container} >
                 <StatusBar barStyle="dark-content" />
 
-                <NavigationBar title='板块' />
+                <NavigationBar title='版块' />
 
                 <View style={styles.view} >
 

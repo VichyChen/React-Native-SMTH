@@ -23,7 +23,6 @@ import {
   StatusBar
 } from 'react-native';
 
-import codePush from 'react-native-code-push'
 import SegmentedControl from 'antd-mobile/lib/segmented-control';
 
 import {
@@ -81,10 +80,6 @@ export default class NewHotScreen extends Component {
     this.newHotListScreenRefreshNotification = DeviceEventEmitter.addListener('NewHotScreenNotification', (index) => {
       this._tabSelectedIndex = index;
     });
-  }
-
-  componentDidMount() {
-    // codePush.sync();
   }
 
   componentWillUpdate() {

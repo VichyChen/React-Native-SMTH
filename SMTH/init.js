@@ -3,12 +3,9 @@ import {
     Platform,
     DeviceEventEmitter
 } from 'react-native';
-
 import AsyncStorageManger from './js/storage/AsyncStorageManger';
-
-import {
-    BoardModel
-} from 'ModelModule';
+import { BoardModel } from 'ModelModule';
+import codePush from 'react-native-code-push';
 
 global.login = false;
 
@@ -178,6 +175,8 @@ function init() {
 }
 
 async function configure() {
+
+    codePush.sync();
 
     // //字体大小
     // var fontSize = await AsyncStorageManger.get(global.storageKeys.fontSize);

@@ -14,7 +14,8 @@ import {
     Dimensions,
     TouchableWithoutFeedback,
     DeviceEventEmitter,
-    RefreshControl
+    RefreshControl,
+    StatusBar
 } from 'react-native';
 
 import {
@@ -130,6 +131,8 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
+                            <StatusBar barStyle="dark-content" />
+
                 <NavigationBar title='收藏'
                     showBottomLine={true}
                     rightButtonTitle={global.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}

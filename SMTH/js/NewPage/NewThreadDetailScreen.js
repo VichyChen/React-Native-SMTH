@@ -75,6 +75,7 @@ export default class NewThreadDetailScreen extends Component {
   hostTime;
   hostBody;
   hostArticleId;
+  realArticleId;
   wordage;
   boardID;
   boardName;
@@ -111,8 +112,6 @@ export default class NewThreadDetailScreen extends Component {
 
   componentWillMount() {
     this.newThreadRefreshNotification = DeviceEventEmitter.addListener('NewThreadRefreshNotification', (id) => {
-      console.log('id:' + id);
-      console.log('this.props.navigation.state.params.id:' + this.props.navigation.state.params.id);
       if (id == this.props.navigation.state.params.id) {
         this.setState({
           screenStatus: global.screen.loading,
@@ -128,111 +127,40 @@ export default class NewThreadDetailScreen extends Component {
   }
 
   getNewTopic(page) {
-    NetworkManager.getNewTopic(this.props.navigation.state.params.type, this.props.navigation.state.params.id, page, (result) => {
-      var array = [];
-
-      this.$ = cio.load(result, { decodeEntities: false });
-      var currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
-      this.totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
-      this.likeCount = this.$('.article-likes').children().first().children().first().text();
-
-      //第一页
-      if (page == 1) {
-        //帖子总数
-        this.threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
-        this.hostID = this.$('.avatar').children().first().attr('title');
-        this.hostTime = this.$('.publish-time').text();
-        this.hostBody = this.$('.show-content').html().trim();
-        this.hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
-        this.boardID = this.$('.notebook').attr('href').split('/')[2];
-        this.boardName = this.$('.notebook').children().first().next().text();
-        this.boardTitle = this.$('.notebook').children().last().text();
+    NetworkManager.getNewTopic((this.props.navigation.state.params.type == null ? null : (page == 1 ? this.props.navigation.state.params.type : null)),
+      (this.props.navigation.state.params.type == null ? this.props.navigation.state.params.id : (page == 1 ? this.props.navigation.state.params.id : this.realArticleId)), page, (result) => {
+        var array = [];
 
         this.$ = cio.load(result, { decodeEntities: false });
-        this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
+        var currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
+        this.totalPage = this.$('.pagination').children().last().attr('class') == 'disabled' ? currentPage : this.$('.pagination').children().last().children().attr('href').split('/')[3];
+        this.realArticleId = this.$('.pagination').children().last().attr('class') == 'disabled' ? null : this.$('.pagination').children().last().children().attr('href').split('/')[2];
+        this.likeCount = this.$('.article-likes').children().first().children().first().text();
 
-        this.title = this.$('.title').text();
-        //标题
-        array.push({
-          key: array.length,
-          section: 0,
-          title: this.title,
-        });
+        //第一页
+        if (page == 1) {
+          //帖子总数
+          this.threadCount = this.$('.reply-list').children().first().children().first().children().first().children().first().text();
+          this.hostID = this.$('.avatar').children().first().attr('title');
+          this.hostTime = this.$('.publish-time').text();
+          this.hostBody = this.$('.show-content').html().trim();
+          this.hostArticleId = this.$('.follow-detail').children().first().children().first().next().attr('href').split('/')[3];
+          this.boardID = this.$('.notebook').attr('href').split('/')[2];
+          this.boardName = this.$('.notebook').children().first().next().text();
+          this.boardTitle = this.$('.notebook').children().last().text();
 
-        //楼主图片
-        var images = this.$('div[class=image-package]').html();
-        var attachment_list = [];
-        if (images != null) {
-          this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
-          this.$('a').each(function (i, elem) {
-            this.$ = cio.load(elem, { decodeEntities: false });
-            attachment_list.push({
-              key: attachment_list.length,
-              url: this.$('img').attr('src')
-            });
+          this.$ = cio.load(result, { decodeEntities: false });
+          this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
+
+          this.title = this.$('.title').text();
+          //标题
+          array.push({
+            key: array.length,
+            section: 0,
+            title: this.title,
           });
-        }
 
-        this.$ = cio.load(result, { decodeEntities: false });
-        this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
-        this.$('.image-package').remove();
-        this.$('.image-caption').remove();
-
-        this.wordage = this.$('.wordage').text();
-        //楼主
-        array.push({
-          key: array.length,
-          section: 1,
-          avatar: this.$('.avatar').children().first().attr('src'),
-          avatarID: this.$('.avatar').attr('href').split('/')[2],
-          name: this.$('.avatar').children().first().attr('title'),
-          meta: this.$('.meta').children().first().text(),
-          time: this.$('.publish-time').text(),
-          wordage: this.$('.wordage').text(),
-          attachment_list: attachment_list,
-          reply: this.$('.show-content').html().trim(),
-        });
-        //like
-        this.$ = cio.load(result, { decodeEntities: false });
-        var like = this.$('div[class=like-list]').html();
-        if (like != null) {
-          this.$ = cio.load(this.$('div[class=like-list]').html(), { decodeEntities: false });
-          this.$('div[class=like]').each(function (i, elem) {
-            this.$ = cio.load(elem, { decodeEntities: false });
-
-            var score = this.$('div[class*=score-bad]').text();
-            if (score.length == 0) {
-              score = this.$('div[class*=score-good]').text();
-            }
-
-            array.push({
-              key: array.length,
-              index: i,
-              section: 2,
-              avatar: this.$('.avatar').children().attr('src'),
-              avatarID: this.$('.name').children().first().attr('href').split('/')[2],
-              name: this.$('.name').children().first().text(),
-              meta: this.$('.name').next().text(),
-              time: this.$('.name').next().next().text(),
-              reply: this.$('.text').html().trim(),
-              score: score.trim(),
-            });
-          });
-        }
-        //
-        array.push({
-          key: array.length,
-          section: 4,
-        });
-      }
-
-      //回复
-      this.$ = cio.load(result);
-      var reply = this.$('div[class=reply-list]').html();
-      if (reply != null) {
-        this.$ = cio.load(this.$('div[class=reply-list]').html());
-        this.$('div[class=reply]').each(function (i, elem) {
-          this.$ = cio.load(elem, { decodeEntities: false });
+          //楼主图片
           var images = this.$('div[class=image-package]').html();
           var attachment_list = [];
           if (images != null) {
@@ -246,115 +174,188 @@ export default class NewThreadDetailScreen extends Component {
             });
           }
 
-          this.$ = cio.load(elem, { decodeEntities: false });
-          var replyID = this.$('div[class=tool-group]').children().last().attr('href').split('/')[3];
-          this.$('.tool-group').remove();
-          this.$('.article-quote').prev().remove();
-          this.$('.article-quote').children().last().remove();
-          var quote = this.$('div[class=article-quote]').html();
-          this.$('.article-quote').remove();
+          this.$ = cio.load(result, { decodeEntities: false });
+          this.$ = cio.load(this.$('div[class=article]').html(), { decodeEntities: false });
           this.$('.image-package').remove();
           this.$('.image-caption').remove();
 
+          this.wordage = this.$('.wordage').text();
+          //楼主
           array.push({
             key: array.length,
-            index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
-            section: 3,
-            avatar: this.$('a[class=avatar]').children().attr('src'),
+            section: 1,
+            avatar: this.$('.avatar').children().first().attr('src'),
             avatarID: this.$('.avatar').attr('href').split('/')[2],
-            name: this.$('a[class=name]').text(),
-            meta: this.$('div[class=meta]').children().first().text(),
-            time: this.$('div[class=meta]').children().last().text(),
+            name: this.$('.avatar').children().first().attr('title'),
+            meta: this.$('.meta').children().first().text(),
+            time: this.$('.publish-time').text(),
+            wordage: this.$('.wordage').text(),
             attachment_list: attachment_list,
-            replyID: replyID,
-            reply: this.$('div[class=reply-wrap]').html().trim(),
-            quote: quote,
+            reply: this.$('.show-content').html().trim(),
           });
-        });
-      }
+          //like
+          this.$ = cio.load(result, { decodeEntities: false });
+          var like = this.$('div[class=like-list]').html();
+          if (like != null) {
+            this.$ = cio.load(this.$('div[class=like-list]').html(), { decodeEntities: false });
+            this.$('div[class=like]').each(function (i, elem) {
+              this.$ = cio.load(elem, { decodeEntities: false });
 
-      //分区
-      this.$ = cio.load(result);
-      var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
-      //有登陆
-      if (second.indexOf("成员") != -1) {
-        AsyncStorageManger.setLogin(true);
-        this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
-      }
-      //没登陆
-      else {
-        AsyncStorageManger.setLogin(false);
-        this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
-      }
-      this.$ = cio.load(this.$('.dropdown-menu').html());
-      this.$('li[class=divider]').next().remove();
-      this.$('li[class=divider]').remove();
+              var score = this.$('div[class*=score-bad]').text();
+              if (score.length == 0) {
+                score = this.$('div[class*=score-good]').text();
+              }
 
-      var sectionArray = new Array();
-      this.$('li').each(function (i, elem) {
-        this.$ = cio.load(elem);
-        sectionArray.push({
-          key: this.$('a').attr('href').split('/')[2],
-          title: this.$('a').text(),
-        });
-      });
-      AsyncStorageManger.setSectionArray(sectionArray);
-
-
-      if (page == 1 && array.length == 0) {
-        this.setState({
-          screenStatus: global.screen.none,
-          screenText: '帖子不存在',
-        });
-      }
-      else {
-        this.setState({
-          dataArray: array,
-          totalPage: this.totalPage,
-          currentPage: page,
-          selectedValue: page.toString(),
-          screenStatus: global.screen.none,
-          screenText: null,
-        });
-
-        if (this.refs.flatList != null) {
-          this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
-          setTimeout(() => {
-            if (this.refs.flatList != null) {
-              this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
-            }
-          }, 50);
+              array.push({
+                key: array.length,
+                index: i,
+                section: 2,
+                avatar: this.$('.avatar').children().attr('src'),
+                avatarID: this.$('.name').children().first().attr('href').split('/')[2],
+                name: this.$('.name').children().first().text(),
+                meta: this.$('.name').next().text(),
+                time: this.$('.name').next().next().text(),
+                reply: this.$('.text').html().trim(),
+                score: score.trim(),
+              });
+            });
+          }
+          //
+          array.push({
+            key: array.length,
+            section: 4,
+          });
         }
 
-      }
+        //回复
+        this.$ = cio.load(result);
+        var reply = this.$('div[class=reply-list]').html();
+        if (reply != null) {
+          this.$ = cio.load(this.$('div[class=reply-list]').html());
+          this.$('div[class=reply]').each(function (i, elem) {
+            this.$ = cio.load(elem, { decodeEntities: false });
+            var images = this.$('div[class=image-package]').html();
+            var attachment_list = [];
+            if (images != null) {
+              this.$ = cio.load(this.$('div[class=image-package]').html(), { decodeEntities: false });
+              this.$('a').each(function (i, elem) {
+                this.$ = cio.load(elem, { decodeEntities: false });
+                attachment_list.push({
+                  key: attachment_list.length,
+                  url: this.$('img').attr('src')
+                });
+              });
+            }
 
-      if (this.scanRecord == false) {
-        ScanRecordModel.create(
-          'new',
-          this.props.navigation.state.params.id,
-          this.boardName,
-          this.title,
-          this.hostID,
-          this.hostTime
-        ).then(() => {
-          this.scanRecord = true;
-        }).catch((error) => {
-          this.scanRecord == false
+            this.$ = cio.load(elem, { decodeEntities: false });
+            var replyID = this.$('div[class=tool-group]').children().last().attr('href').split('/')[3];
+            this.$('.tool-group').remove();
+            this.$('.article-quote').prev().remove();
+            this.$('.article-quote').children().last().remove();
+            var quote = this.$('div[class=article-quote]').html();
+            this.$('.article-quote').remove();
+            this.$('.image-package').remove();
+            this.$('.image-caption').remove();
+
+            array.push({
+              key: array.length,
+              index: currentPage == 1 ? (i + 1) : (i + ((currentPage - 1) * 20)),
+              section: 3,
+              avatar: this.$('a[class=avatar]').children().attr('src'),
+              avatarID: this.$('.avatar').attr('href').split('/')[2],
+              name: this.$('a[class=name]').text(),
+              meta: this.$('div[class=meta]').children().first().text(),
+              time: this.$('div[class=meta]').children().last().text(),
+              attachment_list: attachment_list,
+              replyID: replyID,
+              reply: this.$('div[class=reply-wrap]').html().trim(),
+              quote: quote,
+            });
+          });
+        }
+
+        //分区
+        this.$ = cio.load(result);
+        var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
+        //有登陆
+        if (second.indexOf("成员") != -1) {
+          AsyncStorageManger.setLogin(true);
+          this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
+        }
+        //没登陆
+        else {
+          AsyncStorageManger.setLogin(false);
+          this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
+        }
+        this.$ = cio.load(this.$('.dropdown-menu').html());
+        this.$('li[class=divider]').next().remove();
+        this.$('li[class=divider]').remove();
+
+        var sectionArray = new Array();
+        this.$('li').each(function (i, elem) {
+          this.$ = cio.load(elem);
+          sectionArray.push({
+            key: this.$('a').attr('href').split('/')[2],
+            title: this.$('a').text(),
+          });
         });
-      }
+        AsyncStorageManger.setSectionArray(sectionArray);
 
-    }, (error) => {
-      ToastUtil.info(error);
-      this.setState({
-        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
-        screenText: error,
+
+        if (page == 1 && array.length == 0) {
+          this.setState({
+            screenStatus: global.screen.none,
+            screenText: '帖子不存在',
+          });
+        }
+        else {
+          this.setState({
+            dataArray: array,
+            totalPage: this.totalPage,
+            currentPage: page,
+            selectedValue: page.toString(),
+            screenStatus: global.screen.none,
+            screenText: null,
+          });
+
+          if (this.refs.flatList != null) {
+            this.refs.flatList.scrollToOffset({ offset: 1, animated: true })
+            setTimeout(() => {
+              if (this.refs.flatList != null) {
+                this.refs.flatList.scrollToOffset({ offset: 0, animated: true })
+              }
+            }, 50);
+          }
+
+        }
+
+        if (this.scanRecord == false) {
+          ScanRecordModel.create(
+            'new',
+            this.props.navigation.state.params.id,
+            this.boardName,
+            this.title,
+            this.hostID,
+            this.hostTime
+          ).then(() => {
+            this.scanRecord = true;
+          }).catch((error) => {
+            this.scanRecord == false
+          });
+        }
+
+      }, (error) => {
+        ToastUtil.info(error);
+        this.setState({
+          screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
+          screenText: error,
+        });
+      }, (errorMessage) => {
+        ToastUtil.info(errorMessage);
+        this.setState({
+          screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+        });
       });
-    }, (errorMessage) => {
-      ToastUtil.info(errorMessage);
-      this.setState({
-        screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
-      });
-    });
   }
 
   _renderItem = ({ item }) => {
@@ -416,9 +417,9 @@ export default class NewThreadDetailScreen extends Component {
           {
             this.likeCount.length > 0
               ?
-              <View style={styles.sectionView} >
-                <View style={styles.sectionVerticalLine} />
-                <Text style={styles.sectionTitle} >
+              <View style={CommonCSS.sectionView} >
+                <View style={CommonCSS.sectionVerticalLine} />
+                <Text style={CommonCSS.sectionTitle} >
                   {this.likeCount.split(' ')[0] + ' Like'}
                 </Text>
               </View>
@@ -582,12 +583,14 @@ export default class NewThreadDetailScreen extends Component {
           {
             this.threadCount.length > 0
               ?
-              (<View style={styles.sectionView} >
-                <View style={styles.sectionVerticalLine} />
-                <Text style={styles.sectionTitle} >
-                  {this.threadCount.split(' ')[0] + ' 回复 '}
-                </Text>
-              </View>)
+              (
+                <View style={CommonCSS.sectionView} >
+                  <View style={CommonCSS.sectionVerticalLine} />
+                  <Text style={CommonCSS.sectionTitle} >
+                    {this.threadCount.split(' ')[0] + ' 回复 '}
+                  </Text>
+                </View>
+              )
               :
               null
           }
@@ -921,30 +924,6 @@ var styles = {
       flex: 1,
       padding: global.constants.Padding,
       backgroundColor: global.colors.whiteColor
-    }
-  },
-  get sectionView() {
-    return {
-      height: 30, flexDirection: 'row',
-      alignItems: 'center',
-      paddingLeft: global.constants.Padding
-    }
-  },
-  get sectionVerticalLine() {
-    return {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      bottom: 0,
-      width: 2,
-      backgroundColor: global.colors.themeColor,
-    }
-  },
-  get sectionTitle() {
-    return {
-      fontSize: global.configures.fontSize16,
-      // fontWeight: '600',
-      color: global.colors.fontColor
     }
   },
   get itemBoard() {

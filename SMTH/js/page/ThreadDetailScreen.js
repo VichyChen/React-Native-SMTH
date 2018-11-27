@@ -232,9 +232,9 @@ export default class ThreadDetailScreen extends Component {
         {
           item.floor == 1
             ?
-            (<View style={styles.sectionView} >
-              <View style={styles.sectionVerticalLine} />
-              <Text style={styles.sectionTitle} >
+            (<View style={[CommonCSS.sectionView, styles.sectionView]} >
+              <View style={CommonCSS.sectionVerticalLine} />
+              <Text style={CommonCSS.sectionTitle} >
                 {(parseInt(this.threadCount) - 1) + '回复'}
               </Text>
             </View>)
@@ -728,29 +728,9 @@ var styles = {
   },
   get sectionView() {
     return {
-      height: 30, flexDirection: 'row',
-      alignItems: 'center',
-      paddingLeft: global.constants.Padding,
       marginTop: -global.constants.Padding,
       marginLeft: -global.constants.Padding,
       marginBottom: global.constants.Padding
-    }
-  },
-  get sectionVerticalLine() {
-    return {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      bottom: 0,
-      width: 2,
-      backgroundColor: global.colors.themeColor,
-    }
-  },
-  get sectionTitle() {
-    return {
-      fontSize: global.configures.fontSize16,
-      // fontWeight: '600',
-      color: global.colors.fontColor
     }
   },
   get board() {

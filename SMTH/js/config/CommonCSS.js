@@ -119,6 +119,33 @@ var CommonCSS = {
             color: global.colors.fontColor,
         }
     },
+
+    get sectionView() {
+        return {
+            height: 40,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: global.constants.Padding,
+            backgroundColor: global.colors.whiteColor,
+        }
+    },
+    get sectionVerticalLine() {
+        return {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 4,
+            backgroundColor: global.colors.themeColor,
+        }
+    },
+    get sectionTitle() {
+        return {
+            fontSize: global.configures.fontSize16,
+            fontWeight: '600',
+            color: global.colors.fontColor
+        }
+    },
 }
 
 export {

@@ -983,7 +983,12 @@ export default class NetworkManager {
     static getNew(url, params, success, failure, netError) {
         NetworkUtil.getNew(url, params
         ).then(result => {
-            success(result);
+            if (result.status == 502) {
+                failure('水木后台接口502啦');
+            }
+            else {
+                success(result);
+            }
         }).catch(error => {
             console.log(error);
             if (error.message == 'Timeout' || error.message == 'Network request failed') {

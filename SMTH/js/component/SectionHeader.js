@@ -26,8 +26,8 @@ var styles = {
     },
     get title() {
         return {
-            marginLeft: 13,
-            fontSize: global.configures.fontSize17,
+            marginLeft: global.constants.Margin,
+            fontSize: global.configures.fontSize16,
             color: global.colors.fontColor,
         }
     },
