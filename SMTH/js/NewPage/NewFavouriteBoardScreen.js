@@ -29,6 +29,7 @@ import {
     ToastUtil,
     NavigationBar,
     LoginButtonView,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -68,10 +69,17 @@ export default class NewFavouriteBoardScreen extends Component {
         }
     }
 
+    componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+        });
+    }
+
     componentWillUnmount() {
         this.refreshViewNotification.remove();
         this.loginSuccessNotification.remove();
         this.logoutNotification.remove();
+        this._navListener.remove();
     }
 
     net_LoadFavorites() {
@@ -131,7 +139,6 @@ export default class NewFavouriteBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                            <StatusBar barStyle="dark-content" />
 
                 <NavigationBar title='收藏'
                     showBottomLine={true}
@@ -175,7 +182,7 @@ export default class NewFavouriteBoardScreen extends Component {
                                                         if (global.boards.all[item.id] == null) {
                                                             return;
                                                         }
-                                                        this.props.navigation.navigate('newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
+                                                        ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
                                                     }}>
                                                         {item.name}
                                                     </Text>

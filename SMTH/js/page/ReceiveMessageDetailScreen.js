@@ -24,7 +24,8 @@ import {
     CellBackground,
     SeperatorLine,
     Screen,
-    HorizontalSeperatorLine
+    HorizontalSeperatorLine,
+    ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -99,7 +100,7 @@ export default class ReceiveMessageDetailScreen extends Component {
                             widthAndHeight={40}
                             borderRadius={20}
                             onPressClick={() => {
-                                this.props.navigation.navigate('userScreen', { id: this.state.author_id });
+                                ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: this.state.author_id });
                             }}
                             uri={NetworkManager.net_getFace(this.state.author_id)} />
                         <View style={{ height: 42 }}>

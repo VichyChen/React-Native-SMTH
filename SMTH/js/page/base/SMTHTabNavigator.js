@@ -36,7 +36,6 @@ const SMTHTabNavigator = TabNavigator({
                     }}
                     onClick={() => {
                         if (!focused) {
-                            StatusBar.setBarStyle('dark-content');
                             navigation.navigate('HotScreen')
                         }
                     }}>
@@ -45,7 +44,6 @@ const SMTHTabNavigator = TabNavigator({
                 </CustomDoubleClick>
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
-                StatusBar.setBarStyle('dark-content');
                 navigation.navigate('HotScreen')
             },
         })
@@ -61,7 +59,6 @@ const SMTHTabNavigator = TabNavigator({
                 />
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
-                StatusBar.setBarStyle('dark-content');
                 navigation.navigate('BoardScreen')
             },
         })
@@ -77,7 +74,6 @@ const SMTHTabNavigator = TabNavigator({
                 />
             ),
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
-                StatusBar.setBarStyle('dark-content');
                 navigation.navigate('FavouriteScreen')
             },
         })
@@ -87,7 +83,6 @@ const SMTHTabNavigator = TabNavigator({
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '我的',
             tabBarOnPress: () => {
-                StatusBar.setBarStyle('light-content');
                 DeviceEventEmitter.emit('ClickMyScreenNotification', null);
                 navigation.navigate('MyScreen')
             },

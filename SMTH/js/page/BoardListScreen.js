@@ -25,7 +25,8 @@ import {
     LoadingView,
     Screen,
     ToastUtil,
-    AvatorImage
+    AvatorImage,
+    ReactNavigation
 } from '../config/Common';
 
 var from = 0;
@@ -136,7 +137,7 @@ export default class BoardListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
                 }}
             >
                 <View style={styles.container}>
@@ -146,7 +147,7 @@ export default class BoardListScreen extends Component {
                             borderRadius={20}
                             widthAndHeight={40}
                             onPressClick={() => {
-                                this.props.navigation.navigate('userScreen', { id: item.author_id });
+                                ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
                             }}
                             uri={NetworkManager.net_getFace(item.author_id)} />
                         <View style={{ height: 42 }}>

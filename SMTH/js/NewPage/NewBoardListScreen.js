@@ -28,7 +28,8 @@ import {
     ToastUtil,
     AvatorImage,
     NavigationBar,
-    TabPageView
+    TabPageView,
+    ReactNavigation
 } from '../config/Common';
 
 import ActionSheet from 'react-native-actionsheet'
@@ -54,7 +55,6 @@ export default class NewBoardListScreen extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar barStyle="dark-content" />
-
                 <NavigationBar
                     title={this.props.navigation.state.params.name}
                     message={this.props.navigation.state.params.title}
@@ -85,7 +85,7 @@ export default class NewBoardListScreen extends Component {
                         //发帖
                         if (index == 0) {
                             if (global.login == true) {
-                                this.props.navigation.navigate('newPostThreadScreen',
+                                ReactNavigation.navigate(this.props.navigation, 'newPostThreadScreen',
                                     {
                                         id: this.props.navigation.state.params.id,
                                         name: this.props.navigation.state.params.name,

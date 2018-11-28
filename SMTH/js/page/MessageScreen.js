@@ -23,7 +23,8 @@ import {
   CellBackground,
   AvatorImage,
   DateUtil,
-  NavigatorTitleButton
+  NavigatorTitleButton,
+  ReactNavigation
 } from '../config/Common';
 
 import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from 'react-native-scrollable-tab-view';
@@ -264,7 +265,7 @@ export default class MessageScreen extends Component {
     return (
       <CellBackground
         onPress={() => {
-          this.props.navigation.navigate('receiveMessageDetailScreen', { message: item })
+          ReactNavigation.navigate(this.props.navigation, 'receiveMessageDetailScreen', { message: item })
         }}
       >
         <View>
@@ -275,7 +276,7 @@ export default class MessageScreen extends Component {
                 borderRadius={20}
                 widthAndHeight={40}
                 onPressClick={() => {
-                  this.props.navigation.navigate('userScreen', { id: item.author_id });
+                  ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
                 }}
                 uri={NetworkManager.net_getFace(item.author_id)} />
               <View style={{ height: 42 }}>
@@ -299,7 +300,7 @@ export default class MessageScreen extends Component {
     return (
       <CellBackground
         onPress={() => {
-          this.props.navigation.navigate('sendMessageDetailScreen', { message: item })
+          ReactNavigation.navigate(this.props.navigation, 'sendMessageDetailScreen', { message: item })
         }}
       >
         <View>
@@ -310,7 +311,7 @@ export default class MessageScreen extends Component {
                 borderRadius={20}
                 widthAndHeight={40}
                 onPressClick={() => {
-                  this.props.navigation.navigate('userScreen', { id: item.author_id });
+                  ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
                 }}
                 uri={NetworkManager.net_getFace(item.author_id)} />
               <View style={{ height: 42 }}>
@@ -336,7 +337,7 @@ export default class MessageScreen extends Component {
     return (
       <CellBackground
         onPress={() => {
-          this.props.navigation.navigate('threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
+          ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
         }}
       >
         <View>
@@ -347,7 +348,7 @@ export default class MessageScreen extends Component {
                 borderRadius={20}
                 widthAndHeight={40}
                 onPressClick={() => {
-                  this.props.navigation.navigate('userScreen', { id: item.user_id });
+                  ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.user_id });
                 }}
                 uri={NetworkManager.net_getFace(item.user_id)} />
               <View style={{ height: 42 }}>

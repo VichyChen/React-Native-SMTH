@@ -35,7 +35,8 @@ import {
     Toast,
     ToastUtil,
     AvatorImage,
-    LoginButtonView
+    LoginButtonView,
+    ReactNavigation
 } from '../config/Common';
 
 import { CommonCSS } from 'CommonCSS';
@@ -199,7 +200,7 @@ export default class NewTopTenScreen extends Component {
             return (
                 <CellBackground
                     onPress={() => {
-                        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board, subject: item.subject })
+                        ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: item.board, subject: item.subject })
                     }}
                 >
                     <View>

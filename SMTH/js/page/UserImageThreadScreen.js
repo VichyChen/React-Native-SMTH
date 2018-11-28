@@ -25,7 +25,8 @@ import {
     LoadingView,
     Screen,
     NavigatorTitleButton,
-    CellBackground
+    CellBackground,
+    ReactNavigation
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -127,7 +128,7 @@ export default class UserImageThreadScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                    ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
                 }}
             >
                 <View style={styles.container}>

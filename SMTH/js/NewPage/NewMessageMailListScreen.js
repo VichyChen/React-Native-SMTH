@@ -24,7 +24,8 @@ import {
     AvatorImage,
     DateUtil,
     NavigatorTitleButton,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -80,7 +81,7 @@ export default class NewMessageMailListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newMessageMailDetailScreen', { message: item })
+                    ReactNavigation.navigate(this.props.navigation, 'newMessageMailDetailScreen', { message: item })
                 }}
             >
                 <View>
@@ -90,7 +91,7 @@ export default class NewMessageMailListScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    this.props.navigation.navigate('newUserScreen', { id: null, name: item.author_id });
+                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.author_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.author_id)} />
                             <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.author_id}</Text>

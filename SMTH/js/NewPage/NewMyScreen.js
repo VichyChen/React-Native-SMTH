@@ -25,7 +25,8 @@ import {
   SeperatorLine,
   HorizontalSeperatorLine,
   NavigationBar,
-  DateUtil
+  DateUtil,
+  ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -85,6 +86,24 @@ export default class NewMyScreen extends Component {
         this.network();
       });
     }
+  }
+
+  componentDidMount() {
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('light-content');
+    });
+    this._navListener2 = this.props.navigation.addListener('willBlur', () => {
+      StatusBar.setBarStyle('dark-content');
+    });
+  }
+
+  componentWillUnmount() {
+    this.loginSuccessNotification.remove();
+    this.logoutNotification.remove();
+    this.clickMyScreenNotification.remove();
+    this.refreshViewNotification.remove();
+    this._navListener.remove();
+    this._navListener2.remove();
   }
 
   network() {
@@ -171,22 +190,16 @@ export default class NewMyScreen extends Component {
 
   }
 
-  componentWillUnmount() {
-    this.loginSuccessNotification.remove();
-    this.logoutNotification.remove();
-    this.clickMyScreenNotification.remove();
-    this.refreshViewNotification.remove();
-  }
-
   showLogin() {
-    StatusBar.setBarStyle('dark-content');
-    DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
+    // StatusBar.setBarStyle('dark-content');
+    // DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
+    DeviceEventEmitter.emit('LoginNotification', () => {  });
   }
 
   render() {
     return (
       <View style={{ backgroundColor: 'green' }}>
-        <StatusBar barStyle="light-content" />
+        {/* <StatusBar barStyle="light-content" /> */}
         <NavigationBar
           showBackButton={false}
           showBottomLine={false}
@@ -194,8 +207,8 @@ export default class NewMyScreen extends Component {
           rightButtonTitle='设置'
           rightButtonTitleColor={global.colors.whiteColor}
           rightButtonOnPress={() => {
-            StatusBar.setBarStyle('dark-content');
-            this.props.navigation.navigate('newSettingScreen');
+            // StatusBar.setBarStyle('dark-content');
+            ReactNavigation.navigate(this.props.navigation, 'newSettingScreen');
           }}
         />
 
@@ -223,7 +236,7 @@ export default class NewMyScreen extends Component {
                 onPress={() => {
                   if (global.login == true) {
                     AsyncStorageManger.getID().then(id => {
-                      this.props.navigation.navigate('newUserScreen', { id: id, name: this.state.username });
+                      ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: id, name: this.state.username });
                     });
                   }
                   else {
@@ -348,8 +361,8 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
-                        StatusBar.setBarStyle('dark-content');
-                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 0 })
+                        // StatusBar.setBarStyle('dark-content');
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 0 })
                       }
                       else {
                         this.showLogin();
@@ -375,8 +388,8 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
-                        StatusBar.setBarStyle('dark-content');
-                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 1 })
+                        // StatusBar.setBarStyle('dark-content');
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 1 })
                       }
                       else {
                         this.showLogin();
@@ -403,8 +416,8 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
-                        StatusBar.setBarStyle('dark-content');
-                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 2 })
+                        // StatusBar.setBarStyle('dark-content');
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 2 })
                       }
                       else {
                         this.showLogin();
@@ -431,8 +444,8 @@ export default class NewMyScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                       if (global.login == true) {
-                        StatusBar.setBarStyle('dark-content');
-                        this.props.navigation.navigate('newMessageScreen', { selectedIndex: 3 })
+                        // StatusBar.setBarStyle('dark-content');
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 3 })
                       }
                       else {
                         this.showLogin();
@@ -476,8 +489,8 @@ export default class NewMyScreen extends Component {
                 onPress={() => {
                   if (global.login == true) {
                     AsyncStorageManger.getID().then(id => {
-                      StatusBar.setBarStyle('dark-content');
-                      this.props.navigation.navigate('newUserArticleScreen', { id: id });
+                      // StatusBar.setBarStyle('dark-content');
+                      ReactNavigation.navigate(this.props.navigation, 'newUserArticleScreen', { id: id });
                     });
                   }
                   else {
@@ -496,8 +509,8 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  StatusBar.setBarStyle('dark-content');
-                  this.props.navigation.navigate('newFavouriteThreadScreen')
+                  // StatusBar.setBarStyle('dark-content');
+                  ReactNavigation.navigate(this.props.navigation, 'newFavouriteThreadScreen')
                 }}
               >
                 <View style={[styles.content]}>
@@ -511,8 +524,8 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  StatusBar.setBarStyle('dark-content');
-                  this.props.navigation.navigate('scanRecordScreen', { id: this.state.username })
+                  // StatusBar.setBarStyle('dark-content');
+                  ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
                 }}
               >
                 <View style={[styles.content]}>

@@ -30,7 +30,8 @@ import {
     Screen,
     ToastUtil,
     NavigationBar,
-    CellBackground
+    CellBackground,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -59,8 +60,15 @@ export default class NewBoardScreen extends Component {
         this.getSectionsFromCatch(0, this.state.leftDataArray[0].id);
     }
 
+    componentDidMount() {
+        this._navListener = this.props.navigation.addListener('didFocus', () => {
+            StatusBar.setBarStyle('dark-content');
+        });
+    }
+
     componentWillUnmount() {
         this.refreshViewNotification.remove();
+        this._navListener.remove();
     }
 
     getSectionsFromCatch(key, id) {
@@ -145,7 +153,6 @@ export default class NewBoardScreen extends Component {
     render() {
         return (
             <View style={styles.container} >
-                <StatusBar barStyle="dark-content" />
 
                 <NavigationBar title='版块' />
 
@@ -167,7 +174,7 @@ export default class NewBoardScreen extends Component {
                                     this.state.rightDataArray.map((item, i) => {
                                         return (
                                             <Text key={i} style={CommonCSS.itemBoard} onPress={() => {
-                                                this.props.navigation.navigate('newBoardListScreen', {
+                                                ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', {
                                                     id: item.id,
                                                     name: item.name,
                                                     title: item.title

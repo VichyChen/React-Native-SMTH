@@ -23,9 +23,11 @@ import {
     Screen,
     CellBackground,
     NavigationBar,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import cio from 'cheerio-without-node-native';
+import uuid from 'uuid';
 
 export default class NewUserFriendsScreen extends Component {
 
@@ -113,7 +115,10 @@ export default class NewUserFriendsScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newUserScreen', { id: item.id, name: item.name });
+                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', {
+                        id: item.id,
+                        name: item.name
+                    });
                 }}
             >
                 <View>

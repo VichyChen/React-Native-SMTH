@@ -23,7 +23,8 @@ import {
     Screen,
     CellBackground,
     NavigationBar,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -110,7 +111,7 @@ export default class NewUserMemberScreen extends Component {
                             this.state.dataArray.map((item, i) => {
                                 return (
                                     <Text key={i} style={CommonCSS.itemBoard} onPress={() => {
-                                        this.props.navigation.navigate('newBoardListScreen', { id: item.id, name: item.boardName, title: item.boardTitle });
+                                        ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', { id: item.id, name: item.boardName, title: item.boardTitle });
                                     }}>
                                         {item.boardName}
                                     </Text>

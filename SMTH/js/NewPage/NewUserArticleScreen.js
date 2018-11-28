@@ -24,7 +24,8 @@ import {
     Screen,
     CellBackground,
     NavigationBar,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -149,7 +150,7 @@ export default class NewUserArticleScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.id, type: 'article' });
+                    ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id, type: 'article' });
                 }}
             >
                 <View>
@@ -194,9 +195,6 @@ export default class NewUserArticleScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                {
-                    this.props.id != null ? <StatusBar barStyle="light-content" /> : <StatusBar barStyle="dark-content" />
-                }
                 {
                     this.props.id != null ? null :
                         <NavigationBar

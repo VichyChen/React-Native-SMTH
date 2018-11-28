@@ -29,6 +29,7 @@ import {
   TabPageView,
   NewFavouriteBoardScreen,
   NewFavouriteThreadScreen,
+  ReactNavigation
 } from '../config/Common';
 
 
@@ -61,7 +62,7 @@ export default class NewFavouriteScreen extends Component {
 
           }
           else {
-            this.props.navigation.navigate('boardListScreen', { id: item.id, text: item.name })
+            ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: item.id, text: item.name })
           }
         }}
       >

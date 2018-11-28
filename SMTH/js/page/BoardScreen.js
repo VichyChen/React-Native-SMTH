@@ -25,7 +25,8 @@ import {
   ImageButton,
   LoadingView,
   Screen,
-  ToastUtil
+  ToastUtil,
+  ReactNavigation
 } from '../config/Common';
 
 export default class BoardScreen extends Component {
@@ -162,9 +163,9 @@ export default class BoardScreen extends Component {
     return (
       <BoardItems text={item.text} type={item.type == 'section' ? '目录' : '版面'} onPress={() => {
         if (item.type == 'board') {
-          this.props.navigation.navigate('boardListScreen', { id: item.id, text: item.text })
+          ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: item.id, text: item.text })
         } else {
-          this.props.navigation.navigate('boardScreen', { id: item.id, text: item.text })
+          ReactNavigation.navigate(this.props.navigation, 'boardScreen', { id: item.id, text: item.text })
         }
       }}
       />

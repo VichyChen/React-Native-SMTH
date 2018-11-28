@@ -25,7 +25,8 @@ import {
     LoadingView,
     Screen,
     ToastUtil,
-    NavigationBar
+    NavigationBar,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -70,10 +71,10 @@ export default class NewFavouriteThreadScreen extends Component {
             <CellBackground
                 onPress={() => {
                     if (item.type == 'new') {
-                        this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                        ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
                     }
                     else {
-                        this.props.navigation.navigate('threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
+                        ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
                     }
                 }}
             >
@@ -110,7 +111,7 @@ export default class NewFavouriteThreadScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar barStyle="dark-content" />
+
                 <NavigationBar
                     navigation={this.props.navigation}
                     title='帖子收藏'

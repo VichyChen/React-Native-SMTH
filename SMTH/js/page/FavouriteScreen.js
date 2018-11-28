@@ -24,7 +24,8 @@ import {
   ImageButton,
   LoadingView,
   Screen,
-  ToastUtil
+  ToastUtil,
+  ReactNavigation
 } from '../config/Common';
 
 var _dataArray;
@@ -172,7 +173,7 @@ export default class FavouriteScreen extends Component {
 
           }
           else {
-            this.props.navigation.navigate('boardListScreen', { id: item.id, text: item.name })
+            ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: item.id, text: item.name })
           }
         }}
       >

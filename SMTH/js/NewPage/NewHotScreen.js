@@ -82,8 +82,10 @@ export default class NewHotScreen extends Component {
     });
   }
 
-  componentWillUpdate() {
-    // StatusBar.setBarStyle('dark-content');
+  componentDidMount() {
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('dark-content');
+    });
   }
 
   componentWillUnmount() {
@@ -91,6 +93,8 @@ export default class NewHotScreen extends Component {
     this.loginSuccessNotification.remove();
     this.doubleClickHotScreenNotification.remove();
     this.newHotListScreenRefreshNotification.remove();
+
+    this._navListener.remove();
   }
 
   render() {
@@ -113,7 +117,7 @@ export default class NewHotScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="dark-content" />
+
         <NavigationBar showBottomLine={false} >
           <SegmentedControl
             values={['十大', '热点', '图览']}

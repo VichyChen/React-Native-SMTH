@@ -20,7 +20,8 @@ import {
     NavigatorTitleButton,
     BoardItems,
     ToastUtil,
-    Screen
+    Screen,
+    ReactNavigation
 } from '../config/Common';
 
 export default class SearchBoardScreen extends Component {
@@ -126,9 +127,9 @@ export default class SearchBoardScreen extends Component {
                 type={item.type == 'board' ? '版面' : '目录'}
                 onPress={() => {
                     if (item.type == 'board') {
-                        this.props.navigation.navigate('boardListScreen', { id: item.id, text: item.name })
+                        ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: item.id, text: item.name })
                     } else {
-                        this.props.navigation.navigate('boardScreen', { id: item.id, text: item.name })
+                        ReactNavigation.navigate(this.props.navigation, 'boardScreen', { id: item.id, text: item.name })
                     }
                 }}
             />

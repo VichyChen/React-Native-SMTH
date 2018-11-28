@@ -108,7 +108,7 @@ export default class ReplyThreadScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1, }}>
-                <StatusBar barStyle="dark-content" />
+
                 <NavigationBar title='回复'
                         navigation={this.props.navigation}
                         showBackButton={true}

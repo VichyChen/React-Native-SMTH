@@ -55,7 +55,8 @@ import {
   Screen,
   ToastUtil,
   NavigationBar,
-  SectionBlankHeader
+  SectionBlankHeader,
+  ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -387,7 +388,7 @@ export default class NewThreadDetailScreen extends Component {
                   borderRadius={15}
                   widthAndHeight={30}
                   onPressClick={() => {
-                    this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
+                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
                   }}
                   uri={NetworkManager.net_getFace(item.name)}
                 />
@@ -463,7 +464,7 @@ export default class NewThreadDetailScreen extends Component {
                 borderRadius={10}
                 widthAndHeight={20}
                 onPressClick={() => {
-                  this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
+                  ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
                 }}
                 uri={NetworkManager.net_getFace(item.name)}
               />
@@ -515,7 +516,7 @@ export default class NewThreadDetailScreen extends Component {
                 borderRadius={15}
                 widthAndHeight={30}
                 onPressClick={() => {
-                  this.props.navigation.navigate('newUserScreen', { id: item.avatarID, name: item.name });
+                  ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
                 }}
                 uri={NetworkManager.net_getFace(item.name)}
               />
@@ -623,7 +624,7 @@ export default class NewThreadDetailScreen extends Component {
           title={this.boardTitle}
           message={this.boardName}
           titleOnPress={() => {
-            this.props.navigation.navigate('newBoardListScreen', {
+            ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', {
               id: this.boardID,
               name: this.boardTitle,
               title: this.boardName,
@@ -681,7 +682,7 @@ export default class NewThreadDetailScreen extends Component {
             }}
             onReplyClick={() => {
               if (global.login == true) {
-                this.props.navigation.navigate('newReplyThreadScreen',
+                ReactNavigation.navigate(this.props.navigation, 'newReplyThreadScreen',
                   {
                     threadID: this.props.navigation.state.params.id,
                     id: this.hostArticleId,
@@ -786,7 +787,7 @@ export default class NewThreadDetailScreen extends Component {
               }
               //给楼主私信
               else if (index == 4) {
-                this.props.navigation.navigate('newMessageSendScreen', { user: this.hostID })
+                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.hostID })
               }
               //举报
               else if (index == 5) {
@@ -802,7 +803,7 @@ export default class NewThreadDetailScreen extends Component {
                       if (this.boardObject != null) {
                         var array = this.boardObject.manager.split(" ");
                         if (array.length == 0) return;
-                        this.props.navigation.navigate('newMessageSendScreen', {
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
                           user: array[0],
                           title: '举报 ' + this.hostID + ' 在 ' + this.boardName + ' 版中发表的内容',
                           content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.title,
@@ -816,7 +817,7 @@ export default class NewThreadDetailScreen extends Component {
                   else {
                     var array = this.boardObject.manager.split(" ");
                     if (array.length == 0) return;
-                    this.props.navigation.navigate('newMessageSendScreen', {
+                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
                       user: array[0],
                       title: '举报 ' + this.hostID + ' 在 ' + this.boardName + ' 版中发表的内容',
                       content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.title,
@@ -843,7 +844,7 @@ export default class NewThreadDetailScreen extends Component {
               //回复
               if (index == 0) {
                 if (global.login == true) {
-                  this.props.navigation.navigate('newReplyThreadScreen',
+                  ReactNavigation.navigate(this.props.navigation, 'newReplyThreadScreen',
                     {
                       threadID: this.props.navigation.state.params.id,
                       id: this.selectMoreItemReplyID,
@@ -858,7 +859,7 @@ export default class NewThreadDetailScreen extends Component {
               }
               //私信
               else if (index == 1) {
-                this.props.navigation.navigate('newMessageSendScreen', { user: this.selectMoreItemName })
+                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.selectMoreItemName })
               }
               //举报
               else if (index == 2) {
@@ -874,7 +875,7 @@ export default class NewThreadDetailScreen extends Component {
                       if (this.boardObject != null) {
                         var array = this.boardObject.manager.split(" ");
                         if (array.length == 0) return;
-                        this.props.navigation.navigate('newMessageSendScreen', {
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
                           user: array[0],
                           title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.boardName + ' 版中发表的内容',
                           content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
@@ -888,7 +889,7 @@ export default class NewThreadDetailScreen extends Component {
                   else {
                     var array = this.boardObject.manager.split(" ");
                     if (array.length == 0) return;
-                    this.props.navigation.navigate('newMessageSendScreen', {
+                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
                       user: array[0],
                       title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.boardName + ' 版中发表的内容',
                       content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,

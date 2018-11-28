@@ -29,7 +29,8 @@ import {
     NewMessageMailListScreen,
     NewMessageSendMailListScreen,
     NewMessageReplyListScreen,
-    NewMessageAtListScreen
+    NewMessageAtListScreen,
+    ReactNavigation
 } from '../config/Common';
 
 export default class NewMessageScreen extends Component {
@@ -54,7 +55,7 @@ export default class NewMessageScreen extends Component {
                     showBottomLine={false}
                     rightButtonTitle={'私信'}
                     rightButtonOnPress={() => {
-                        this.props.navigation.navigate('newMessageSendScreen', {  })
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {  })
                     }}
                 />
                 <TabPageView titles={['收件箱', '发件箱', '回复我', '@我']} selectedIndex={this.props.navigation.state.params.selectedIndex}

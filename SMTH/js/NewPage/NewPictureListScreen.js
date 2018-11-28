@@ -34,7 +34,8 @@ import {
     Screen,
     Toast,
     ToastUtil,
-    AvatorImage
+    AvatorImage,
+    ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -143,7 +144,7 @@ export default class NewPictureListScreen extends Component {
     _renderItem = ({ item }) => (
         <CellBackground
             onPress={() => {
-                this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
             }}
         >
             <View>

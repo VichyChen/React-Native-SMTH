@@ -25,7 +25,8 @@ import {
     SeperatorLine,
     Screen,
     HorizontalSeperatorLine,
-    NavigationBar
+    NavigationBar,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -94,7 +95,7 @@ export default class NewMessageSendMailDetailScreen extends Component {
                                     borderRadius={15}
                                     widthAndHeight={30}
                                     onPressClick={() => {
-                                        this.props.navigation.navigate('newUserScreen', { id: null, name: this.state.author_id });
+                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: this.state.author_id });
                                     }}
                                     uri={NetworkManager.net_getFace(this.state.author_id)} />
                                 <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{this.state.author_id}</Text>

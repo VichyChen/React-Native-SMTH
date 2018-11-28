@@ -26,7 +26,8 @@ import {
     LoadingView,
     Screen,
     NavigatorTitleButton,
-    CellBackground
+    CellBackground,
+    ReactNavigation
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
@@ -84,7 +85,7 @@ export default class UserScreen extends Component {
                     color={global.colors.whiteColor}
                     fontSize={16}
                     onPressClick={() => {
-                        this.props.navigation.navigate('sendMessageScreen', {
+                        ReactNavigation.navigate(this.props.navigation, 'sendMessageScreen', {
                             user: this.props.navigation.state.params.id,
                             title: '',
                             content: '',
@@ -145,15 +146,15 @@ export default class UserScreen extends Component {
                     <TitleArrowItem
                         title={this.props.navigation.state.params.id + ' 的图片主题'}
                         onPress={() => {
-                            this.props.navigation.navigate('userImageThreadScreen', { id: this.props.navigation.state.params.id })
-                            // this.props.navigation.navigate('userImageThreadScreen', { id: 'IDjiangyou' })
+                            ReactNavigation.navigate(this.props.navigation, 'userImageThreadScreen', { id: this.props.navigation.state.params.id })
+                            // ReactNavigation.navigate(this.props.navigation, 'userImageThreadScreen', { id: 'IDjiangyou' })
                         }}
                     />
                     <SeperatorLine />
                     <TitleArrowItem
                         title={this.props.navigation.state.params.id + ' 的主题'}
                         onPress={() => {
-                            this.props.navigation.navigate('userThreadScreen', { id: this.props.navigation.state.params.id })
+                            ReactNavigation.navigate(this.props.navigation, 'userThreadScreen', { id: this.props.navigation.state.params.id })
                         }}
                     />
 

@@ -82,7 +82,7 @@ export default class NewPostThreadScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1, }}>
-                <StatusBar barStyle="dark-content" />
+
                 <NavigationBar title='发帖'
                     navigation={this.props.navigation}
                     showBackButton={true}

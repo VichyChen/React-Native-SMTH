@@ -25,7 +25,8 @@ import {
     LoadingView,
     Screen,
     ToastUtil,
-    AvatorImage
+    AvatorImage,
+    ReactNavigation
 } from '../config/Common';
 
 import { CommonCSS } from 'CommonCSS';
@@ -105,7 +106,7 @@ export default class NewBoardListScreenExperience extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                    ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
                 }}
             >
                 <View>
@@ -115,11 +116,11 @@ export default class NewBoardListScreenExperience extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                                    // ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
                                 }}
                                 uri={'https://exp.newsmth.net/' + item.avatar} />
 
-                            <Text style={CommonCSS.listName} >{item.name}</Text>
+                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
                         </View>
                         <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
                         <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>

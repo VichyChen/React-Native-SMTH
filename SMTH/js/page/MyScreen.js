@@ -22,6 +22,7 @@ import {
   SectionBlankHeader,
   CellBackground,
   SeperatorLine,
+  ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -149,7 +150,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('userScreen', { id: this.state.username });
+            ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: this.state.username });
           }}
         >
           <View style={{ flexDirection: 'row', padding: 13, height: 80, backgroundColor: global.colors.whiteColor }}>
@@ -162,7 +163,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('userThreadScreen', { id: this.state.username })
+            ReactNavigation.navigate(this.props.navigation, 'userThreadScreen', { id: this.state.username })
           }}
         >
           <View style={styles.container}>
@@ -178,7 +179,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('scanRecordScreen', { id: this.state.username })
+            ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
           }}
         >
           <View style={styles.container}>
@@ -194,7 +195,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('messageScreen')
+            ReactNavigation.navigate(this.props.navigation, 'messageScreen')
           }}
         >
           <View style={styles.container}>
@@ -210,7 +211,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('sendMessageScreen', {
+            ReactNavigation.navigate(this.props.navigation, 'sendMessageScreen', {
               user: 'VichyChen',
               title: '意见反馈',
               content: '',
@@ -230,7 +231,7 @@ export default class MyScreen extends Component {
 
         {/* <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('updateListScreen')
+            ReactNavigation.navigate(this.props.navigation, 'updateListScreen')
           }}
         >
           <View style={styles.container}>
@@ -263,7 +264,7 @@ export default class MyScreen extends Component {
 
         <CellBackground
           onPress={() => {
-            this.props.navigation.navigate('settingScreen')
+            ReactNavigation.navigate(this.props.navigation, 'settingScreen')
           }}
         >
           <View style={styles.container}>

@@ -24,7 +24,8 @@ import {
     AvatorImage,
     DateUtil,
     NavigatorTitleButton,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -80,7 +81,7 @@ export default class NewMessageAtListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
+                    ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
                 }}
             >
                 <View>
@@ -90,7 +91,7 @@ export default class NewMessageAtListScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    this.props.navigation.navigate('newUserScreen', { id: null, name: item.user_id });
+                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.user_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.user_id)} />
                             <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.user_id}</Text>

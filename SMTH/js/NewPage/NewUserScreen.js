@@ -38,7 +38,8 @@ import {
     NewUserFriendsScreen,
     NewUserfansScreen,
     TabPageView,
-    ToastUtil
+    ToastUtil,
+    ReactNavigation
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import { NativeModules } from 'react-native';
@@ -70,6 +71,20 @@ export default class NewUserScreen extends Component {
             });
         }
     }
+
+    // componentDidMount() {
+    //     this._navListener = this.props.navigation.addListener('didFocus', () => {
+    //         StatusBar.setBarStyle('light-content');
+    //     });
+    //     this._navListener2 = this.props.navigation.addListener('willBlur', () => {
+    //         StatusBar.setBarStyle('dark-content');
+    //     });
+    // }
+
+    // componentWillUnmount() {
+    //     this._navListener.remove();
+    //     this._navListener2.remove();
+    // }
 
     queryUser() {
         NetworkManager.net_QueryUser(this.props.navigation.state.params.name, (result) => {
@@ -111,7 +126,7 @@ export default class NewUserScreen extends Component {
                     rightButtonOnPress={() => {
                         if (this.props.navigation.state.params.id != null) {
                             var shareManager = NativeModules.ShareManager;
-                            shareManager.share(this.props.navigation.state.params.name + ' - 水木社区', 'https://exp.newsmth.net/account/' + this.props.navigation.state.params.id);                
+                            shareManager.share(this.props.navigation.state.params.name + ' - 水木社区', 'https://exp.newsmth.net/account/' + this.props.navigation.state.params.id);
                         }
                     }}
                 />
@@ -121,7 +136,7 @@ export default class NewUserScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                         if (global.login == true) {
-                            this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
+                            ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.props.navigation.state.params.name })
                         }
                         else {
                             StatusBar.setBarStyle('dark-content');
@@ -242,7 +257,7 @@ export default class NewUserScreen extends Component {
                             <CellBackground
                                 showSelect={false}
                                 onPress={() => {
-                                    this.props.navigation.navigate('newMessageSendScreen', { user: this.props.navigation.state.params.name })
+                                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.props.navigation.state.params.name })
                                 }}
                             >
                                 <View style={styles.buttonView} >

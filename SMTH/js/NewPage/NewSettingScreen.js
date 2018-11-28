@@ -57,7 +57,6 @@ export default class NewSettingScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar barStyle="dark-content" />
 
         <NavigationBar title='设置' showBackButton={true} navigation={this.props.navigation} />
 

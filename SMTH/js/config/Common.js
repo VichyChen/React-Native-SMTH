@@ -2,6 +2,8 @@
 import NetworkManager from '../util/NetworkManager';
 import HTMLParseManager from '../util/HTMLParseManager';
 
+
+import ReactNavigation from '../util/ReactNavigation';
 import DateUtil from '../util/DateUtil';
 import ToastUtil from '../util/ToastUtil';
 
@@ -67,6 +69,7 @@ export {
     NetworkManager,
     HTMLParseManager,
     DateUtil,
+    ReactNavigation,
     ToastUtil,
     SeperatorLine,
     HorizontalSeperatorLine,

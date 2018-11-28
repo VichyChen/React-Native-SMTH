@@ -37,7 +37,8 @@ import {
     Toast,
     ToastUtil,
     AvatorImage,
-    NavigationBar
+    NavigationBar,
+    ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -183,7 +184,7 @@ export default class NewHotListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    this.props.navigation.navigate('newThreadDetailScreen', { id: item.id });
+                    ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
                 }}
             >
                 <View>
@@ -194,7 +195,7 @@ export default class NewHotListScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    // this.props.navigation.navigate('userScreen', { id: item.author_id });
+                                    // ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
                                 }}
                                 uri={'https://exp.newsmth.net/' + item.avatar} />
 
