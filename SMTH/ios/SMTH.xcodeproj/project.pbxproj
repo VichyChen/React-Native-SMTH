@@ -29,7 +29,6 @@
 		047099641FF726C300676CC8 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 043DDDA81F5F947900A7785B /* libSMTH_0.2.3.a */; };
 		047099651FF726C300676CC8 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		047099661FF726C300676CC8 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
-		047099671FF726C300676CC8 /* libGDTMobSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04FC03F71FEBA83300E07094 /* libGDTMobSDK.a */; };
 		047099681FF726C300676CC8 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		047099691FF726C300676CC8 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		0470996A1FF726C300676CC8 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
@@ -43,7 +42,6 @@
 		0470997E1FF734DF00676CC8 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 0470997D1FF734DF00676CC8 /* Util.m */; };
 		047099821FF736E700676CC8 /* GCStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 047099811FF736E700676CC8 /* GCStatistics.m */; };
 		04EB25741F86655000D77F67 /* bundle in Resources */ = {isa = PBXBuildFile; fileRef = 04EB25731F86655000D77F67 /* bundle */; };
-		04FC03F81FEBA83400E07094 /* libGDTMobSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04FC03F71FEBA83300E07094 /* libGDTMobSDK.a */; };
 		04FC03FB1FEBA8E200E07094 /* UIImage+CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 04FC03FA1FEBA8E200E07094 /* UIImage+CommonMethods.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -283,6 +281,13 @@
 			remoteGlobalIDString = 3D3CD9181DE5FBD800167DC4;
 			remoteInfo = "jschelpers-tvOS";
 		};
+		4281CBD821AE482000A9688A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 681ED60C2E3C455182B68A43 /* CodePush.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F886647B1F4ADB500036D01B;
+			remoteInfo = "CodePush-tvOS";
+		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -340,15 +345,6 @@
 		047099801FF736E700676CC8 /* GCStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCStatistics.h; sourceTree = "<group>"; };
 		047099811FF736E700676CC8 /* GCStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCStatistics.m; sourceTree = "<group>"; };
 		04EB25731F86655000D77F67 /* bundle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundle; sourceTree = "<group>"; };
-		04FC03EF1FEBA83300E07094 /* GDTMobBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTMobBannerView.h; sourceTree = "<group>"; };
-		04FC03F01FEBA83300E07094 /* GDTMobInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTMobInterstitial.h; sourceTree = "<group>"; };
-		04FC03F11FEBA83300E07094 /* GDTNativeAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTNativeAd.h; sourceTree = "<group>"; };
-		04FC03F21FEBA83300E07094 /* GDTNativeExpressAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTNativeExpressAd.h; sourceTree = "<group>"; };
-		04FC03F31FEBA83300E07094 /* GDTNativeExpressAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTNativeExpressAdView.h; sourceTree = "<group>"; };
-		04FC03F41FEBA83300E07094 /* GDTSDKConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTSDKConfig.h; sourceTree = "<group>"; };
-		04FC03F51FEBA83300E07094 /* GDTSplashAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTSplashAd.h; sourceTree = "<group>"; };
-		04FC03F61FEBA83300E07094 /* GDTTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDTTrack.h; sourceTree = "<group>"; };
-		04FC03F71FEBA83300E07094 /* libGDTMobSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGDTMobSDK.a; sourceTree = "<group>"; };
 		04FC03F91FEBA8E100E07094 /* UIImage+CommonMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+CommonMethods.h"; path = "SMTH/UIImage+CommonMethods.h"; sourceTree = "<group>"; };
 		04FC03FA1FEBA8E200E07094 /* UIImage+CommonMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+CommonMethods.m"; path = "SMTH/UIImage+CommonMethods.m"; sourceTree = "<group>"; };
 		06A6422E5C7399F6DEC855DB /* Pods-SMTH.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SMTH.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SMTH/Pods-SMTH.debug.xcconfig"; sourceTree = "<group>"; };
@@ -409,7 +405,6 @@
 				047099641FF726C300676CC8 /* libSMTH_0.2.3.a in Frameworks */,
 				047099651FF726C300676CC8 /* libRCTLinking.a in Frameworks */,
 				047099661FF726C300676CC8 /* libRCTNetwork.a in Frameworks */,
-				047099671FF726C300676CC8 /* libGDTMobSDK.a in Frameworks */,
 				047099681FF726C300676CC8 /* libRCTSettings.a in Frameworks */,
 				047099691FF726C300676CC8 /* libRCTText.a in Frameworks */,
 				0470996A1FF726C300676CC8 /* libRCTVibration.a in Frameworks */,
@@ -432,7 +427,6 @@
 				043DDDAC1F5F947A00A7785B /* libSMTH_0.2.3.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
-				04FC03F81FEBA83400E07094 /* libGDTMobSDK.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
@@ -587,25 +581,9 @@
 			isa = PBXGroup;
 			children = (
 				04FC03DB1FEA106500E07094 /* libCodePush.a */,
+				4281CBD921AE482000A9688A /* libCodePush.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		04FC03EE1FEBA83300E07094 /* GDT */ = {
-			isa = PBXGroup;
-			children = (
-				04FC03EF1FEBA83300E07094 /* GDTMobBannerView.h */,
-				04FC03F01FEBA83300E07094 /* GDTMobInterstitial.h */,
-				04FC03F11FEBA83300E07094 /* GDTNativeAd.h */,
-				04FC03F21FEBA83300E07094 /* GDTNativeExpressAd.h */,
-				04FC03F31FEBA83300E07094 /* GDTNativeExpressAdView.h */,
-				04FC03F41FEBA83300E07094 /* GDTSDKConfig.h */,
-				04FC03F51FEBA83300E07094 /* GDTSplashAd.h */,
-				04FC03F61FEBA83300E07094 /* GDTTrack.h */,
-				04FC03F71FEBA83300E07094 /* libGDTMobSDK.a */,
-			);
-			name = GDT;
-			path = SMTH/GDT;
 			sourceTree = "<group>";
 		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
@@ -636,7 +614,6 @@
 				047099791FF72F8D00676CC8 /* ShareManager.m */,
 				04FC03F91FEBA8E100E07094 /* UIImage+CommonMethods.h */,
 				04FC03FA1FEBA8E200E07094 /* UIImage+CommonMethods.m */,
-				04FC03EE1FEBA83300E07094 /* GDT */,
 				04EB25731F86655000D77F67 /* bundle */,
 				043DDDA51F5F947900A7785B /* libSmth */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -817,7 +794,6 @@
 				0470995E1FF726C300676CC8 /* Frameworks */,
 				0470996E1FF726C300676CC8 /* Resources */,
 				047099721FF726C300676CC8 /* Bundle React Native code and images */,
-				905AD7ADAE334A1129ACBDA9 /* [CP] Embed Pods Frameworks */,
 				ADB2CE5A060ED9A5F3C0AABD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -838,7 +814,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				A6FF184EB73C0F9FBF3E6A79 /* [CP] Embed Pods Frameworks */,
 				13C8FC98CEE011BE0031C8DD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -1197,6 +1172,13 @@
 			remoteRef = 3DAD3EAE1DF850E9000B6D8A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		4281CBD921AE482000A9688A /* libCodePush.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCodePush.a;
+			remoteRef = 4281CBD821AE482000A9688A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1324,7 +1306,19 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSocialSDKResourcesNew.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentOpenApi_IOS_Bundle.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WeiboSDK.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentDetailController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentInputController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentInputControlleriPad.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMShareEditViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMShareEditViewControlleriPad.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSLoginViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSnsAccountViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSShareListController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zh-Hans.lproj",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1363,36 +1357,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		905AD7ADAE334A1129ACBDA9 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SMTH Pro/Pods-SMTH Pro-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A6FF184EB73C0F9FBF3E6A79 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SMTH/Pods-SMTH-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		ADB2CE5A060ED9A5F3C0AABD /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1416,7 +1380,19 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSocialSDKResourcesNew.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentOpenApi_IOS_Bundle.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/WeiboSDK.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentDetailController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentInputController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSCommentInputControlleriPad.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMShareEditViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMShareEditViewControlleriPad.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSLoginViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSnsAccountViewController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/UMSShareListController.nib",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/en.lproj",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zh-Hans.lproj",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -22,8 +22,7 @@
 @interface AppDelegate() <GDTSplashAdDelegate>
 
 @property (strong, nonatomic) GDTSplashAd *splash;
-@property (retain, nonatomic) UIView *bottomView;
-
+@property (strong, nonatomic) UILabel *skipLabel;
 @end
 
 @implementation AppDelegate
@@ -40,9 +39,9 @@
   
 #ifdef DEBUG
   //调试
-// jsCodeLocation = [NSURL URLWithString:@"http://127.0.0.1:8081/index.ios.bundle?platform=ios&dev=true"];
+ jsCodeLocation = [NSURL URLWithString:@"http://127.0.0.1:8081/index.ios.bundle?platform=ios&dev=true"];
   //本地打包
-     jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"bundle/index.ios" withExtension:@"jsbundle"];
+//     jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"bundle/index.ios" withExtension:@"jsbundle"];
 #else
   //发布热更新
   jsCodeLocation = [CodePush bundleURL];
@@ -63,7 +62,7 @@
   
 #if FREEVERSION
 //  [self setupADInterstitialTime];
-//  [self configureSplashAd];
+  [self configureSplashAd];
 #endif
   
   
@@ -164,6 +163,7 @@
  */
 - (void)splashAdLifeTime:(NSUInteger)time {
   NSLog(@"GDT开屏广告剩余时间回调 %ld", time);
+  self.skipLabel.text = [NSString stringWithFormat:@"跳过 %ld", time - 1];
 }
 
 #pragma mark - UMengAnalytics
@@ -184,54 +184,60 @@
 - (void)configureSplashAd {
   NSString *imageName;
   CGRect defaultImageRect;
-  CGRect bottomViewImageRect;
   //4
   if (ScreenWidth == 320) {
-    imageName = @"AdLaunchImage_640_1136";
+    imageName = @"AdLaunchImage_iPhone_4_640_1136";
     defaultImageRect = CGRectMake(0, 0, 640, 1136);
-    bottomViewImageRect = CGRectMake(0, 1136 - 200, 640, 200);
   }
   //4.7
   else if (ScreenWidth == 375 && ScreenHeight == 667) {
-    imageName = @"AdLaunchImage_750_1334";
+    imageName = @"AdLaunchImage_iPhone_4.7_750_1334";
     defaultImageRect = CGRectMake(0, 0, 750, 1334);
-    bottomViewImageRect = CGRectMake(0, 1334 - 200, 750, 200);
   }
   //5.5
-  else if (ScreenWidth == 414) {
-    imageName = @"AdLaunchImage_1242_2208";
+  else if (ScreenWidth == 414 && ScreenHeight == 736) {
+    imageName = @"AdLaunchImage_iPhone_5.5_1242_2208";
     defaultImageRect = CGRectMake(0, 0, 1242, 2208);
-    bottomViewImageRect = CGRectMake(0, 2208 - 300, 1242, 300);
   }
   //5.8
   else if (ScreenWidth == 375 && ScreenHeight == 812) {
-    imageName = @"AdLaunchImage_1125_2436";
+    imageName = @"AdLaunchImage_iPhone_5.8_1125_2436";
     defaultImageRect = CGRectMake(0, 0, 1125, 2436);
-    bottomViewImageRect = CGRectMake(0, 2436 - 300, 1125, 300);
+  }
+  //6.1
+  else if (ScreenWidth == 414 && ScreenHeight == 896) {
+    imageName = @"AdLaunchImage_iPhone_6.1_828_1792";
+    defaultImageRect = CGRectMake(0, 0, 828, 1792);
+  }
+  //6.5
+  else if (ScreenWidth == 414 && ScreenHeight == 896) {
+    imageName = @"AdLaunchImage_iPhone_6.5_1242_2688";
+    defaultImageRect = CGRectMake(0, 0, 1242, 2688);
   }
   //7.9、9.7
   else if (ScreenWidth == 768 && ScreenHeight == 1024) {
-    imageName = @"AdLaunchImage_1536_2048";
+    imageName = @"AdLaunchImage_iPad_9.7_1536_2048";
     defaultImageRect = CGRectMake(0, 0, 1536, 2048);
-    bottomViewImageRect = CGRectMake(0, 2048 - 300, 1536, 300);
   }
   //10.5
   else if (ScreenWidth == 834 && ScreenHeight == 1112) {
-    imageName = @"AdLaunchImage_1668_2224";
+    imageName = @"AdLaunchImage_iPad_10.5_1668_2224";
     defaultImageRect = CGRectMake(0, 0, 1668, 2224);
-    bottomViewImageRect = CGRectMake(0, 2224 - 300, 1668, 300);
+  }
+  //11
+  else if (ScreenWidth == 834 && ScreenHeight == 1194) {
+    imageName = @"AdLaunchImage_iPad_11_1668_2388";
+    defaultImageRect = CGRectMake(0, 0, 1668, 2388);
   }
   //12.9
   else if (ScreenWidth == 1024 && ScreenHeight == 1336) {
-    imageName = @"AdLaunchImage_2048_2732";
+    imageName = @"AdLaunchImage_iPad_12.9_2048_2732";
     defaultImageRect = CGRectMake(0, 0, 2048, 2732);
-    bottomViewImageRect = CGRectMake(0, 2732 - 300, 2048, 300);
   }
   //!@#$%^&*()
   else {
-    imageName = @"AdLaunchImage_1536_2048";
-    defaultImageRect = CGRectMake(0, 0, 640, 1136);
-    bottomViewImageRect = CGRectMake(0, 1136 - 200, 640, 200);
+    imageName = @"AdLaunchImage_iPhone_5.5_1242_2208";
+    defaultImageRect = CGRectMake(0, 0, 1242, 2208);
   }
   
   self.splash = [[GDTSplashAd alloc] initWithAppkey:kGDTAppKey placementId:kGDTSplashPlacementID];
@@ -240,16 +246,29 @@
   UIImage *defaultImage = [[[UIImage imageNamed:imageName] cutWithRect:defaultImageRect] resize:CGSizeMake(ScreenWidth, ScreenHeight)];
   self.splash.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
   
-  self.bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, ScreenHeight - 100, ScreenWidth, 100)];
-  UIImage *bottomImage = [[[UIImage imageNamed:imageName] cutWithRect:bottomViewImageRect] resize:self.bottomView.frame.size];
-  self.bottomView.backgroundColor = [UIColor colorWithPatternImage:bottomImage];
 
-  if (iPad) {
-    [self.splash loadAdAndShowInWindow:self.window];
-  }
-  else {
-    [self.splash loadAdAndShowInWindow:self.window withBottomView:self.bottomView];
-  }
+  UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(ScreenWidth - 30 - 50, kNavigatioinBarHeight, 50, 30)];
+  skipView.backgroundColor = [UIColor clearColor];
+  skipView.clipsToBounds = YES;
+  skipView.layer.cornerRadius = 4;
+  
+  UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+  view.backgroundColor = [UIColor blackColor];
+  view.alpha = 0.60;
+  
+  UILabel *label = [[UILabel alloc] init];
+  label.frame = view.frame;
+  label.text = @"跳过";
+  label.textAlignment = NSTextAlignmentCenter;
+  label.textColor = [UIColor whiteColor];
+  label.font = [UIFont systemFontOfSize:14];
+  
+  self.skipLabel = label;
+  
+  [skipView addSubview:view];
+  [skipView addSubview:label];
+  
+  [self.splash loadAdAndShowInWindow:APP.window withBottomView:nil skipView:skipView];
 }
 
 - (void)shareWithTitle:(NSString *)title url:(NSString *)url {

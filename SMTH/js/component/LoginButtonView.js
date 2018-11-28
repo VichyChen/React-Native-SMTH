@@ -28,8 +28,8 @@ export default class LoginButtonView extends Component {
                 <View style={styles.container}>
                     <Image style={[{
                         marginTop: -40, 
-                        width: global.constants.ScreenWidth / 2,
-                        height: global.constants.ScreenWidth / 2,
+                        width: 130,
+                        height: 130,
                     }]}
                         source={global.images.logo} />
                     <Text style={{ color: global.colors.gray2Color, fontSize: global.fontSize.fontSize17 }}>{this.props.text}</Text>

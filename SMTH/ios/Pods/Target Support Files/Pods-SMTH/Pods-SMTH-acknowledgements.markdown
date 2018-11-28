@@ -1,6 +1,10 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
+## GDTMobSDK
+
+Copyright 2017 Tencent Inc. All Rights Reserved.
+
 ## UMengAnalytics
 
 Copyright 2011 - 2015 UMeng.com. All rights reserved.

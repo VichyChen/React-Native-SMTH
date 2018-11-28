@@ -5,6 +5,7 @@ target "SMTH" do
 
 pod 'UMengSocial'
 pod 'UMengAnalytics'
+pod 'GDTMobSDK'
 
 end
 
@@ -12,5 +13,5 @@ target "SMTH Pro" do
     
     pod 'UMengSocial'
     pod 'UMengAnalytics'
-    
+    pod 'GDTMobSDK'
 end

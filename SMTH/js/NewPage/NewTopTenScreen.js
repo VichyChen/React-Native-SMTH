@@ -137,12 +137,14 @@ export default class NewTopTenScreen extends Component {
             if (section != 0) {
                 array = this.state.dataArray;
             }
-            array.push({
-                key: 'section' + section,
-                type: 'section',
-                title: this._array[section],
-            });
-            array = array.concat(result['threads']);
+            if (result['threads'].length > 0) {
+                array.push({
+                    key: 'section' + section,
+                    type: 'section',
+                    title: this._array[section],
+                });
+                array = array.concat(result['threads']);    
+            }
 
             this.setState({
                 dataArray: array,
