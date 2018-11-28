@@ -132,17 +132,24 @@ export default class NewSettingScreen extends Component {
 */}
 
           {/* 退出 */}
-          <Button onPress={() => {
-            Cookie.clear();
-            AsyncStorageManger.setAccessToken('');
-            AsyncStorageManger.setID('');
-            AsyncStorageManger.setLogin(false);
-            global.login = false;
-            global.current.username = '';
-            DeviceEventEmitter.emit('LogoutNotification', null);
+          {
+            global.login == true
+              ?
+              <Button onPress={() => {
+                Cookie.clear();
+                AsyncStorageManger.setAccessToken('');
+                AsyncStorageManger.setID('');
+                AsyncStorageManger.setLogin(false);
+                global.login = false;
+                global.current.username = '';
+                DeviceEventEmitter.emit('LogoutNotification', null);
 
-            this.props.navigation.goBack();
-          }} text='退出登录' />
+                this.props.navigation.goBack();
+              }} text='退出登录' />
+              :
+              null
+          }
+
 
 
         </ScrollView>

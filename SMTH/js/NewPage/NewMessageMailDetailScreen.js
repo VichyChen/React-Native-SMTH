@@ -91,7 +91,7 @@ export default class NewMessageMailDetailScreen extends Component {
                         </View>
                         <HorizontalSeperatorLine />
                         <View style={{ flex: 1, padding: global.constants.Padding }}>
-                            <View style={{ flexDirection: 'row', backgroundColor: global.colors.whiteColor }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', backgroundColor: global.colors.whiteColor }}>
                                 <AvatorImage style={styles.avator}
                                     borderRadius={15}
                                     widthAndHeight={30}

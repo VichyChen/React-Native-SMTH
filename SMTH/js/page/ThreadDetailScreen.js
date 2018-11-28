@@ -137,6 +137,7 @@ export default class ThreadDetailScreen extends Component {
         }
         result['articles'][i].key = i;
         result['articles'][i].floor = from + i;
+        result['articles'][i].body = unescape(result['articles'][i].body);
         result['articles'][i].time = DateUtil.formatTimeStamp(result['articles'][i].time);
         for (var j = 0; j < result['articles'][i].attachment_list.length; j++) {
           result['articles'][i]['attachment_list'][j].key = j;
@@ -287,11 +288,11 @@ export default class ThreadDetailScreen extends Component {
 
         </View>
         <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{(item.floor == 0 ? '' : (item.floor + '楼') + '  ') + item.time}</Text>
-        <Text style={[CommonCSS.content, { marginTop: 10 }]}>{item.body.trim()}</Text>
         <FlatList
           data={item.attachment_list}
           renderItem={this._attachmentImageItem}
         />
+        <Text style={[CommonCSS.content, { marginTop: 10 }]}>{item.body.trim()}</Text>
       </View>
       {
         item.floor == 0
@@ -306,7 +307,7 @@ export default class ThreadDetailScreen extends Component {
   _attachmentImageItem = ({ item }) => (
     <AutoHeightImage
       style={styles.image}
-      width={global.constants.ScreenWidth - 26}
+      width={global.constants.ScreenWidth - global.constants.Padding * 2}
       imageURL={NetworkManager.net_getAttachmentImage(this.board, item.id, item.pos)}
     />
   );
@@ -754,8 +755,7 @@ var styles = {
   },
   get image() {
     return {
-      marginBottom: 13,
-      marginLeft: 13,
+      marginTop: global.constants.Padding,
     }
   },
 }

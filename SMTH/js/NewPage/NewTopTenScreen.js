@@ -113,6 +113,7 @@ export default class NewTopTenScreen extends Component {
             for (var i = 0; i < result['threads'].length; i++) {
                 result['threads'][i].key = section * 10 + i;
                 result['threads'][i].type = 'row';
+                result['threads'][i].subject = unescape(result['threads'][i].subject);
                 result['threads'][i].board = unescape(result['threads'][i].board);
                 result['threads'][i].boardName = global.configures.boards[result['threads'][i].board];
             }
