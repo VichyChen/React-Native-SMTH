@@ -34,7 +34,7 @@ export default class LoginButtonView extends Component {
                         source={global.images.logo} />
                     <Text style={{ color: global.colors.gray2Color, fontSize: global.fontSize.fontSize17 }}>{this.props.text}</Text>
                     <Button style={{ marginTop: 40, width: 100, borderRadius: 20, }}
-                        text={'去登陆'}
+                        text={'登陆'}
                         fontColor={global.colors.whiteColor}
                         backgroundColor={global.colors.themeColor}
                         height={40}

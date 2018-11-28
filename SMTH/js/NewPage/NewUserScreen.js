@@ -72,20 +72,6 @@ export default class NewUserScreen extends Component {
         }
     }
 
-    // componentDidMount() {
-    //     this._navListener = this.props.navigation.addListener('didFocus', () => {
-    //         StatusBar.setBarStyle('light-content');
-    //     });
-    //     this._navListener2 = this.props.navigation.addListener('willBlur', () => {
-    //         StatusBar.setBarStyle('dark-content');
-    //     });
-    // }
-
-    // componentWillUnmount() {
-    //     this._navListener.remove();
-    //     this._navListener2.remove();
-    // }
-
     queryUser() {
         NetworkManager.net_QueryUser(this.props.navigation.state.params.name, (result) => {
             this.setState({

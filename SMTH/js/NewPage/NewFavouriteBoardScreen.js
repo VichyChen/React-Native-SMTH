@@ -64,9 +64,12 @@ export default class NewFavouriteBoardScreen extends Component {
             this.setState({});
         });
 
-        if (global.login == true) {
-            this.net_LoadFavorites();
-        }
+        AsyncStorageManger.getLogin().then(login => {
+            global.login = login;
+            if (login == true) {
+                this.net_LoadFavorites();
+            }
+        });
     }
 
     componentDidMount() {
@@ -159,7 +162,7 @@ export default class NewFavouriteBoardScreen extends Component {
                     {
                         global.login == false
                             ?
-                            <LoginButtonView text={'需登陆才能查看收藏内容'} style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
+                            <LoginButtonView text={'需登陆才能查看收藏'} style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
                             :
                             <ScrollView
                                 refreshControl={

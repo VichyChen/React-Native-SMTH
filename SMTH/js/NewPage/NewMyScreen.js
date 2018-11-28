@@ -77,7 +77,8 @@ export default class NewMyScreen extends Component {
       this.setState({});
     });
 
-    if (global.login == true) {
+    AsyncStorageManger.getLogin().then(login => {
+      global.login = login;
       AsyncStorageManger.getUsername().then(username => {
         this.setState({
           username: username,
@@ -85,7 +86,7 @@ export default class NewMyScreen extends Component {
 
         this.network();
       });
-    }
+    });
   }
 
   componentDidMount() {
@@ -191,9 +192,8 @@ export default class NewMyScreen extends Component {
   }
 
   showLogin() {
-    // StatusBar.setBarStyle('dark-content');
-    // DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
-    DeviceEventEmitter.emit('LoginNotification', () => {  });
+    StatusBar.setBarStyle('dark-content');
+    DeviceEventEmitter.emit('LoginNotification', () => { StatusBar.setBarStyle('light-content'); });
   }
 
   render() {

@@ -48,6 +48,8 @@ var _array;
 export default class NewPictureListScreen extends Component {
 
     _page = 1;
+    _width = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3);
+    _height = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3);
 
     constructor(props) {
         super(props);
@@ -171,8 +173,8 @@ export default class NewPictureListScreen extends Component {
                                             item.attachment_list.map((image, i) => {
                                                 return (
                                                     <Image key={i} style={[styles.image, {
-                                                        width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
-                                                        height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
+                                                        width: this._width,
+                                                        height: this._height,
                                                     }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
                                                 );
                                             })
@@ -184,8 +186,8 @@ export default class NewPictureListScreen extends Component {
                                                 item.attachment_list.map((image, i) => {
                                                     return (
                                                         <Image key={i} style={[styles.image, {
-                                                            width: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
-                                                            height: Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3),
+                                                            width: this._width,
+                                                            height: this._height,
                                                         }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
                                                     );
                                                 })

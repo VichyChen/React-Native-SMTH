@@ -16,6 +16,7 @@ global.bool = {
 };
 
 global.constants = {
+    Scale: Dimensions.get('window').scale,
     ScreenWidth: Dimensions.get('window').width,
     ScreenHeight: global.bool.iOS ? Dimensions.get('window').height : Dimensions.get('window').height - 24,
     StatusBarHeight: global.bool.iOS ? (global.bool.iPhoneX ? 44 : 20) : 20,

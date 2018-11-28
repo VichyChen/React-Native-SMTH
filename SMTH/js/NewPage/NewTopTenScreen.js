@@ -60,24 +60,10 @@ export default class NewTopTenScreen extends Component {
             showLogin: false,
         }
 
-        // this._array = [
-        //     { 'key': 0, 'value': '本日十大' },
-        //     { 'key': 1, 'value': '社区管理' },
-        //     { 'key': 2, 'value': '国内院校' },
-        //     { 'key': 3, 'value': '休闲娱乐' },
-        //     { 'key': 4, 'value': '五湖四海' },
-        //     { 'key': 5, 'value': '游戏运动' },
-        //     { 'key': 6, 'value': '社会信息' },
-        //     { 'key': 7, 'value': '知性感性' },
-        //     { 'key': 8, 'value': '文化人文' },
-        //     { 'key': 9, 'value': '学术科学' },
-        //     { 'key': 10, 'value': '电脑技术' },
-        // ];
         this._array = {
             0: '本日十大', 1: '社区管理', 2: '国内院校', 3: '休闲娱乐', 4: '五湖四海',
             5: '游戏运动', 6: '社会信息', 7: '知性感性', 8: '文化人文', 9: '学术科学', 10: '电脑技术'
         };
-
 
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({
@@ -105,12 +91,9 @@ export default class NewTopTenScreen extends Component {
             }
         });
 
-        AsyncStorageManger.getAccessToken().then((value) => {
-            //没登录
-            if (value.length == 0) {
-                this.setState({});
-            }
-            else {
+        AsyncStorageManger.getLogin().then(login => {
+            global.login = login;
+            if (login == true) {
                 this.setState({
                     screenStatus: global.screen.loading,
                 });
