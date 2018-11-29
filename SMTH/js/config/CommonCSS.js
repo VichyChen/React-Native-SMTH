@@ -33,7 +33,7 @@ var CommonCSS = {
     get listTitle() {
         return {
             lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize16,
+            fontSize: global.configures.fontSize17,
             fontWeight: '600',
             color: global.colors.fontColor,
         }
@@ -41,7 +41,7 @@ var CommonCSS = {
     get listOnlyTitle() {
         return {
             lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize16,
+            fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
         }
     },

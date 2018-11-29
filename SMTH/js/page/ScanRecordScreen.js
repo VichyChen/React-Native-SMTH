@@ -89,7 +89,7 @@ export default class ScanRecordScreen extends Component {
                                             <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board_id].name}</Text>
                                         )
                                 }
-                                <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]}>{item.author}</Text>
+                                {/* <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]}>{item.author}</Text> */}
                             </View>
                     </View>
                     <SeperatorLine />

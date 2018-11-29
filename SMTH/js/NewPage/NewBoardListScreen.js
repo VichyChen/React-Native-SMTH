@@ -36,6 +36,7 @@ import ActionSheet from 'react-native-actionsheet'
 
 import NewBoardListScreenExperience from './NewBoardListScreenExperience';
 import NewBoardListScreenHot from './NewBoardListScreenHot';
+import { NativeModules } from 'react-native';
 
 export default class NewBoardListScreen extends Component {
 
@@ -118,7 +119,8 @@ export default class NewBoardListScreen extends Component {
                         }
                         //分享
                         else if (index == 3) {
-
+                            var shareManager = NativeModules.ShareManager;
+                            shareManager.share(this.props.navigation.state.params.name + ' - ' + this.props.navigation.state.params.title + ' - 水木社区', 'https://exp.newsmth.net/board/' + this.props.navigation.state.params.id);
                         }
                         else {
 

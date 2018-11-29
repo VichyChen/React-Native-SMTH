@@ -94,6 +94,8 @@ export default class NewHotListScreen extends Component {
                     key: i + ((page - 1) * 20),
                     id: this.$('a[class=article-subject]').attr('href').split('/')[2],
                     avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
+                    authorID: this.$('div[class=article-account-name]').children().first().attr('href').split('/')[2],
+                    authorName: this.$('a[class=article-account-avatar]').children().first().attr('title'),
                     name: this.$('div[class=article-account-name]').children().first().text(),
                     time: this.$('div[class=article-account-name]').children().last().text(),
                     title: this.$('a[class=article-subject]').text().trim(),
@@ -195,7 +197,7 @@ export default class NewHotListScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    // ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.author_id });
+                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.authorID, name: item.authorName });
                                 }}
                                 uri={'https://exp.newsmth.net/' + item.avatar} />
 
