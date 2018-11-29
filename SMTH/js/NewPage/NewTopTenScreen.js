@@ -36,11 +36,10 @@ import {
     ToastUtil,
     AvatorImage,
     LoginButtonView,
-    ReactNavigation
+    ReactNavigation,
+    GDTNativeExpressView
 } from '../config/Common';
-
 import { CommonCSS } from 'CommonCSS';
-
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 
@@ -48,6 +47,7 @@ export default class NewTopTenScreen extends Component {
 
     _array;
     _page = 0;
+    _array1;
 
     constructor(props) {
         super(props);
@@ -58,6 +58,10 @@ export default class NewTopTenScreen extends Component {
             screenText: null,
             dataArray: [],
             showLogin: false,
+            adheight1: (global.constants.ScreenWidth - 30) * 0.56 + 93,
+            adheight2: (global.constants.ScreenWidth - 30) * 0.56 + 93,
+            // adheight1: 0.01,
+            // adheight2: 0.01,
         }
 
         this._array = {
@@ -128,8 +132,18 @@ export default class NewTopTenScreen extends Component {
                     type: 'section',
                     title: this._array[section],
                 });
-                array = array.concat(result['threads']);    
+                array = array.concat(result['threads']);
+
+                if (section == 0 || section == 3) {
+                    array.push({
+                        key: 'ad' + section,
+                        index: section == 0 ? 0 : 1,
+                        type: 'ad',
+                        height: 0,
+                    });
+                }
             }
+            this._array1 = array;
 
             this.setState({
                 dataArray: array,
@@ -137,7 +151,6 @@ export default class NewTopTenScreen extends Component {
                 pullMoreLoading: false,
                 screenStatus: global.screen.none,
             });
-
         }, (error) => {
             ToastUtil.info(error.message);
             this.setState({
@@ -156,28 +169,37 @@ export default class NewTopTenScreen extends Component {
         });
     }
 
-    _renderHeader = ({ section }) => section.data.length > 0 ?
-        (
-            <View>
-                <SectionHeader title={section.key} color={global.colors.backgroundGrayColor} />
-            </View>
-
-            // <View style={CommonCSS.sectionView} >
-            //     <View style={CommonCSS.sectionVerticalLine} />
-            //     <Text style={CommonCSS.sectionTitle} >
-            //         {section.key}
-            //     </Text>
-            // </View>
-
-        )
-        : null;
-
     _renderItem = ({ item }) => {
         if (item.type == 'section') {
             return (
                 <View>
                     <SectionHeader title={item.title} color={global.colors.backgroundGrayColor} />
                 </View>
+            );
+        }
+        else if (item.type == 'ad') {
+            return (
+                <GDTNativeExpressView
+                    ref={'ad' + item.index}
+                    style={{
+                        width: global.constants.ScreenWidth,
+                        height: item.index == 0 ? this.state.adheight1 : this.state.adheight2
+                    }}
+                    index={item.index}
+                    onReceived={(event) => {
+                        console.log('event.nativeEvent.height:' + event.nativeEvent.height);
+                        if (item.index == 0) {
+                            this.setState({
+                                adheight1: event.nativeEvent.height
+                            });
+                        }
+                        else {
+                            this.setState({
+                                adheight2: event.nativeEvent.height
+                            });
+                        }
+                    }}
+                />
             );
         }
         else {

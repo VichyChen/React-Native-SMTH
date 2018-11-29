@@ -17,12 +17,17 @@
 #import "UIImage+CommonMethods.h"
 #import <UIKit/UIKit.h>
 #import <UMengAnalytics/UMMobClick/MobClick.h>
+#import "GDTNativeExpressAd.h"
+#import "GDTNativeExpressAdView.h"
 
 
-@interface AppDelegate() <GDTSplashAdDelegate>
+@interface AppDelegate() <GDTSplashAdDelegate, GDTNativeExpressAdDelegete>
 
 @property (strong, nonatomic) GDTSplashAd *splash;
 @property (strong, nonatomic) UILabel *skipLabel;
+
+@property (nonatomic, strong) GDTNativeExpressAd *nativeExpressAd;
+
 @end
 
 @implementation AppDelegate
@@ -47,6 +52,14 @@
   jsCodeLocation = [CodePush bundleURL];
 #endif
 
+  
+  self.nativeExpressAd = [[GDTNativeExpressAd alloc] initWithAppId:@"1106572785" placementId:@"8000544629700360" adSize:CGSizeMake(ScreenWidth - 30, ScreenHeight - 30)];
+  self.nativeExpressAd.delegate = self;
+  [self.nativeExpressAd loadAd:5];
+
+  
+  
+  
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"SMTH"
@@ -87,7 +100,6 @@
  *  开屏广告成功展示
  */
 -(void)splashAdSuccessPresentScreen:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告成功展示");
   [GCStatistics event:GCStatisticsEventGDTSplashShowSuccess extra:nil];
 }
 
@@ -95,75 +107,47 @@
  *  开屏广告展示失败
  */
 - (void)splashAdFailToPresent:(GDTSplashAd *)splashAd withError:(NSError *)error {
-  NSLog(@"GDT开屏广告展示失败");
   NSString *errorInfo = error.userInfo[@"NSLocalizedDescription"];
   [GCStatistics event:GCStatisticsEventGDTSplashShowFailure extra:@{ @"error" : String(errorInfo)}];
 }
 
 /**
- *  应用进入后台时回调
- *  详解: 当点击下载应用时会调用系统程序打开，应用切换到后台
- */
-- (void)splashAdApplicationWillEnterBackground:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT应用进入后台时回调");}
-
-/**
  *  开屏广告点击回调
  */
 - (void)splashAdClicked:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告点击回调");
   [GCStatistics event:GCStatisticsEventGDTSplashClick extra:nil];
-}
-
-/**
- *  开屏广告将要关闭回调
- */
-- (void)splashAdWillClosed:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告将要关闭回调");
 }
 
 /**
  *  开屏广告关闭回调
  */
 - (void)splashAdClosed:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告关闭回调");
   self.splash = nil;
-}
-
-/**
- *  开屏广告点击以后即将弹出全屏广告页
- */
-- (void)splashAdWillPresentFullScreenModal:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告点击以后即将弹出全屏广告页");
-}
-
-/**
- *  开屏广告点击以后弹出全屏广告页
- */
-- (void)splashAdDidPresentFullScreenModal:(GDTSplashAd *)splashAd {
-  NSLog(@"GDT开屏广告点击以后弹出全屏广告页");
-}
-
-/**
- *  点击以后全屏广告页将要关闭
- */
-- (void)splashAdWillDismissFullScreenModal:(GDTSplashAd *)splashAd  {
-  NSLog(@"GDT点击以后全屏广告页将要关闭");
-}
-
-/**
- *  点击以后全屏广告页已经关闭
- */
-- (void)splashAdDidDismissFullScreenModal:(GDTSplashAd *)splashAd  {
-  NSLog(@"GDT点击以后全屏广告页已经关闭");
 }
 
 /**
  * 开屏广告剩余时间回调
  */
 - (void)splashAdLifeTime:(NSUInteger)time {
-  NSLog(@"GDT开屏广告剩余时间回调 %ld", time);
   self.skipLabel.text = [NSString stringWithFormat:@"跳过 %ld", time - 1];
+}
+
+#pragma mark - GDTNativeExpressAdDelegete
+
+- (void)nativeExpressAdSuccessToLoad:(GDTNativeExpressAd *)nativeExpressAd views:(NSArray<__kindof GDTNativeExpressAdView *> *)views
+{
+  self.expressAdViews = [NSArray arrayWithArray:views];
+  if (self.expressAdViews.count) {
+    [self.expressAdViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+      GDTNativeExpressAdView *expressView = (GDTNativeExpressAdView *)obj;
+      expressView.controller = self.window.rootViewController;
+      [expressView render];
+    }];
+  }
+}
+
+- (void)nativeExpressAdFailToLoad:(GDTNativeExpressAd *)nativeExpressAd error:(NSError *)error {
+
 }
 
 #pragma mark - UMengAnalytics

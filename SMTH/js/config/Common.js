@@ -65,6 +65,8 @@ import NewMessageSendMailListScreen from '../NewPage/NewMessageSendMailListScree
 import NewMessageReplyListScreen from '../NewPage/NewMessageReplyListScreen';
 import NewMessageAtListScreen from '../NewPage/NewMessageAtListScreen';
 
+import GDTNativeExpressView from '../GDT/GDTNativeExpressView';
+
 export {
     NetworkManager,
     HTMLParseManager,
@@ -118,5 +120,7 @@ export {
     NewMessageMailListScreen,
     NewMessageSendMailListScreen,
     NewMessageReplyListScreen,
-    NewMessageAtListScreen
+    NewMessageAtListScreen,
+
+    GDTNativeExpressView,
 }
