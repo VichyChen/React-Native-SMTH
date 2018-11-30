@@ -40,7 +40,7 @@
   }
 }
 
-- (UIView *)getAd:(NSInteger)adTag {
+- (GDTNativeExpressAdView *)getAd:(NSInteger)adTag {
   for (GDTNativeExpressAdView *view in self.expressAdViews) {
     if (view.tag == adTag) {
       return view;
@@ -90,5 +90,10 @@ RCT_EXPORT_METHOD(remove:(NSArray *)adTags) {
 - (void)nativeExpressAdFailToLoad:(GDTNativeExpressAd *)nativeExpressAd error:(NSError *)error {
   
 }
+
+- (void)nativeExpressAdViewRenderSuccess:(GDTNativeExpressAdView *)nativeExpressAdView {
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"GDTNativeExpressViewRenderSuccessNotification" object:@(nativeExpressAdView.tag)];
+}
+
 
 @end

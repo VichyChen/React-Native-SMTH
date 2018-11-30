@@ -184,7 +184,7 @@ export default class NewTopTenScreen extends Component {
                 <GDTNativeExpressView
                     style={{ height: this.state.adheight[item.adTag.toString()] }}
                     adTag={item.adTag}
-                    onReceived={(event) => {
+                    onRenderSuccess={(event) => {
                         this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
                         this.setState({
                             adheight: this.state.adheight,

@@ -15,7 +15,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_VIEW_PROPERTY(adTag, int);
-RCT_EXPORT_VIEW_PROPERTY(onReceived, RCTBubblingEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onRenderSuccess, RCTBubblingEventBlock);
 
 - (UIView *)view {
   return [[GDTNativeExpressView alloc] init];

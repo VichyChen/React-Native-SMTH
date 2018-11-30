@@ -22,7 +22,7 @@
 
 - (void)loadAd;
 
-- (UIView *)getAd:(NSInteger)adTag;
+- (GDTNativeExpressAdView *)getAd:(NSInteger)adTag;
 
 - (void)removeAds:(NSArray *)array;
 

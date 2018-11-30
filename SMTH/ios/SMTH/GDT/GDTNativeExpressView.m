@@ -11,7 +11,7 @@
 
 @interface GDTNativeExpressView()
 
-@property (strong, nonatomic) UIView *expressView;
+@property (strong, nonatomic) GDTNativeExpressAdView *expressView;
 
 @end
 
@@ -19,24 +19,38 @@
 
 - (instancetype)init {
   if (self = [super init]) {
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renderSuccessAction:) name:@"GDTNativeExpressViewRenderSuccessNotification" object:nil];
   }
   return self;
+}
+
+- (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)renderSuccessAction:(NSNotification *)notification {
+  if (((NSNumber *)[notification object]).intValue == self.adTag) {
+    if (self.onRenderSuccess) {
+      self.onRenderSuccess(@{@"height": @(self.expressView.bounds.size.height)});
+    }
+  }
 }
 
 - (void)setAdTag:(int)adTag {
   _adTag = adTag;
 }
 
-- (void)setOnReceived:(RCTBubblingEventBlock)onReceived {
-    _onReceived = onReceived;
+- (void)setOnRenderSuccess:(RCTBubblingEventBlock)onRenderSuccess {
+    _onRenderSuccess = onRenderSuccess;
   
   self.expressView = [APP.nativeExpressAdManager getAd:self.adTag];
   self.expressView.frame = CGRectMake(0, 0, ScreenWidth, self.expressView.bounds.size.height);
   [self addSubview:self.expressView];
 
-  if (self.onReceived) {
-    self.onReceived(@{@"height": @(self.expressView.bounds.size.height)});
+  if (self.expressView.isReady) {
+    if (self.onRenderSuccess) {
+      self.onRenderSuccess(@{@"height": @(self.expressView.bounds.size.height)});
+    }
   }
 }
 
