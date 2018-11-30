@@ -41,16 +41,21 @@ import {
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import { NativeModules } from 'react-native';
+import uuid from 'uuid';
 
 
 export default class NewTopTenScreen extends Component {
 
     _array;
     _page = 0;
-    _array1;
+    _adSection = [0, 3, 7, 10];
+    _adTag = [900, 901, 902, 903];
+    _adTagDic = { '0': 900, '3': 901, '7': 902, '10': 903 };
 
     constructor(props) {
         super(props);
+
         this.state = {
             pullLoading: false,
             pullMoreLoading: false,
@@ -58,10 +63,7 @@ export default class NewTopTenScreen extends Component {
             screenText: null,
             dataArray: [],
             showLogin: false,
-            adheight1: (global.constants.ScreenWidth - 30) * 0.56 + 93,
-            adheight2: (global.constants.ScreenWidth - 30) * 0.56 + 93,
-            // adheight1: 0.01,
-            // adheight2: 0.01,
+            adheight: { '900': 0, '901': 0, '902': 0, '903': 0 },
         }
 
         this._array = {
@@ -88,6 +90,8 @@ export default class NewTopTenScreen extends Component {
                         this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
                     }, 50);
                     setTimeout(() => {
+                        var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                        nativeExpressAdManager.remove(this._adTag);
                         this._page = 0;
                         this.net_LoadSectionHot(this._page);
                     }, 1000);
@@ -134,16 +138,14 @@ export default class NewTopTenScreen extends Component {
                 });
                 array = array.concat(result['threads']);
 
-                if (section == 0 || section == 3) {
+                if (this._adSection.indexOf(section) != -1) {
                     array.push({
-                        key: 'ad' + section,
-                        index: section == 0 ? 0 : 1,
+                        key: 'ad' + uuid.v4(),
+                        adTag: this._adTagDic[section.toString()],
                         type: 'ad',
-                        height: 0,
                     });
                 }
             }
-            this._array1 = array;
 
             this.setState({
                 dataArray: array,
@@ -180,24 +182,13 @@ export default class NewTopTenScreen extends Component {
         else if (item.type == 'ad') {
             return (
                 <GDTNativeExpressView
-                    ref={'ad' + item.index}
-                    style={{
-                        width: global.constants.ScreenWidth,
-                        height: item.index == 0 ? this.state.adheight1 : this.state.adheight2
-                    }}
-                    index={item.index}
+                    style={{ height: this.state.adheight[item.adTag.toString()] }}
+                    adTag={item.adTag}
                     onReceived={(event) => {
-                        console.log('event.nativeEvent.height:' + event.nativeEvent.height);
-                        if (item.index == 0) {
-                            this.setState({
-                                adheight1: event.nativeEvent.height
-                            });
-                        }
-                        else {
-                            this.setState({
-                                adheight2: event.nativeEvent.height
-                            });
-                        }
+                        this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
+                        this.setState({
+                            adheight: this.state.adheight,
+                        });
                     }}
                 />
             );
@@ -259,6 +250,8 @@ export default class NewTopTenScreen extends Component {
                                     this.setState({
                                         pullLoading: true
                                     });
+                                    var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                                    nativeExpressAdManager.remove(this._adTag);
                                     this._page = 0;
                                     this.net_LoadSectionHot(this._page);
                                 }}

@@ -17,16 +17,11 @@
 #import "UIImage+CommonMethods.h"
 #import <UIKit/UIKit.h>
 #import <UMengAnalytics/UMMobClick/MobClick.h>
-#import "GDTNativeExpressAd.h"
-#import "GDTNativeExpressAdView.h"
 
-
-@interface AppDelegate() <GDTSplashAdDelegate, GDTNativeExpressAdDelegete>
+@interface AppDelegate() <GDTSplashAdDelegate>
 
 @property (strong, nonatomic) GDTSplashAd *splash;
 @property (strong, nonatomic) UILabel *skipLabel;
-
-@property (nonatomic, strong) GDTNativeExpressAd *nativeExpressAd;
 
 @end
 
@@ -53,11 +48,9 @@
 #endif
 
   
-  self.nativeExpressAd = [[GDTNativeExpressAd alloc] initWithAppId:@"1106572785" placementId:@"8000544629700360" adSize:CGSizeMake(ScreenWidth - 30, ScreenHeight - 30)];
-  self.nativeExpressAd.delegate = self;
-  [self.nativeExpressAd loadAd:5];
+  self.nativeExpressAdManager = [[GDTNativeExpressAdManager alloc] initWithAppId:@"1106572785" placementId:@"8000544629700360" adSize:CGSizeMake(ScreenWidth, 1)];
+  [self.nativeExpressAdManager loadAd];
 
-  
   
   
   
@@ -77,8 +70,6 @@
 //  [self setupADInterstitialTime];
   [self configureSplashAd];
 #endif
-  
-  
   
   return YES;
 }
@@ -130,24 +121,6 @@
  */
 - (void)splashAdLifeTime:(NSUInteger)time {
   self.skipLabel.text = [NSString stringWithFormat:@"跳过 %ld", time - 1];
-}
-
-#pragma mark - GDTNativeExpressAdDelegete
-
-- (void)nativeExpressAdSuccessToLoad:(GDTNativeExpressAd *)nativeExpressAd views:(NSArray<__kindof GDTNativeExpressAdView *> *)views
-{
-  self.expressAdViews = [NSArray arrayWithArray:views];
-  if (self.expressAdViews.count) {
-    [self.expressAdViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-      GDTNativeExpressAdView *expressView = (GDTNativeExpressAdView *)obj;
-      expressView.controller = self.window.rootViewController;
-      [expressView render];
-    }];
-  }
-}
-
-- (void)nativeExpressAdFailToLoad:(GDTNativeExpressAd *)nativeExpressAd error:(NSError *)error {
-
 }
 
 #pragma mark - UMengAnalytics

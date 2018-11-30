@@ -11,7 +11,7 @@
 
 @interface GDTNativeExpressView : UIView
 
-@property (nonatomic, assign) int index;
+@property (nonatomic, assign) int adTag;
 @property (nonatomic, copy) RCTBubblingEventBlock onReceived;
 
 @end

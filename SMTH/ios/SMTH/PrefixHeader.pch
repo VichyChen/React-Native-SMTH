@@ -12,6 +12,7 @@
 #import <UIKit/UIKit.h>
 #import "Util.h"
 #import "GCStatistics.h"
+#import "AppDelegate.h"
 
 #define ScreenHeight ([UIScreen mainScreen].bounds.size.height)
 #define ScreenWidth ([UIScreen mainScreen].bounds.size.width)

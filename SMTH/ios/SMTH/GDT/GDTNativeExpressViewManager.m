@@ -14,22 +14,10 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_VIEW_PROPERTY(index, int);
+RCT_EXPORT_VIEW_PROPERTY(adTag, int);
 RCT_EXPORT_VIEW_PROPERTY(onReceived, RCTBubblingEventBlock);
 
 - (UIView *)view {
-//  NSArray *array = ((AppDelegate *)[UIApplication sharedApplication].delegate).expressAdViews;
-//  UIView *view;
-//  if (array.count > 0) {
-//    view = [array firstObject];
-//  }
-//  else {
-//    view = [[UIView alloc] init];
-//  }
-//  self.zoomEnabled = YES;
-//
-//  return view;
-  
   return [[GDTNativeExpressView alloc] init];
 }
 

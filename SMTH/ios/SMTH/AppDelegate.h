@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "GDTNativeExpressAdManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -15,6 +16,6 @@
 
 - (void)shareWithTitle:(NSString *)title url:(NSString *)url;
 
-@property (nonatomic, strong) NSArray *expressAdViews;
+@property (nonatomic, strong) GDTNativeExpressAdManager *nativeExpressAdManager;
 
 @end

@@ -65,6 +65,7 @@
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* SMTHTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* SMTHTests.m */; };
 		3399286D30B3404D9672D381 /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86476FD8BE0841F5B5B38780 /* libCodePush.a */; };
+		427FC59421B0DF6B0031405E /* GDTNativeExpressAdManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 427FC59321B0DF6B0031405E /* GDTNativeExpressAdManager.m */; };
 		428F4B7021AF948D00B3D139 /* GDTNativeExpressViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 428F4B6F21AF948D00B3D139 /* GDTNativeExpressViewManager.m */; };
 		428F4B7321AF9A3400B3D139 /* GDTNativeExpressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 428F4B7221AF9A3400B3D139 /* GDTNativeExpressView.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -364,6 +365,8 @@
 		2D02E47B1E0B4A5D006451C7 /* SMTH-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SMTH-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* SMTH-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SMTH-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3568D20D1BF7438B9F291A40 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		427FC59221B0DF6A0031405E /* GDTNativeExpressAdManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDTNativeExpressAdManager.h; sourceTree = "<group>"; };
+		427FC59321B0DF6B0031405E /* GDTNativeExpressAdManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GDTNativeExpressAdManager.m; sourceTree = "<group>"; };
 		428F4B6E21AF948D00B3D139 /* GDTNativeExpressViewManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDTNativeExpressViewManager.h; sourceTree = "<group>"; };
 		428F4B6F21AF948D00B3D139 /* GDTNativeExpressViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GDTNativeExpressViewManager.m; sourceTree = "<group>"; };
 		428F4B7121AF9A3400B3D139 /* GDTNativeExpressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GDTNativeExpressView.h; sourceTree = "<group>"; };
@@ -676,6 +679,8 @@
 				428F4B6F21AF948D00B3D139 /* GDTNativeExpressViewManager.m */,
 				428F4B7121AF9A3400B3D139 /* GDTNativeExpressView.h */,
 				428F4B7221AF9A3400B3D139 /* GDTNativeExpressView.m */,
+				427FC59221B0DF6A0031405E /* GDTNativeExpressAdManager.h */,
+				427FC59321B0DF6B0031405E /* GDTNativeExpressAdManager.m */,
 			);
 			name = GDT;
 			path = SMTH/GDT;
@@ -1469,6 +1474,7 @@
 				043DDDC81F5F979C00A7785B /* SMNetworkAPI.m in Sources */,
 				04FC03FB1FEBA8E200E07094 /* UIImage+CommonMethods.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				427FC59421B0DF6B0031405E /* GDTNativeExpressAdManager.m in Sources */,
 				428F4B7021AF948D00B3D139 /* GDTNativeExpressViewManager.m in Sources */,
 				0470997E1FF734DF00676CC8 /* Util.m in Sources */,
 				047099821FF736E700676CC8 /* GCStatistics.m in Sources */,
