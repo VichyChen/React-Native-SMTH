@@ -50,8 +50,8 @@ export default class NewTopTenScreen extends Component {
     _array;
     _page = 0;
     _adSection = [0, 3, 7, 10];
-    _adTag = [900, 901, 902, 903];
-    _adTagDic = { '0': 900, '3': 901, '7': 902, '10': 903 };
+    _adTag = [100, 101, 102, 103];
+    _adTagDic = { '0': 100, '3': 101, '7': 102, '10': 103 };
 
     constructor(props) {
         super(props);
@@ -63,7 +63,7 @@ export default class NewTopTenScreen extends Component {
             screenText: null,
             dataArray: [],
             showLogin: false,
-            adheight: { '900': 0, '901': 0, '902': 0, '903': 0 },
+            adheight: { '100': 0, '101': 0, '102': 0, '103': 0 },
         }
 
         this._array = {
@@ -183,6 +183,7 @@ export default class NewTopTenScreen extends Component {
             return (
                 <GDTNativeExpressView
                     style={{ height: this.state.adheight[item.adTag.toString()] }}
+                    adType={0}
                     adTag={item.adTag}
                     onRenderSuccess={(event) => {
                         this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;

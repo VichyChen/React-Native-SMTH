@@ -71,7 +71,9 @@
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(remove:(NSArray *)adTags) {
-  [APP.nativeExpressAdManager removeAds:adTags];
+  for (GDTNativeExpressAdManager *manager in APP.nativeExpressAdManagerArray) {
+    [manager removeAds:adTags];
+  }
 }
 
 #pragma mark - GDTNativeExpressAdDelegete

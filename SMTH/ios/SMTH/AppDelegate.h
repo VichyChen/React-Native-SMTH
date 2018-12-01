@@ -16,6 +16,6 @@
 
 - (void)shareWithTitle:(NSString *)title url:(NSString *)url;
 
-@property (nonatomic, strong) GDTNativeExpressAdManager *nativeExpressAdManager;
+@property (nonatomic, strong) NSMutableArray <GDTNativeExpressAdManager *>*nativeExpressAdManagerArray;
 
 @end

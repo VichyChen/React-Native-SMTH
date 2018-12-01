@@ -38,14 +38,19 @@ import {
     ToastUtil,
     AvatorImage,
     NavigationBar,
-    ReactNavigation
+    ReactNavigation,
+    GDTNativeExpressView
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import { NativeModules } from 'react-native';
+import uuid from 'uuid';
 
 export default class NewHotListScreen extends Component {
+
     _page = 1;
+    _adTag = [200, 201, 202, 203];
 
     constructor(props) {
         super(props);
@@ -55,6 +60,7 @@ export default class NewHotListScreen extends Component {
             screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
+            adheight: { '200': 0, '201': 0, '202': 0, '203': 0 },
         }
         this.newHotListScreenRefreshNotification = DeviceEventEmitter.addListener('NewHotListScreenRefreshNotification', (index) => {
             if (this.props.index == index) {
@@ -65,6 +71,10 @@ export default class NewHotListScreen extends Component {
                     this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
                 }, 50);
                 setTimeout(() => {
+                    if (this.props.index == 0) {
+                        var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                        nativeExpressAdManager.remove(this._adTag);
+                    }
                     this._page = 1;
                     this.getNewHot(this._page);
                 }, 1000);
@@ -88,10 +98,12 @@ export default class NewHotListScreen extends Component {
             if (page != 1) {
                 array = array.concat(this.state.dataArray);
             }
+            var pageIndex = this.props.index;
             this.$('div[class=article-content]').each(function (i, elem) {
                 this.$ = cio.load(elem);
+                var index = i + ((page - 1) * 20);
                 array.push({
-                    key: i + ((page - 1) * 20),
+                    key: index,
                     id: this.$('a[class=article-subject]').attr('href').split('/')[2],
                     avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                     authorID: this.$('div[class=article-account-name]').children().first().attr('href').split('/')[2],
@@ -106,6 +118,14 @@ export default class NewHotListScreen extends Component {
                     heart: this.$('span[class*=glyphicon-heart]').parent().text(),
                     picture: this.$('span[class*=glyphicon-picture]').parent().text(),
                 });
+
+                if (pageIndex == 0 && [10, 20, 30, 40].indexOf(index) != -1) {
+                    array.push({
+                        key: 'ad' + uuid.v4(),
+                        type: 'ad',
+                        adTag: { '10': 200, '20': 201, '30': 202, '40': 203 }[index.toString()],
+                    });
+                }
             });
 
             //分区
@@ -183,40 +203,60 @@ export default class NewHotListScreen extends Component {
 
 
     _renderItem = ({ item }) => {
-        return (
-            <CellBackground
-                onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
-                }}
-            >
+        if (item.type == 'ad') {
+            return (
                 <View>
-                    <View style={styles.itemContainer}>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <AvatorImage
-                                borderRadius={15}
-                                widthAndHeight={30}
-                                onPressClick={() => {
-                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.authorID, name: item.authorName });
-                                }}
-                                uri={'https://exp.newsmth.net/' + item.avatar} />
-
-                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
-                        </View>
-                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
-                        <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
-                        {item.content.length > 0 ? <Text style={[CommonCSS.listContent, { marginTop: 10 }]} >{item.content}</Text> : null}
-                        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                            <Text style={[CommonCSS.listBoardEN, { paddingTop: 1 }]} >{item.boardName}</Text>
-                            <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
-                            <Text style={CommonCSS.listDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
-                        </View>
-
-                    </View>
+                    <GDTNativeExpressView
+                        style={{ height: this.state.adheight[item.adTag.toString()] }}
+                        adType={0}
+                        adTag={item.adTag}
+                        onRenderSuccess={(event) => {
+                            this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
+                            this.setState({
+                                adheight: this.state.adheight,
+                            });
+                        }}
+                    />
                     <SeperatorLine />
                 </View>
-            </CellBackground>
-        )
+            );
+        }
+        else {
+            return (
+                <CellBackground
+                    onPress={() => {
+                        ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
+                    }}
+                >
+                    <View>
+                        <View style={styles.itemContainer}>
+
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <AvatorImage
+                                    borderRadius={15}
+                                    widthAndHeight={30}
+                                    onPressClick={() => {
+                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.authorID, name: item.authorName });
+                                    }}
+                                    uri={'https://exp.newsmth.net/' + item.avatar} />
+
+                                <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.name}</Text>
+                            </View>
+                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
+                            <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
+                            {item.content.length > 0 ? <Text style={[CommonCSS.listContent, { marginTop: 10 }]} >{item.content}</Text> : null}
+                            <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                                <Text style={[CommonCSS.listBoardEN, { paddingTop: 1 }]} >{item.boardName}</Text>
+                                <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8, paddingTop: 3 }]} >{item.boardTitle}</Text>
+                                <Text style={CommonCSS.listDescript} >{(item.comment.length > 0 ? (item.comment + '回复 ') : '') + (item.heart.length > 0 ? (item.heart + '赞 ') : '') + (item.picture.length > 0 ? (item.picture + '图片 ') : '')}</Text>
+                            </View>
+
+                        </View>
+                        <SeperatorLine />
+                    </View>
+                </CellBackground>
+            )
+        }
     };
 
     render() {
@@ -239,6 +279,10 @@ export default class NewHotListScreen extends Component {
                         this.setState({
                             pullLoading: true
                         });
+                        if (this.props.index == 0) {
+                            var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                            nativeExpressAdManager.remove(this._adTag);
+                        }
                         this._page = 1;
                         this.getNewHot(this._page);
                     }

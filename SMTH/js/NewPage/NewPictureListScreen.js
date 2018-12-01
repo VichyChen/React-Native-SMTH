@@ -35,21 +35,23 @@ import {
     Toast,
     ToastUtil,
     AvatorImage,
-    ReactNavigation
+    ReactNavigation,
+    GDTNativeExpressView
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import cio from 'cheerio-without-node-native';
 import AutoHeightImage from 'react-native-auto-height-image';
 import { CommonCSS } from 'CommonCSS';
-
-var _array;
+import { NativeModules } from 'react-native';
+import uuid from 'uuid';
 
 export default class NewPictureListScreen extends Component {
 
     _page = 1;
-    _width = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3);
-    _height = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8) - 15) / 3);
+    _width = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2))) - 20) / 3);
+    _height = Math.floor((((global.constants.ScreenWidth - (global.constants.Padding * 2))) - 20) / 3);
+    _adTag = [300, 301, 302, 303];
 
     constructor(props) {
         super(props);
@@ -59,7 +61,9 @@ export default class NewPictureListScreen extends Component {
             screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
+            adheight: { '300': 0, '301': 0, '302': 0, '303': 0 },
         }
+
         this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
             if (this.props.selected == true) {
                 this.setState({
@@ -69,6 +73,8 @@ export default class NewPictureListScreen extends Component {
                     this.refs.flatList.scrollToOffset({ offset: -64, animated: true })
                 }, 50);
                 setTimeout(() => {
+                    var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                    nativeExpressAdManager.remove(this._adTag);
                     this._page = 1;
                     this.getNewAlbum(this._page);
                 }, 1000);
@@ -107,8 +113,10 @@ export default class NewPictureListScreen extends Component {
                 }
 
                 this.$ = cio.load(elem);
+                var index = i + ((page - 1) * 20);
                 array.push({
-                    key: i + ((page - 1) * 20),
+                    key: index,
+                    type: 'image',
                     id: this.$('div[class=caption]').children().first().children().first().attr('href').split('/')[2],
                     title: this.$('div[class=caption]').children().first().children().first().text(),
                     boardName: this.$('p').first().children().first().text(),
@@ -116,6 +124,14 @@ export default class NewPictureListScreen extends Component {
                     time: this.$('p').first().text().split('#')[3],
                     attachment_list: attachment_list,
                 });
+
+                if ([10, 20, 30, 40].indexOf(index) != -1) {
+                    array.push({
+                        key: 'ad' + uuid.v4(),
+                        type: 'ad',
+                        adTag: { '10': 300, '20': 301, '30': 302, '40': 303 }[index.toString()],
+                    });
+                }
             });
 
             this.setState({
@@ -143,70 +159,92 @@ export default class NewPictureListScreen extends Component {
         });
     }
 
-    _renderItem = ({ item }) => (
-        <CellBackground
-            onPress={() => {
-                ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
-            }}
-        >
-            <View>
-                <View style={styles.itemContainer}>
-                    <Text style={CommonCSS.listOnlyTitle}>{item.title}</Text>
-                    {
+    _renderItem = ({ item }) => {
+        if (item.type == 'ad') {
+            return (
+                <View>
+                    <GDTNativeExpressView
+                        style={{ height: this.state.adheight[item.adTag.toString()] }}
+                        adType={1}
+                        adTag={item.adTag}
+                        onRenderSuccess={(event) => {
+                            this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
+                            this.setState({
+                                adheight: this.state.adheight,
+                            });
+                        }}
+                    />
+                    <SeperatorLine />
+                </View>
+            );
+        }
+        else {
+            return (
+                <CellBackground
+                    onPress={() => {
+                        ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
+                    }}
+                >
+                    <View>
+                        <View style={styles.itemContainer}>
+                            <Text style={CommonCSS.listOnlyTitle}>{item.title}</Text>
+                            {
 
-                        item.attachment_list.length == 1 ? (
-                            <View style={[styles.imageView, {
-                                marginTop: global.constants.Padding,
-                                width: (global.constants.ScreenWidth - global.constants.Padding * 2) * 0.5,
-                                backgroundColor: global.colors.backgroundGrayColor
-                            }]} >
-                                <AutoHeightImage
-                                    style={{}}
-                                    width={(global.constants.ScreenWidth - global.constants.Padding * 2) * 0.5}
-                                    imageURL={'https://exp.newsmth.net' + item.attachment_list[0].url}
-                                />
-                            </View>
-                        ) : (
-                                item.attachment_list.length == 4 ? (
-                                    <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.7 }]} >
-                                        {
-                                            item.attachment_list.map((image, i) => {
-                                                return (
-                                                    <Image key={i} style={[styles.image, {
-                                                        width: this._width,
-                                                        height: this._height,
-                                                    }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
-                                                );
-                                            })
-                                        }
+                                item.attachment_list.length == 1 ? (
+                                    <View style={[styles.imageView, {
+                                        marginTop: global.constants.Padding,
+                                        width: (global.constants.ScreenWidth - global.constants.Padding * 2) * 0.66,
+                                        backgroundColor: global.colors.backgroundGrayColor
+                                    }]} >
+                                        <AutoHeightImage
+                                            style={{}}
+                                            width={(global.constants.ScreenWidth - global.constants.Padding * 2) * 0.66}
+                                            imageURL={'https://exp.newsmth.net' + item.attachment_list[0].url}
+                                        />
                                     </View>
                                 ) : (
-                                        <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.8 }]} >
-                                            {
-                                                item.attachment_list.map((image, i) => {
-                                                    return (
-                                                        <Image key={i} style={[styles.image, {
-                                                            width: this._width,
-                                                            height: this._height,
-                                                        }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
-                                                    );
-                                                })
-                                            }
-                                        </View>
+                                        item.attachment_list.length == 4 ? (
+                                            <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) * 0.7 }]} >
+                                                {
+                                                    item.attachment_list.map((image, i) => {
+                                                        return (
+                                                            <Image key={i} style={[styles.image, {
+                                                                width: this._width,
+                                                                height: this._height,
+                                                            }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
+                                                        );
+                                                    })
+                                                }
+                                            </View>
+                                        ) : (
+                                                <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) + 10 }]} >
+                                                    {
+                                                        item.attachment_list.map((image, i) => {
+                                                            return (
+                                                                <Image key={i} style={[styles.image, {
+                                                                    width: this._width,
+                                                                    height: this._height,
+                                                                }]} source={{ uri: 'https://exp.newsmth.net' + image.url, cache: 'force-cache' }} />
+                                                            );
+                                                        })
+                                                    }
+                                                </View>
 
+                                            )
                                     )
-                            )
-                    }
-                    <Text style={[CommonCSS.listTime, { marginTop: 5 }]} >{item.time}</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                        <Text style={[CommonCSS.listBoardEN]} >{item.boardName}</Text>
-                        <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
+                            }
+                            <Text style={[CommonCSS.listTime, { marginTop: 5 }]} >{item.time}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                                <Text style={[CommonCSS.listBoardEN]} >{item.boardName}</Text>
+                                <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
+                            </View>
+                        </View>
+                        <SeperatorLine />
                     </View>
-                </View>
-                <SeperatorLine />
-            </View>
-        </CellBackground>
-    );
+                </CellBackground>
+            );
+        }
+    }
 
     render() {
         return (
@@ -230,6 +268,8 @@ export default class NewPictureListScreen extends Component {
                             this.setState({
                                 pullLoading: true
                             });
+                            var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                            nativeExpressAdManager.remove(this._adTag);
                             this._page = 1;
                             this.getNewAlbum(this._page);
                         }
@@ -278,14 +318,14 @@ var styles = {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',
-            marginTop: 10,
+            marginTop: 5,
             marginBottom: 10,
         }
     },
     get image() {
         return {
-            marginRight: 5,
-            marginTop: 5,
+            marginRight: 10,
+            marginTop: 10,
             backgroundColor: global.colors.backgroundGrayColor,
         }
     },

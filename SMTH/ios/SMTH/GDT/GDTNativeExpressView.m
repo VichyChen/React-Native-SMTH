@@ -40,10 +40,14 @@
   _adTag = adTag;
 }
 
+- (void)setAdType:(int)adType {
+  _adType = adType;
+}
+
 - (void)setOnRenderSuccess:(RCTBubblingEventBlock)onRenderSuccess {
     _onRenderSuccess = onRenderSuccess;
   
-  self.expressView = [APP.nativeExpressAdManager getAd:self.adTag];
+  self.expressView = [APP.nativeExpressAdManagerArray[self.adType] getAd:self.adTag];
   self.expressView.frame = CGRectMake(0, 0, ScreenWidth, self.expressView.bounds.size.height);
   [self addSubview:self.expressView];
 

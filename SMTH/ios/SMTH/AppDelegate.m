@@ -23,6 +23,10 @@
 @property (strong, nonatomic) GDTSplashAd *splash;
 @property (strong, nonatomic) UILabel *skipLabel;
 
+@property (nonatomic, strong) GDTNativeExpressAdManager *nativeExpressAdManager0; //上文下一图
+@property (nonatomic, strong) GDTNativeExpressAdManager *nativeExpressAdManager1; //上文下三图
+@property (nonatomic, strong) GDTNativeExpressAdManager *nativeExpressAdManager2; //纯图
+
 @end
 
 @implementation AppDelegate
@@ -47,12 +51,20 @@
   jsCodeLocation = [CodePush bundleURL];
 #endif
 
+  self.nativeExpressAdManagerArray = [NSMutableArray array];
+  self.nativeExpressAdManager0 = [[GDTNativeExpressAdManager alloc] initWithAppId:@"1106572785" placementId:@"8000544629700360" adSize:CGSizeMake(ScreenWidth, 1)];
+  [self.nativeExpressAdManager0 loadAd];
   
-  self.nativeExpressAdManager = [[GDTNativeExpressAdManager alloc] initWithAppId:@"1106572785" placementId:@"8000544629700360" adSize:CGSizeMake(ScreenWidth, 1)];
-  [self.nativeExpressAdManager loadAd];
+  self.nativeExpressAdManager1 = [[GDTNativeExpressAdManager alloc] initWithAppId:@"1106572785" placementId:@"2080445679604219" adSize:CGSizeMake(ScreenWidth, 1)];
+  [self.nativeExpressAdManager1 loadAd];
+  
+  self.nativeExpressAdManager2 = [[GDTNativeExpressAdManager alloc] initWithAppId:@"1106572785" placementId:@"3060849609784657" adSize:CGSizeMake(ScreenWidth, 1)];
+  [self.nativeExpressAdManager2 loadAd];
 
-  
-  
+  [self.nativeExpressAdManagerArray addObject:self.nativeExpressAdManager0];
+  [self.nativeExpressAdManagerArray addObject:self.nativeExpressAdManager1];
+  [self.nativeExpressAdManagerArray addObject:self.nativeExpressAdManager2];
+
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"SMTH"
