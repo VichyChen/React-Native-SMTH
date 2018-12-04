@@ -1288,4 +1288,32 @@ export default class NetworkManager {
     }
 
     //上传图片
+    static postUpload(images, success, failure, netError) {
+        var length = images.length;
+        var count = 0;
+        console.log('length:' +length);
+        for (var i = 0; i < length; i++) {
+            var array = images[i].uri.split('/');
+            NetworkUtil.uploadNew('https://exp.newsmth.net/compose/upload', 'files', images[i].uri, array[array.length -1]).then(async result => {
+                if (result.error == '') {
+                    count++;
+                    if (count == length) {
+                        success();
+                    }
+                }
+                else {
+                    failure('图片上传失败');
+                }
+            }).catch(error => {
+                console.log(error);
+                if (error.message == 'Timeout') {
+                    netError('网络连接出错');
+                }
+                else {
+                    failure('图片上传失败');
+                }
+            });
+
+        }
+    }
 }

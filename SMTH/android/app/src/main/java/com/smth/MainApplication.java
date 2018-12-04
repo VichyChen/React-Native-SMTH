@@ -3,6 +3,7 @@ package com.smth;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import im.shimo.react.cookie.CookieManagerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import io.realm.react.RealmReactPackage;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImagePickerPackage(),
             new CookieManagerPackage(),
             new RNFetchBlobPackage(),
             new RealmReactPackage(),

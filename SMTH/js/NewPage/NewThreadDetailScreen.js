@@ -117,6 +117,7 @@ export default class NewThreadDetailScreen extends Component {
         this.setState({
           screenStatus: global.screen.loading,
         });
+        this.page = 1;
         this.getNewTopic(this.page);
       }
     });
@@ -606,12 +607,10 @@ export default class NewThreadDetailScreen extends Component {
       marginTop: 15, backgroundColor: global.colors.backgroundGrayColor
     }}>
       <AutoHeightImage
-        style={styles.itemImage}
+
+        style={[styles.itemImage, {  }]}
         width={global.constants.ScreenWidth - global.constants.Padding * 2}
         imageURL={'https://exp.newsmth.net/' + item.url}
-        onHeightChange={(height) => {
-
-        }}
       />
     </View>
   );

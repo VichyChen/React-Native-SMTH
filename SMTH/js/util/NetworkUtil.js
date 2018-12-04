@@ -15,7 +15,7 @@ export default class NetworkUtil {
           url += '&' + paramsArray.join('&')
         }
       }
-      NetworkUtil.timeout(fetch(url, {
+      NetworkUtil.timeout(15000, fetch(url, {
         method: 'GET'
       }))
         .then((responseData) => {
@@ -36,7 +36,7 @@ export default class NetworkUtil {
     console.log('Params:\n' + JSON.stringify(params));
 
     return new Promise(function (resolve, reject) {
-      NetworkUtil.timeout(fetch(url, {
+      NetworkUtil.timeout(15000, fetch(url, {
         method: 'POST',
         headers: { "content-type": "application/json" },
         body: JSON.stringify(params)
@@ -66,7 +66,7 @@ export default class NetworkUtil {
           url += '&' + paramsArray.join('&')
         }
       }
-      NetworkUtil.timeout(fetch(url, {
+      NetworkUtil.timeout(15000, fetch(url, {
         method: 'GET',
         headers: { "user-agent": _pcUserAgent },
         credentials: 'include'
@@ -85,7 +85,7 @@ export default class NetworkUtil {
   static getImage(url, params) {
     console.log('NetworkUtil getImage');
     return new Promise(function (resolve, reject) {
-      NetworkUtil.timeout(fetch(url, {
+      NetworkUtil.timeout(15000, fetch(url, {
         method: 'GET',
         headers: { "user-agent": _pcUserAgent },
         credentials: 'include'
@@ -112,7 +112,7 @@ export default class NetworkUtil {
     console.log('paramsArray.join(): ' + paramsArray.join('&'))
 
     return new Promise(function (resolve, reject) {
-      NetworkUtil.timeout(fetch(url, {
+      NetworkUtil.timeout(15000, fetch(url, {
         method: 'POST',
         headers: {
           "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -138,11 +138,43 @@ export default class NetworkUtil {
     });
   }
 
-  static timeout(promise) {
+  static uploadNew(url, key, uri, name) {
+
+    var data = new FormData();
+    // data.append('files', {uri: uri, name: '123.jpg', type: 'multipart/form-data'});
+    data.append(key, {uri: uri, name: name, type: 'multipart/form-data'});
+
+    return new Promise(function (resolve, reject) {
+      NetworkUtil.timeout(30000, fetch(url, {
+        method: 'POST',
+        headers: {
+          "origin": "https://exp.newsmth.net",
+          "user-agent": _pcUserAgent,
+          "x-requested-with": " XMLHttpRequest",
+          "accept": "application/json",
+        },
+        credentials: 'include',
+        body: data,
+      }))
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log('ResponseJson:\n' + JSON.stringify(responseData));
+          resolve(responseData);
+        })
+        .catch((error) => {
+          console.log('error:' + error);
+          console.log('error.name====' + error.name);
+          console.log('error.message====' + error.message);
+          reject(error);
+        });
+    });
+  }
+
+  static timeout(time, promise) {
     return new Promise(function (resolve, reject) {
       const timeoutId = setTimeout(function () {
         reject(new Error("Timeout"))
-      }, 15000)
+      }, time)
       promise.then(
         (result) => {
           clearTimeout(timeoutId);

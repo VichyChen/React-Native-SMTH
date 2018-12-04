@@ -23,16 +23,24 @@ import {
     Screen,
     NavigationBar,
     HorizontalSeperatorLine,
+    SeperatorLine,
+    Button,
+    ImageButton
 } from '../config/Common';
+import ImagePicker from 'react-native-image-picker';
 
 var _title;
 var _content;
 
 export default class NewPostThreadScreen extends Component {
+
+    _images = [];
+
     constructor(props) {
         super(props);
         this.state = {
             isLoading: false,
+            images: [],
         }
     }
 
@@ -47,24 +55,47 @@ export default class NewPostThreadScreen extends Component {
         });
         NetworkManager.getNewPost(this.props.navigation.state.params.id, (result) => {
 
-            NetworkManager.postPostSave(this.props.navigation.state.params.id, _title, _content, (result) => {
+            if (this._images.length > 0) {
+                NetworkManager.postUpload(this._images, (result) => {
 
-                ToastUtil.info('发帖成功');
-                setTimeout(() => {
-                    this.props.navigation.goBack();
-                }, 50);
+                    this.postReplSave();
 
-            }, (error) => {
-                this.setState({
-                    isLoading: false,
+                }, (error) => {
+                    this.setState({
+                        isLoading: false,
+                    });
+                    ToastUtil.error(error);
+                }, (errorMessage) => {
+                    this.setState({
+                        isLoading: false,
+                    });
+                    ToastUtil.error(errorMessage);
                 });
-                ToastUtil.error(error);
-            }, (errorMessage) => {
-                this.setState({
-                    isLoading: false,
-                });
-                ToastUtil.error(errorMessage);
+            }
+            else {
+                this.postReplSave();
+            }
+
+        }, (error) => {
+            this.setState({
+                isLoading: false,
             });
+            ToastUtil.error(error);
+        }, (errorMessage) => {
+            this.setState({
+                isLoading: false,
+            });
+            ToastUtil.error(errorMessage);
+        });
+    }
+
+    postReplSave() {
+        NetworkManager.postPostSave(this.props.navigation.state.params.id, _title, _content, (result) => {
+
+            ToastUtil.info('发帖成功');
+            setTimeout(() => {
+                this.props.navigation.goBack();
+            }, 50);
 
         }, (error) => {
             this.setState({
@@ -92,6 +123,39 @@ export default class NewPostThreadScreen extends Component {
                         this.save();
                     }}
                 />
+
+                <Button
+                    style={{ zIndex: 999, position: 'absolute', top: global.constants.TopSaveArea + 19, right: global.constants.Padding + 40, height: 44, }}
+                    height={44}
+                    text={'选择图片'}
+                    fontColor={global.colors.themeColor}
+                    onPress={() => {
+
+                        ImagePicker.showImagePicker({
+                            title: '选择图片',
+                            takePhotoButtonTitle: '拍照',
+                            chooseFromLibraryButtonTitle: '相册',
+                            cancelButtonTitle: '取消',
+                            storageOptions: {
+                                path: 'images',
+                            },
+                        }, (response) => {
+                            console.log('Response = ', response);
+
+                            if (response.didCancel) {
+                                console.log('User cancelled image picker');
+                            } else if (response.error) {
+                                console.log('ImagePicker Error: ', response.error);
+                            } else if (response.customButton) {
+                                console.log('User tapped custom button: ', response.customButton);
+                            } else {
+                                this._images.push(response);
+                                this.setState({
+                                    images: this._images,
+                                });
+                            }
+                        });
+                    }} />
 
                 <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
                     <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >
@@ -126,6 +190,29 @@ export default class NewPostThreadScreen extends Component {
                                 onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
                                 value={this.state.content}
                             />
+
+                            <View style={styles.imageView} >
+                                {
+                                    this._images.map((item, i) => {
+                                        return (
+                                            <View key={i} >
+                                                <Image style={styles.image} source={{ uri: item.uri }} />
+                                                <ImageButton
+                                                    style={styles.deleteImage}
+                                                    width={36}
+                                                    height={36}
+                                                    margin={16}
+                                                    source={global.images.icon_minus}
+                                                    onPress={() => {
+                                                        this._images.splice(i, 1);
+                                                        this.setState({});
+                                                    }} />
+                                            </View>
+                                        );
+                                    })
+                                }
+                            </View>
+
                         </View>
                     </ScrollView>
                 </Screen>
@@ -143,15 +230,14 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            // backgroundColor: global.colors.themeColor,
             paddingTop: global.constants.Padding,
-            paddingLeft: global.constants.Padding + 6,
-            paddingRight: global.constants.Padding + 6,
         }
     },
     get titleInput() {
         return {
             height: 35,
+            paddingLeft: global.constants.Padding,
+            paddingRight: global.constants.Padding,
             paddingBottom: global.constants.Padding,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
@@ -161,10 +247,39 @@ var styles = {
         return {
             height: 200,
             paddingTop: global.constants.Padding,
+            paddingLeft: global.constants.Padding,
+            paddingRight: global.constants.Padding,
             borderColor: global.colors.clearColor,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
             textAlignVertical: 'top'
+        }
+    },
+    get imageView() {
+        return {
+            // backgroundColor: 'yellow',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            paddingTop: 5,
+            paddingLeft: global.constants.Padding,
+            paddingRight: 5,
+        }
+    },
+    get image() {
+        return {
+            width: Math.floor((((global.constants.ScreenWidth - global.constants.Padding * 2)) - 30) / 4),
+            height: Math.floor((((global.constants.ScreenWidth - global.constants.Padding * 2)) - 30) / 4),
+            marginRight: 10,
+            marginTop: 10,
+        }
+    },
+    get deleteImage() {
+        return {
+            position: 'absolute',
+            top: 0,
+            right: 0,
         }
     },
 }
