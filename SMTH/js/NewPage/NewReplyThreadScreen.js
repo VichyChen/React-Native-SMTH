@@ -161,39 +161,41 @@ export default class NewReplyThreadScreen extends Component {
                         this.save();
                     }}
                 />
+                {
+                    this._images.length == 8 ? null :
+                        <Button
+                            style={{ zIndex: 999, position: 'absolute', top: global.constants.TopSaveArea + 19, right: global.constants.Padding + 40, height: 44, }}
+                            height={44}
+                            text={'选择图片'}
+                            fontColor={global.colors.themeColor}
+                            onPress={() => {
 
-                <Button
-                    style={{ zIndex: 999, position: 'absolute', top: global.constants.TopSaveArea + 19, right: global.constants.Padding + 40, height: 44, }}
-                    height={44}
-                    text={'选择图片'}
-                    fontColor={global.colors.themeColor}
-                    onPress={() => {
+                                ImagePicker.showImagePicker({
+                                    title: '选择图片',
+                                    takePhotoButtonTitle: '拍照',
+                                    chooseFromLibraryButtonTitle: '相册',
+                                    cancelButtonTitle: '取消',
+                                    storageOptions: {
+                                        path: 'images',
+                                    },
+                                }, (response) => {
+                                    console.log('Response = ', response);
 
-                        ImagePicker.showImagePicker({
-                            title: '选择图片',
-                            takePhotoButtonTitle: '拍照',
-                            chooseFromLibraryButtonTitle: '相册',
-                            cancelButtonTitle: '取消',
-                            storageOptions: {
-                                path: 'images',
-                            },
-                        }, (response) => {
-                            console.log('Response = ', response);
-
-                            if (response.didCancel) {
-                                console.log('User cancelled image picker');
-                            } else if (response.error) {
-                                console.log('ImagePicker Error: ', response.error);
-                            } else if (response.customButton) {
-                                console.log('User tapped custom button: ', response.customButton);
-                            } else {
-                                this._images.push(response);
-                                this.setState({
-                                    images: this._images,
+                                    if (response.didCancel) {
+                                        console.log('User cancelled image picker');
+                                    } else if (response.error) {
+                                        console.log('ImagePicker Error: ', response.error);
+                                    } else if (response.customButton) {
+                                        console.log('User tapped custom button: ', response.customButton);
+                                    } else {
+                                        this._images.push(response);
+                                        this.setState({
+                                            images: this._images,
+                                        });
+                                    }
                                 });
-                            }
-                        });
-                    }} />
+                            }} />
+                }
 
                 <Screen showLoading={this.state.isLoading} loadingType={'clear'} >
                     <ScrollView style={styles.scrollView} keyboardDismissMode={'on-drag'} >

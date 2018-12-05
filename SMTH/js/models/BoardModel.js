@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const BoardSchema = {
-    name: 'Board',
+    name: 'new_board',
     primaryKey: 'id',
     properties: {
         id: 'string',
@@ -15,7 +15,7 @@ export default class BoardModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'boardSchema.realm',
+                path: 'new_board.realm',
                 schema: [BoardSchema]
             })
                 .then(realm => {

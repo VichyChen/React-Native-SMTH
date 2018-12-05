@@ -67,6 +67,10 @@ import NewMessageAtListScreen from '../NewPage/NewMessageAtListScreen';
 
 import GDTNativeExpressView from '../GDT/GDTNativeExpressView';
 
+import NewSearchArticleScreen from '../NewPage/NewSearchArticleScreen';
+import NewSearchBoardScreen from '../NewPage/NewSearchBoardScreen';
+import NewSearchAccountScreen from '../NewPage/NewSearchAccountScreen';
+
 export {
     NetworkManager,
     HTMLParseManager,
@@ -123,4 +127,7 @@ export {
     NewMessageAtListScreen,
 
     GDTNativeExpressView,
+    NewSearchArticleScreen,
+    NewSearchBoardScreen,
+    NewSearchAccountScreen,
 }

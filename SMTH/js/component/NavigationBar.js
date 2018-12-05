@@ -175,7 +175,6 @@ var styles = {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            // backgroundColor: 'green',
         }
     },
     get bottomLine() {

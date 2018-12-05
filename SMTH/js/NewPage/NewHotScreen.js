@@ -31,7 +31,8 @@ import {
   NewHotListScreen,
   NewLoginView,
   NewTopTenScreen,
-  NewPictureListScreen
+  NewPictureListScreen,
+  ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -118,7 +119,15 @@ export default class NewHotScreen extends Component {
     return (
       <View style={styles.container}>
 
-        <NavigationBar showBottomLine={false} >
+        <NavigationBar
+          showBottomLine={false}
+          rightButtonImage={global.images.icon_search}
+          rightButtonImageMargin={22}
+          rightButtonTintColor={global.colors.themeColor}
+          rightButtonOnPress={() => {
+            ReactNavigation.navigate(this.props.navigation, 'newSearchScreen', { index: 0 });
+          }}
+        >
           <SegmentedControl
             values={['十大', '热点', '图览']}
             tintColor={global.colors.themeColor}

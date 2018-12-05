@@ -1103,8 +1103,10 @@ export default class NetworkManager {
     https://exp.newsmth.net/search?mode=board&keyword=%E6%88%BF%E5%9C%B0%E4%BA%A7 搜索版面
     https://exp.newsmth.net/search?mode=account&keyword=%E6%88%BF%E5%9C%B0%E4%BA%A7 搜索用户
     */
-    static getNewSearch(keyword, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/topic/', null, result => {
+
+    //搜索帖子
+    static getNewSearchArticle(keyword, original, page, success, failure, netError) {
+        NetworkManager.getNew('https://exp.newsmth.net/search?mode=Article&attachment=false&keyword=' + keyword + '&original=' + original + '&page=' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1113,8 +1115,9 @@ export default class NetworkManager {
         });
     }
 
-    static getNewSearchAccount(keyword, success, failure, netError) {
-        NetworkManager.getNew('https://exp.newsmth.net/search?mode=Account&keyword=' + keyword, null, result => {
+    //搜索版面
+    static getNewSearchBoard(keyword, page, success, failure, netError) {   
+        NetworkManager.getNew('https://exp.newsmth.net/search?mode=board&keyword=' + keyword + '&page=' + page, null, result => {
             success(result._bodyInit);
         }, error => {
             failure(error);
@@ -1122,6 +1125,18 @@ export default class NetworkManager {
             netError(errorMessage);
         });
     }
+
+    //搜索用户
+    static getNewSearchAccount(keyword, page, success, failure, netError) {   
+        NetworkManager.getNew('https://exp.newsmth.net/search?mode=account&keyword=' + keyword + '&page=' + page, null, result => {
+            success(result._bodyInit);
+        }, error => {
+            failure(error);
+        }, errorMessage => {
+            netError(errorMessage);
+        });
+    }
+
 
     //个人信息页+主题列表
     static getNewAccountArticles(account_id, page, success, failure, netError) {

@@ -216,12 +216,12 @@
   self.splash.backgroundColor = [UIColor colorWithPatternImage:defaultImage];
   
 
-  UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(ScreenWidth - 30 - 50, kNavigatioinBarHeight, 50, 30)];
+  UIView *skipView = [[UIView alloc] initWithFrame:CGRectMake(ScreenWidth - 30 - 60, kNavigatioinBarHeight, 60, 30)];
   skipView.backgroundColor = [UIColor clearColor];
   skipView.clipsToBounds = YES;
   skipView.layer.cornerRadius = 4;
   
-  UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+  UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
   view.backgroundColor = [UIColor blackColor];
   view.alpha = 0.60;
   

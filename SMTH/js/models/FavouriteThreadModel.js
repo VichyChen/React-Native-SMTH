@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const FavouriteThreadSchema = {
-    name: 'FavouriteThread',
+    name: 'new_favouritethread',
     primaryKey: 'id',
     properties: {
         type: 'string',
@@ -20,7 +20,7 @@ export default class FavouriteThreadModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'favouriteThreadRealm.realm',
+                path: 'new_favouritethread.realm',
                 schema: [FavouriteThreadSchema]
             })
                 .then(realm => {

@@ -51,7 +51,7 @@ const SMTHTabNavigator = TabNavigator({
     BoardScreen: {
         screen: NewBoardScreen,
         navigationOptions: ({ navigation }) => ({
-            tabBarLabel: '板块',
+            tabBarLabel: '版块',
             tabBarIcon: ({ tintColor, focused }) => (
                 <Image
                     source={focused == true ? global.images.tabbar_group_filled : global.images.tabbar_group}

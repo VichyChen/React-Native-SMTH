@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const BoardListSchema = {
-    name: 'BoardList',
+    name: 'new_boardlist',
     primaryKey: 'id',
     properties: {
         id: 'string',
@@ -15,7 +15,7 @@ export default class BoardListModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'boardListRealm.realm',
+                path: 'new_boardlist.realm',
                 schema: [BoardListSchema]
             })
                 .then(realm => {

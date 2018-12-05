@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const ScanRecordSchema = {
-    name: 'ScanRecord',
+    name: 'new_scanrecord',
     primaryKey: 'id',
     properties: {
         type: 'string',
@@ -21,7 +21,7 @@ export default class ScanRecordModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'scanRecordRealm.realm',
+                path: 'new_scanrecord.realm',
                 schema: [ScanRecordSchema]
             })
                 .then(realm => {

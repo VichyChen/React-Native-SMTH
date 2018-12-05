@@ -261,7 +261,7 @@ export default class NewPictureListScreen extends Component {
                         ref="flatList"
                         data={this.state.dataArray}
                         renderItem={this._renderItem}
-                        removeClippedSubviews={false}
+                        removeClippedSubviews={true}
                         extraData={this.state}
                         style={styles.flatList}
                         onRefresh={() => {

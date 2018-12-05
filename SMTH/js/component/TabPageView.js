@@ -16,30 +16,31 @@ import {
 import { TabView, TabBar, SceneMap, PagerPan } from 'react-native-tab-view';
 import { Dimensions } from 'react-native';
 
-var _array;
-var routes;
-
 export default class TabPageView extends Component {
+
+  _array;
+  routes;
+
   constructor(props) {
     super(props);
 
-    _array = new Array();
-    _array.push(this.props.selectedIndex == null ? '0' : this.props.selectedIndex.toString());
+    this._array = new Array();
+    this._array.push(this.props.selectedIndex == null ? '0' : this.props.selectedIndex.toString());
 
-    routes = new Array();
+    this.routes = new Array();
     props.titles.map((title, index) => {
-      routes[index] = { key: index.toString(), title: title };
+      this.routes[index] = { key: index.toString(), title: title };
     });
 
     this.state = {
       index: this.props.selectedIndex == null ? 0 : this.props.selectedIndex,
-      routes: routes,
+      routes: this.routes,
     }
   }
 
   _renderScene = ({ route }) => {
     for (var i = 0; i < this.props.pages.length; i++) {
-      if (route.key == i && (_array.indexOf(route.key) != -1)) {
+      if (route.key == i && (this._array.indexOf(route.key) != -1)) {
         return this.props.pages[i];
       }
     }
@@ -77,8 +78,8 @@ export default class TabPageView extends Component {
   };
 
   _onIndexChange = index => {
-    if (_array.indexOf(index) == -1) {
-      _array.push(index.toString());
+    if (this._array.indexOf(index) == -1) {
+      this._array.push(index.toString());
     }
 
     this.setState({ index })

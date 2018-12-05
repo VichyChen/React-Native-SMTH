@@ -41,6 +41,10 @@ import NewMessageSendScreen from '../../NewPage/NewMessageSendScreen';
 
 import NewSettingScreen from '../../NewPage/NewSettingScreen';
 
+import NewSearchArticleScreen from '../../NewPage/NewSearchArticleScreen';
+import NewSearchBoardScreen from '../../NewPage/NewSearchBoardScreen';
+import NewSearchAccountScreen from '../../NewPage/NewSearchAccountScreen';
+
 import {
     Color
 } from '../../config/Common';
@@ -82,6 +86,10 @@ const SMTHStackNavigator = StackNavigator({
     newMessageSendMailDetailScreen: { screen: NewMessageSendMailDetailScreen },
     newMessageSendScreen: { screen: NewMessageSendScreen },
     newSettingScreen: { screen: NewSettingScreen },
+
+    newSearchArticleScreen: { screen: NewSearchArticleScreen },
+    newSearchBoardScreen: { screen: NewSearchBoardScreen },
+    newSearchAccountScreen: { screen: NewSearchAccountScreen },
 },
     {
         navigationOptions: {
