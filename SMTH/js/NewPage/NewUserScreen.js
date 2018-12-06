@@ -58,7 +58,7 @@ export default class NewUserScreen extends Component {
 
         this.queryUser();
         if (this.props.navigation.state.params.id == null) {
-            NetworkManager.getNewSearchAccount(this.props.navigation.state.params.name, (html) => {
+            NetworkManager.getNewSearchAccount(this.props.navigation.state.params.name, 1, (html) => {
                 HTMLParseManager.parseNewSearchAccount(html, this.props.navigation.state.params.name, (id) => {
                     this.setState({
                         id: id

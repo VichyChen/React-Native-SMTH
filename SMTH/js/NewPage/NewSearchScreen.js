@@ -68,6 +68,7 @@ export default class NewSearchScreen extends Component {
                                 value={this.state.keyword}
                                 returnKeyType={'search'}
                                 autoCapitalize={'none'}
+                                autoFocus={true}
                                 onSubmitEditing={(event) => {
                                     this.setState({
                                         search: true,
