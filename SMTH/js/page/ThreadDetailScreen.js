@@ -52,7 +52,8 @@ import {
   Screen,
   ToastUtil,
   NavigationBar,
-  ReactNavigation
+  ReactNavigation,
+  CellBackground
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -61,6 +62,7 @@ import {
   BoardModel,
   FavouriteThreadModel
 } from 'ModelModule';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class ThreadDetailScreen extends Component {
 
@@ -97,7 +99,11 @@ export default class ThreadDetailScreen extends Component {
       currentPage: 1,
       totalPage: 1,
       // selectedValue: '1',
+      showImageViewer: false,
+      images: [],
+      imageIndex: 0,
     }
+
     this.size = 20;
     this.board = unescape(this.props.navigation.state.params.board);
     this.boardName = global.configures.boards[unescape(this.props.navigation.state.params.board)];
@@ -141,6 +147,7 @@ export default class ThreadDetailScreen extends Component {
         result['articles'][i].time = DateUtil.formatTimeStamp(result['articles'][i].time);
         for (var j = 0; j < result['articles'][i].attachment_list.length; j++) {
           result['articles'][i]['attachment_list'][j].key = j;
+          result['articles'][i]['attachment_list'][j].arrayKey = i;
           result['articles'][i]['attachment_list'][j].id = result['articles'][i].id;
         }
       }
@@ -305,17 +312,38 @@ export default class ThreadDetailScreen extends Component {
   );
 
   _attachmentImageItem = ({ item }) => (
-    <AutoHeightImage
-      style={styles.image}
-      width={global.constants.ScreenWidth - global.constants.Padding * 2}
-      imageURL={NetworkManager.net_getAttachmentImage(this.board, item.id, item.pos)}
-    />
+    <TouchableWithoutFeedback
+      onPress={() => {
+        var array = [];
+        for (var i = 0; i < this.state.dataArray[item.arrayKey].attachment_list.length; i++) {
+          array.push({
+            url: NetworkManager.net_getAttachmentImage(this.board, this.state.dataArray[item.arrayKey].attachment_list[i].id, this.state.dataArray[item.arrayKey].attachment_list[i].pos)
+          });
+        }
+        this.setState({
+          showImageViewer: true,
+          images: array,
+          imageIndex: item.key,
+        });
+      }}
+    >
+      <View style={{
+        marginTop: 15, backgroundColor: global.colors.backgroundGrayColor
+      }}>
+        <AutoHeightImage
+          style={styles.image}
+          width={global.constants.ScreenWidth - global.constants.Padding * 2}
+          imageURL={NetworkManager.net_getAttachmentImage(this.board, item.id, item.pos)}
+        />
+      </ View>
+    </TouchableWithoutFeedback >
+
   );
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-        
+
         <NavigationBar
           title={this.state.screenStatus == global.screen.loading ? '' : global.boards.all[unescape(this.props.navigation.state.params.board)] == null ? this.props.navigation.state.params.board : global.boards.all[unescape(this.props.navigation.state.params.board)].name}
           message={this.state.screenStatus == global.screen.loading ? '' : unescape(this.props.navigation.state.params.board)}
@@ -709,6 +737,14 @@ export default class ThreadDetailScreen extends Component {
           />
 
         </Screen>
+        <Modal visible={this.state.showImageViewer} transparent={true}>
+          <ImageViewer imageUrls={this.state.images} index={this.state.imageIndex} onClick={() => {
+            this.setState({
+              showImageViewer: false,
+            });
+          }} onCancel={() => {
+          }} />
+        </Modal>
       </View>
     )
   }

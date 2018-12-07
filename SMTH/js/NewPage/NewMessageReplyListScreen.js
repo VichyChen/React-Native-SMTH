@@ -147,7 +147,7 @@ export default class NewMessageReplyListScreen extends Component {
                                 this.net_LoadRefer(this.from, this.size);
                             }
                         }}
-                        onEndReachedThreshold={0.2}
+                        onEndReachedThreshold={2}
                         refreshing={this.state.pullLoading}
                     />
                 </View>

@@ -32,6 +32,7 @@ import { CommonCSS } from 'CommonCSS';
 import cio from 'cheerio-without-node-native';
 import HTMLView from 'react-native-htmlview';
 import AutoHeightImage from 'react-native-auto-height-image';
+import {CachedImage} from "react-native-img-cache";
 
 export default class NewUserArticleScreen extends Component {
 

@@ -45,6 +45,7 @@ import AutoHeightImage from 'react-native-auto-height-image';
 import { CommonCSS } from 'CommonCSS';
 import { NativeModules } from 'react-native';
 import uuid from 'uuid';
+import { CachedImage } from "react-native-img-cache";
 
 export default class NewPictureListScreen extends Component {
 
@@ -188,7 +189,36 @@ export default class NewPictureListScreen extends Component {
                     <View>
                         <View style={styles.itemContainer}>
                             <Text style={CommonCSS.listOnlyTitle}>{item.title}</Text>
-                            {
+
+                            <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) + 10 }]} >
+                                {
+                                    item.attachment_list.length > 0 ?
+                                        <CachedImage style={[styles.image, {
+                                            width: this._width,
+                                            height: this._height,
+                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[0].url }} />
+                                        : null
+                                }
+                                {
+                                    item.attachment_list.length > 1 ?
+                                        <CachedImage style={[styles.image, {
+                                            width: this._width,
+                                            height: this._height,
+                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[1].url }} />
+                                        : null
+                                }
+                                {
+                                    item.attachment_list.length > 2 ?
+                                        <CachedImage style={[styles.image, {
+                                            width: this._width,
+                                            height: this._height,
+                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[2].url }} />
+                                        : null
+                                }
+                            </View>
+
+
+                            {/* {
 
                                 item.attachment_list.length == 1 ? (
                                     <View style={[styles.imageView, {
@@ -232,11 +262,16 @@ export default class NewPictureListScreen extends Component {
 
                                             )
                                     )
-                            }
+                            } */}
                             <Text style={[CommonCSS.listTime, { marginTop: 5 }]} >{item.time}</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
                                 <Text style={[CommonCSS.listBoardEN]} >{item.boardName}</Text>
                                 <Text style={[CommonCSS.listBoardCH, { marginLeft: 8, marginRight: 8 }]} >{item.boardTitle}</Text>
+                                {
+                                    item.attachment_list.length <= 3 ? null :
+                                        <Text style={CommonCSS.listDescript} >{item.attachment_list.length + '图片'}</Text>
+                                }
+
                             </View>
                         </View>
                         <SeperatorLine />
@@ -260,6 +295,7 @@ export default class NewPictureListScreen extends Component {
                     <FlatList
                         ref="flatList"
                         data={this.state.dataArray}
+                        initialNumToRender={5}
                         renderItem={this._renderItem}
                         removeClippedSubviews={true}
                         extraData={this.state}
@@ -326,7 +362,7 @@ var styles = {
         return {
             marginRight: 10,
             marginTop: 10,
-            backgroundColor: global.colors.backgroundGrayColor,
+            // backgroundColor: global.colors.backgroundGrayColor,
         }
     },
 }

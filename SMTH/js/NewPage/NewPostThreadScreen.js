@@ -138,6 +138,8 @@ export default class NewPostThreadScreen extends Component {
                                     takePhotoButtonTitle: '拍照',
                                     chooseFromLibraryButtonTitle: '相册',
                                     cancelButtonTitle: '取消',
+                                    maxWidth: 800,
+                                    maxHeight: 800,
                                     storageOptions: {
                                         path: 'images',
                                     },

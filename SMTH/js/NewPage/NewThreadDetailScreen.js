@@ -56,7 +56,8 @@ import {
   ToastUtil,
   NavigationBar,
   SectionBlankHeader,
-  ReactNavigation
+  ReactNavigation,
+  CellBackground
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -64,6 +65,7 @@ import {
   ScanRecordModel,
   FavouriteThreadModel
 } from 'ModelModule';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class NewThreadDetailScreen extends Component {
 
@@ -103,6 +105,9 @@ export default class NewThreadDetailScreen extends Component {
       totalPage: 1,
       // selectedValue: '1',
       showMoreLike: false,
+      showImageViewer: false,
+      images: [],
+      imageIndex: 0,
     }
     this.scanRecord = false;
     this.webURL = 'https://exp.newsmth.net/topic/' + (this.props.navigation.state.params.type == null ? '' : 'article/') + this.props.navigation.state.params.id;
@@ -171,6 +176,7 @@ export default class NewThreadDetailScreen extends Component {
               this.$ = cio.load(elem, { decodeEntities: false });
               attachment_list.push({
                 key: attachment_list.length,
+                arrayKey: array.length,
                 url: this.$('img').attr('src')
               });
             });
@@ -244,6 +250,7 @@ export default class NewThreadDetailScreen extends Component {
                 this.$ = cio.load(elem, { decodeEntities: false });
                 attachment_list.push({
                   key: attachment_list.length,
+                  arrayKey: array.length,
                   url: this.$('img').attr('src')
                 });
               });
@@ -603,16 +610,33 @@ export default class NewThreadDetailScreen extends Component {
   };
 
   _attachmentImageItem = ({ item }) => (
-    <View style={{
-      marginTop: 15, backgroundColor: global.colors.backgroundGrayColor
-    }}>
-      <AutoHeightImage
+    <TouchableWithoutFeedback
+      onPress={() => {
+        var array = [];
+        for (var i = 0; i < this.state.dataArray[item.arrayKey].attachment_list.length; i++) {
+          array.push({
+            url: 'https://exp.newsmth.net/' + this.state.dataArray[item.arrayKey].attachment_list[i].url
+          });
+        }
+        this.setState({
+          showImageViewer: true,
+          // images: this.state.dataArray[item.arrayKey].attachment_list,
+          images: array,
+          imageIndex: item.key,
+        });
+      }}
+    >
+      <View style={{
+        marginTop: 15, backgroundColor: global.colors.backgroundGrayColor
+      }}>
+        <AutoHeightImage
 
-        style={[styles.itemImage, {  }]}
-        width={global.constants.ScreenWidth - global.constants.Padding * 2}
-        imageURL={'https://exp.newsmth.net/' + item.url}
-      />
-    </View>
+          style={[styles.itemImage, {}]}
+          width={global.constants.ScreenWidth - global.constants.Padding * 2}
+          imageURL={'https://exp.newsmth.net/' + item.url}
+        />
+      </ View>
+    </TouchableWithoutFeedback >
   );
 
   render() {
@@ -906,6 +930,14 @@ export default class NewThreadDetailScreen extends Component {
           />
 
         </Screen>
+        <Modal visible={this.state.showImageViewer} transparent={true}>
+          <ImageViewer imageUrls={this.state.images} index={this.state.imageIndex} onClick={() => {
+            this.setState({
+              showImageViewer: false,
+            });
+          }} onCancel={() => {
+          }} />
+        </Modal>
       </View>
 
     )
