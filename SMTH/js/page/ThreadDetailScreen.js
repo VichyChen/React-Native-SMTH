@@ -791,7 +791,7 @@ var styles = {
   },
   get image() {
     return {
-      marginTop: global.constants.Padding,
+      // marginTop: global.constants.Padding,
     }
   },
 }
