@@ -12,7 +12,9 @@ global.login = false;
 global.bool = {
     iOS: Platform.OS === 'ios',
     Android: Platform.OS === 'android',
-    iPhoneX: Platform.OS === 'ios' ? (Dimensions.get('window').width == 375 && Dimensions.get('window').height == 812) : false,
+    iPhoneX: Platform.OS === 'ios' ? 
+    ((Dimensions.get('window').width == 375 && Dimensions.get('window').height == 812) ||
+        (Dimensions.get('window').width == 414 && Dimensions.get('window').height == 896)) : false,
 };
 
 global.constants = {

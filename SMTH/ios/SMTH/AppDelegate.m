@@ -174,12 +174,12 @@
     defaultImageRect = CGRectMake(0, 0, 1125, 2436);
   }
   //6.1
-  else if (ScreenWidth == 414 && ScreenHeight == 896) {
+  else if (ScreenWidth == 414 && ScreenHeight == 896 && [UIScreen mainScreen].scale == 2) {
     imageName = @"AdLaunchImage_iPhone_6.1_828_1792";
     defaultImageRect = CGRectMake(0, 0, 828, 1792);
   }
   //6.5
-  else if (ScreenWidth == 414 && ScreenHeight == 896) {
+  else if (ScreenWidth == 414 && ScreenHeight == 896 && [UIScreen mainScreen].scale == 3) {
     imageName = @"AdLaunchImage_iPhone_6.5_1242_2688";
     defaultImageRect = CGRectMake(0, 0, 1242, 2688);
   }
