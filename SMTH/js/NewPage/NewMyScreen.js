@@ -42,6 +42,7 @@ export default class NewMyScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      login: false,
       isLoading: true,
       dataArray: [],
       username: '',
@@ -55,6 +56,7 @@ export default class NewMyScreen extends Component {
 
     this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', (username) => {
       this.setState({
+        login: true,
         username: username,
         notificationCount: 0,
       });
@@ -62,6 +64,7 @@ export default class NewMyScreen extends Component {
     });
     this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
       this.setState({
+        login: false,
         mailCount: 0,
         sentMailCount: 0,
         replyMeCount: 0,
@@ -69,7 +72,7 @@ export default class NewMyScreen extends Component {
       });
     });
     this.clickMyScreenNotification = DeviceEventEmitter.addListener('ClickMyScreenNotification', () => {
-      if (global.login == true) {
+      if (this.state.login == true) {
         this.network();
       }
     });
@@ -79,14 +82,19 @@ export default class NewMyScreen extends Component {
 
     AsyncStorageManger.getLogin().then(login => {
       global.login = login;
-      AsyncStorageManger.getUsername().then(username => {
-        this.setState({
-          username: username,
-        });
-
-        this.network();
+      this.setState({
+        login: login,
       });
+      if (login == true) {
+        AsyncStorageManger.getUsername().then(username => {
+          this.setState({
+            username: username,
+          });
+          this.network();
+        });
+      }
     });
+
   }
 
   componentDidMount() {
@@ -234,7 +242,7 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  if (global.login == true) {
+                  if (this.state.login == true) {
                     AsyncStorageManger.getID().then(id => {
                       ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: id, name: this.state.username });
                     });
@@ -255,7 +263,7 @@ export default class NewMyScreen extends Component {
                   <AvatorImage
                     borderRadius={30}
                     widthAndHeight={60}
-                    uri={(global.login == true && this.state.username.length > 0 ? NetworkManager.net_getFace(this.state.username) : null)} />
+                    uri={(this.state.login == true && this.state.username.length > 0 ? NetworkManager.net_getFace(this.state.username) : null)} />
 
                   <Text style={{
                     marginLeft: 5,
@@ -263,7 +271,7 @@ export default class NewMyScreen extends Component {
                     fontWeight: '600',
                     color: global.colors.whiteColor
                   }}>
-                    {global.login == true ? '' : '未登录'}
+                    {this.state.login == true ? '' : '未登录'}
                   </Text>
 
                   <View style={{
@@ -279,11 +287,11 @@ export default class NewMyScreen extends Component {
                         fontWeight: '600',
                         color: global.colors.whiteColor
                       }}>
-                        {global.login == true && this.state.username.length > 0 ? this.state.username : ''}
+                        {this.state.login == true && this.state.username.length > 0 ? this.state.username : ''}
                       </Text>
 
                       {/* {
-                        global.login == true && this.state.gender != null ?
+                        this.state.login == true && this.state.gender != null ?
                           <Image style={{ marginLeft: 10, width: 16, height: 16, tintColor: global.colors.whiteColor }} source={this.state.gender == 1 ? global.images.icon_female : global.images.icon_male} />
                           :
                           null
@@ -292,7 +300,7 @@ export default class NewMyScreen extends Component {
                     </View>
 
                     <Text style={[styles.nick, { marginTop: 10 }]} >
-                      {global.login == true && this.state.nick != null ? this.state.nick : ''}
+                      {this.state.login == true && this.state.nick != null ? this.state.nick : ''}
                     </Text>
 
                   </View>
@@ -306,17 +314,17 @@ export default class NewMyScreen extends Component {
               <View style={[styles.userInfoView, { marginTop: 10, height: 40 }]} >
                 <Text style={[styles.userInfoSmallText]} >{'身份 '}</Text>
                 <Text style={[styles.userInfoBigText]} >
-                  {global.login == true && this.state.title != null ? this.state.title : '无'}
+                  {this.state.login == true && this.state.title != null ? this.state.title : '无'}
                 </Text>
                 <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
                 <Text style={[styles.userInfoSmallText]} >{'积分 '}</Text>
                 <Text style={[styles.userInfoBigText]} >
-                  {global.login == true && this.state.score != null ? this.state.score : '0'}
+                  {this.state.login == true && this.state.score != null ? this.state.score : '0'}
                 </Text>
                 <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
                 <Text style={[styles.userInfoSmallText]} >{'等级 '}</Text>
                 <Text style={[styles.userInfoBigText]} >
-                  {global.login == true && this.state.life != null ? this.state.life + '(' + this.state.level + ')' : '无'}
+                  {this.state.login == true && this.state.life != null ? this.state.life + '(' + this.state.level + ')' : '无'}
                 </Text>
               </View>
 
@@ -324,20 +332,20 @@ export default class NewMyScreen extends Component {
                 <Text style={[styles.userInfoSmallText, styles.nick]} >
                   {
                     '上次登录 ' +
-                    (global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无') +
+                    (this.state.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无') +
                     '  |  注册于 ' +
-                    (global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
+                    (this.state.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
                   }
                 </Text>
 
                 {/* <Text style={[styles.userInfoSmallText, styles.nick]} >{'上次登录 '}</Text>
                 <Text style={[styles.userInfoSmallText]} >
-                  {global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无'}
+                  {this.state.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无'}
                 </Text>
                 <Text style={[styles.userInfoSmallText]} >{'  |  '}</Text>
                 <Text style={[styles.userInfoSmallText]} >{'注册于 '}</Text>
                 <Text style={[styles.userInfoSmallText]} >
-                  {global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无'}
+                  {this.state.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无'}
                 </Text> */}
               </View>
 
@@ -360,7 +368,7 @@ export default class NewMyScreen extends Component {
                   <CellBackground
                     showSelect={false}
                     onPress={() => {
-                      if (global.login == true) {
+                      if (this.state.login == true) {
                         // StatusBar.setBarStyle('dark-content');
                         ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 0 })
                       }
@@ -387,7 +395,7 @@ export default class NewMyScreen extends Component {
                   <CellBackground
                     showSelect={false}
                     onPress={() => {
-                      if (global.login == true) {
+                      if (this.state.login == true) {
                         // StatusBar.setBarStyle('dark-content');
                         ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 1 })
                       }
@@ -415,7 +423,7 @@ export default class NewMyScreen extends Component {
                   <CellBackground
                     showSelect={false}
                     onPress={() => {
-                      if (global.login == true) {
+                      if (this.state.login == true) {
                         // StatusBar.setBarStyle('dark-content');
                         ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 2 })
                       }
@@ -443,7 +451,7 @@ export default class NewMyScreen extends Component {
                   <CellBackground
                     showSelect={false}
                     onPress={() => {
-                      if (global.login == true) {
+                      if (this.state.login == true) {
                         // StatusBar.setBarStyle('dark-content');
                         ReactNavigation.navigate(this.props.navigation, 'newMessageScreen', { selectedIndex: 3 })
                       }
@@ -487,7 +495,7 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  if (global.login == true) {
+                  if (this.state.login == true) {
                     AsyncStorageManger.getID().then(id => {
                       // StatusBar.setBarStyle('dark-content');
                       ReactNavigation.navigate(this.props.navigation, 'newUserArticleScreen', { id: id });

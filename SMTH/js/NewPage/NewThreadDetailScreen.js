@@ -283,17 +283,24 @@ export default class NewThreadDetailScreen extends Component {
           });
         }
 
+        // var login = this.$('ul[class*=navbar-right]').children().first().children().first().text();
+        // console.log('loginloginloginlogin:' + login);
+        // if (login == '登录') {
+        //   AsyncStorageManger.setLogin(false);
+        //   global.login = false;
+        // }
+        // else {
+        // }
+
         //分区
         this.$ = cio.load(result);
         var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
         //有登陆
         if (second.indexOf("成员") != -1) {
-          AsyncStorageManger.setLogin(true);
           this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
         }
         //没登陆
         else {
-          AsyncStorageManger.setLogin(false);
           this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
         }
         this.$ = cio.load(this.$('.dropdown-menu').html());

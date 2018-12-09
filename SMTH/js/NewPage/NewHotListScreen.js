@@ -128,17 +128,27 @@ export default class NewHotListScreen extends Component {
                 }
             });
 
+            // var login = this.$('ul[class*=navbar-right]').children().first().children().first().text();
+            // console.log('loginloginloginlogin:' + this.$('ul[class*=navbar-right]').html());
+            // console.log('loginloginloginlogin:' + this.$('ul[class*=navbar-right]').text());
+            // if (login == '登录') {
+            //     console.log('loginloginloginlogin:未登录');
+            //     AsyncStorageManger.setLogin(false);
+            //     global.login = false;
+            // }
+            // else {
+            //     console.log('loginloginloginlogin:已登录');
+            // }
+
             //分区
             this.$ = cio.load(result);
             var second = this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().text().trim();
             //有登陆
             if (second.indexOf("成员") != -1) {
-                AsyncStorageManger.setLogin(true);
                 this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().next().next().html());
             }
             //没登陆
             else {
-                AsyncStorageManger.setLogin(false);
                 this.$ = cio.load(this.$('div[id=bs-example-navbar-collapse-1]').children().first().children().first().next().html());
             }
             this.$ = cio.load(this.$('.dropdown-menu').html());

@@ -57,6 +57,7 @@ export default class NewTopTenScreen extends Component {
         super(props);
 
         this.state = {
+            login: true,
             pullLoading: false,
             pullMoreLoading: false,
             screenStatus: global.screen.loading,
@@ -73,12 +74,15 @@ export default class NewTopTenScreen extends Component {
 
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({
+                login: true,
                 screenStatus: global.screen.loading,
             });
             this.net_LoadSectionHot(this._page);
         });
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
-            this.setState({});
+            this.setState({
+                login: false,
+            });
         });
         this.doubleClickHotScreenNotification = DeviceEventEmitter.addListener('DoubleClickHotScreenNotification', () => {
             if (this.props.selected == true) {
@@ -103,9 +107,15 @@ export default class NewTopTenScreen extends Component {
             global.login = login;
             if (login == true) {
                 this.setState({
+                    login: login,
                     screenStatus: global.screen.loading,
                 });
                 this.net_LoadSectionHot(this._page);
+            }
+            else {
+                this.setState({
+                    login: login,
+                });
             }
         });
     }
@@ -230,7 +240,7 @@ export default class NewTopTenScreen extends Component {
             <View style={styles.container}>
                 <HorizontalSeperatorLine />
                 {
-                    global.login == false
+                    this.state.login == false
                         ?
                         <LoginButtonView text={'需登陆才能查看十大'} style={{ zIndex: 999, position: 'absolute', top: 1, bottom: 0, left: 0, right: 0 }} />
                         :

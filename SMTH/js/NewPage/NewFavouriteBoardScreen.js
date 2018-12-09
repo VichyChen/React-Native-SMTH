@@ -43,8 +43,9 @@ export default class NewFavouriteBoardScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            login: true,
             pullLoading: false,
-            screenStatus: global.login == false ? global.screen.none : global.screen.loading,
+            screenStatus: global.screen.loading,
             screenText: null,
             isDeleting: false,
             editing: false,
@@ -56,18 +57,30 @@ export default class NewFavouriteBoardScreen extends Component {
         });
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', () => {
             this.setState({
+                login: true,
                 screenStatus: global.screen.loading,
             });
             this.net_LoadFavorites();
         });
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
-            this.setState({});
+            this.setState({
+                login: false,
+            });
         });
 
         AsyncStorageManger.getLogin().then(login => {
             global.login = login;
             if (login == true) {
+                this.setState({
+                    login: login,
+                    screenStatus: global.screen.loading,
+                });
                 this.net_LoadFavorites();
+            }
+            else {
+                this.setState({
+                    login: login,
+                });
             }
         });
     }
@@ -145,7 +158,7 @@ export default class NewFavouriteBoardScreen extends Component {
 
                 <NavigationBar title='收藏'
                     showBottomLine={true}
-                    rightButtonTitle={global.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}
+                    rightButtonTitle={this.state.login == false ? null : (this.state.editing == true ? '完成' : '编辑')}
                     rightButtonOnPress={() => {
                         this.setState({
                             editing: !this.state.editing,
@@ -160,7 +173,7 @@ export default class NewFavouriteBoardScreen extends Component {
                     this.net_LoadFavorites();
                 }} >
                     {
-                        global.login == false
+                        this.state.login == false
                             ?
                             <LoginButtonView text={'需登陆才能查看收藏'} style={{ zIndex: 999, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }} />
                             :
