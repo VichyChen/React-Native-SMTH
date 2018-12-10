@@ -62,7 +62,6 @@ import {
   BoardModel,
   FavouriteThreadModel
 } from 'ModelModule';
-import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class ThreadDetailScreen extends Component {
 
@@ -99,9 +98,6 @@ export default class ThreadDetailScreen extends Component {
       currentPage: 1,
       totalPage: 1,
       // selectedValue: '1',
-      showImageViewer: false,
-      images: [],
-      imageIndex: 0,
     }
 
     this.size = 20;
@@ -228,7 +224,7 @@ export default class ThreadDetailScreen extends Component {
         item.floor == 0 ?
           <View>
             <View style={styles.container}>
-              <Text style={CommonCSS.listTitle}>{this.props.navigation.state.params.subject}</Text>
+              <Text style={CommonCSS.threadTitle}>{this.props.navigation.state.params.subject}</Text>
               <Text style={[CommonCSS.listDescript, { marginTop: 10, }]} >{(parseInt(this.threadCount) - 1) + '回复'}</Text>
             </View>
             <HorizontalSeperatorLine />
@@ -320,11 +316,7 @@ export default class ThreadDetailScreen extends Component {
             url: NetworkManager.net_getAttachmentImage(this.board, this.state.dataArray[item.arrayKey].attachment_list[i].id, this.state.dataArray[item.arrayKey].attachment_list[i].pos)
           });
         }
-        this.setState({
-          showImageViewer: true,
-          images: array,
-          imageIndex: item.key,
-        });
+        DeviceEventEmitter.emit('ShowImagesNotification', { images: array, index: item.key });
       }}
     >
       <View style={{
@@ -625,42 +617,51 @@ export default class ThreadDetailScreen extends Component {
               }
               //给楼主私信
               else if (index == 5) {
-                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.hostID })
+                if (global.login == true) {
+                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.hostID })
+                }
+                else {
+                  DeviceEventEmitter.emit('LoginNotification', null);
+                }
               }
               //举报
               else if (index == 6) {
-                if (this.boardObject == null) {
-                  NetworkManager.net_QueryBoard(this.boardName, (result) => {
-                    for (var i = 0; i < result['boards'].length; i++) {
-                      if (this.boardName == result['boards'][i].id) {
-                        this.boardObject = result['boards'][i];
-                        break;
+                if (global.login == true) {
+                  if (this.boardObject == null) {
+                    NetworkManager.net_QueryBoard(this.boardName, (result) => {
+                      for (var i = 0; i < result['boards'].length; i++) {
+                        if (this.boardName == result['boards'][i].id) {
+                          this.boardObject = result['boards'][i];
+                          break;
+                        }
                       }
-                    }
-                    if (this.boardObject != null) {
-                      var array = this.boardObject.manager.split(" ");
-                      if (array.length == 0) return;
-                      ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
-                        user: array[0],
-                        title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
-                        content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
-                      });
-                    }
+                      if (this.boardObject != null) {
+                        var array = this.boardObject.manager.split(" ");
+                        if (array.length == 0) return;
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
+                          user: array[0],
+                          title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
+                          content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
+                        });
+                      }
 
-                  }, (error) => {
-                  }, (timeout) => {
-                  });
+                    }, (error) => {
+                    }, (timeout) => {
+                    });
+                  }
+                  else {
+                    var array = this.boardObject.manager.split(" ");
+                    if (array.length == 0) return;
+                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
+                      user: array[0],
+                      title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
+                      content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
+                    });
+                  }
                 }
                 else {
-                  var array = this.boardObject.manager.split(" ");
-                  if (array.length == 0) return;
-                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
-                    user: array[0],
-                    title: '举报 ' + this.hostID + ' 在 ' + this.board + ' 版中发表的内容',
-                    content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.props.navigation.state.params.subject,
-                  });
+                  DeviceEventEmitter.emit('LoginNotification', null);
                 }
-
               }
               else {
 
@@ -694,40 +695,50 @@ export default class ThreadDetailScreen extends Component {
               }
               //私信
               else if (index == 1) {
-                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.selectMoreItemName })
+                if (global.login == true) {
+                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.selectMoreItemName })
+                }
+                else {
+                  DeviceEventEmitter.emit('LoginNotification', null);
+                }
               }
               //举报
               else if (index == 2) {
-                if (this.boardObject == null) {
-                  NetworkManager.net_QueryBoard(this.boardName, (result) => {
-                    for (var i = 0; i < result['boards'].length; i++) {
-                      if (this.boardName == result['boards'][i].id) {
-                        this.boardObject = result['boards'][i];
-                        break;
+                if (global.login == true) {
+                  if (this.boardObject == null) {
+                    NetworkManager.net_QueryBoard(this.boardName, (result) => {
+                      for (var i = 0; i < result['boards'].length; i++) {
+                        if (this.boardName == result['boards'][i].id) {
+                          this.boardObject = result['boards'][i];
+                          break;
+                        }
                       }
-                    }
-                    if (this.boardObject != null) {
-                      var array = this.boardObject.manager.split(" ");
-                      if (array.length == 0) return;
-                      ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
-                        user: array[0],
-                        title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
-                        content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
-                      });
-                    }
+                      if (this.boardObject != null) {
+                        var array = this.boardObject.manager.split(" ");
+                        if (array.length == 0) return;
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
+                          user: array[0],
+                          title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
+                          content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                        });
+                      }
 
-                  }, (error) => {
-                  }, (timeout) => {
-                  });
+                    }, (error) => {
+                    }, (timeout) => {
+                    });
+                  }
+                  else {
+                    var array = this.boardObject.manager.split(" ");
+                    if (array.length == 0) return;
+                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
+                      user: array[0],
+                      title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
+                      content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
+                    });
+                  }
                 }
                 else {
-                  var array = this.boardObject.manager.split(" ");
-                  if (array.length == 0) return;
-                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', {
-                    user: array[0],
-                    title: '举报 ' + this.selectMoreItemName + ' 在 ' + this.board + ' 版中发表的内容',
-                    content: '\n' + this.webURL + '\n\n【以下为被举报的帖子内容】\n' + this.selectMoreItemReply,
-                  });
+                  DeviceEventEmitter.emit('LoginNotification', null);
                 }
               }
               else {
@@ -737,14 +748,6 @@ export default class ThreadDetailScreen extends Component {
           />
 
         </Screen>
-        <Modal visible={this.state.showImageViewer} transparent={true}>
-          <ImageViewer imageUrls={this.state.images} index={this.state.imageIndex} onClick={() => {
-            this.setState({
-              showImageViewer: false,
-            });
-          }} onCancel={() => {
-          }} />
-        </Modal>
       </View>
     )
   }

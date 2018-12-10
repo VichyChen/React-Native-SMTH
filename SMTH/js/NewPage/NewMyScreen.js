@@ -517,8 +517,12 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  // StatusBar.setBarStyle('dark-content');
-                  ReactNavigation.navigate(this.props.navigation, 'newFavouriteThreadScreen')
+                  if (this.state.login == true) {
+                    ReactNavigation.navigate(this.props.navigation, 'newFavouriteThreadScreen')
+                  }
+                  else {
+                    this.showLogin();
+                  }
                 }}
               >
                 <View style={[styles.content]}>
@@ -532,8 +536,12 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  // StatusBar.setBarStyle('dark-content');
-                  ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
+                  if (this.state.login == true) {
+                    ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
+                  }
+                  else {
+                    this.showLogin();
+                  }
                 }}
               >
                 <View style={[styles.content]}>

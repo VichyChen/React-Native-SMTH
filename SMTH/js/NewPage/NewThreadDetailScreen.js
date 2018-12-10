@@ -65,7 +65,6 @@ import {
   ScanRecordModel,
   FavouriteThreadModel
 } from 'ModelModule';
-import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class NewThreadDetailScreen extends Component {
 
@@ -105,9 +104,6 @@ export default class NewThreadDetailScreen extends Component {
       totalPage: 1,
       // selectedValue: '1',
       showMoreLike: false,
-      showImageViewer: false,
-      images: [],
-      imageIndex: 0,
     }
     this.scanRecord = false;
     this.webURL = 'https://exp.newsmth.net/topic/' + (this.props.navigation.state.params.type == null ? '' : 'article/') + this.props.navigation.state.params.id;
@@ -380,7 +376,7 @@ export default class NewThreadDetailScreen extends Component {
       return (
         <View>
           <View style={[styles.container, {}]} >
-            <Text style={CommonCSS.listTitle} >{item.title}</Text>
+            <Text style={CommonCSS.threadTitle} >{item.title}</Text>
             <Text style={[CommonCSS.listDescript, { marginTop: 10, }]} >
               {
                 (this.wordage.length > 0 ? (this.wordage.split(' ')[1] + '字数 ') : '') +
@@ -625,12 +621,7 @@ export default class NewThreadDetailScreen extends Component {
             url: 'https://exp.newsmth.net/' + this.state.dataArray[item.arrayKey].attachment_list[i].url
           });
         }
-        this.setState({
-          showImageViewer: true,
-          // images: this.state.dataArray[item.arrayKey].attachment_list,
-          images: array,
-          imageIndex: item.key,
-        });
+        DeviceEventEmitter.emit('ShowImagesNotification', { images: array, index: item.key });
       }}
     >
       <View style={{
@@ -817,7 +808,12 @@ export default class NewThreadDetailScreen extends Component {
               }
               //给楼主私信
               else if (index == 4) {
-                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.hostID })
+                if (global.login == true) {
+                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.hostID })
+                }
+                else {
+                  DeviceEventEmitter.emit('LoginNotification', null);
+                }
               }
               //举报
               else if (index == 5) {
@@ -889,7 +885,12 @@ export default class NewThreadDetailScreen extends Component {
               }
               //私信
               else if (index == 1) {
-                ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.selectMoreItemName })
+                if (global.login == true) {
+                  ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.selectMoreItemName })
+                }
+                else {
+                  DeviceEventEmitter.emit('LoginNotification', null);
+                }
               }
               //举报
               else if (index == 2) {
@@ -937,14 +938,6 @@ export default class NewThreadDetailScreen extends Component {
           />
 
         </Screen>
-        <Modal visible={this.state.showImageViewer} transparent={true}>
-          <ImageViewer imageUrls={this.state.images} index={this.state.imageIndex} onClick={() => {
-            this.setState({
-              showImageViewer: false,
-            });
-          }} onCancel={() => {
-          }} />
-        </Modal>
       </View>
 
     )
@@ -1052,7 +1045,7 @@ var styles = {
       p: {
         marginBottom: -15,
         lineHeight: global.constants.LineHeight,
-        fontSize: global.configures.fontSize16,
+        fontSize: global.configures.fontSize17,
         color: global.colors.fontColor,
       },
     }
@@ -1072,7 +1065,7 @@ var styles = {
         marginBottom: -25,
         marginLeft: 10,
         lineHeight: global.constants.LineHeight,
-        fontSize: global.configures.fontSize15,
+        fontSize: global.configures.fontSize16,
         color: global.colors.gray2Color,
       },
     }

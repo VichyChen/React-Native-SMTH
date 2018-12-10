@@ -30,6 +30,14 @@ var CommonCSS = {
             textAlign: 'center'
         }
     },
+    get threadTitle() {
+        return {
+            lineHeight: global.constants.LineHeight,
+            fontSize: global.configures.fontSize18,
+            fontWeight: '600',
+            color: global.colors.fontColor,
+        }
+    },
     get listTitle() {
         return {
             lineHeight: global.constants.LineHeight,
@@ -98,7 +106,7 @@ var CommonCSS = {
     get content() {
         return {
             lineHeight: global.constants.LineHeight,
-            fontSize: global.configures.fontSize16,
+            fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
         }
     },

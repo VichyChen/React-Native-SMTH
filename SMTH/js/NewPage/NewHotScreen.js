@@ -20,7 +20,9 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback,
   DeviceEventEmitter,
-  StatusBar
+  StatusBar,
+  Modal,
+  ActivityIndicator
 } from 'react-native';
 
 import SegmentedControl from 'antd-mobile/lib/segmented-control';
@@ -36,6 +38,7 @@ import {
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class NewHotScreen extends Component {
 
@@ -52,6 +55,10 @@ export default class NewHotScreen extends Component {
       showLogin: false,
       closeCallback: null,
       selectedIndex: 0,
+
+      showImageViewer: false,
+      images: [],
+      imageIndex: 0,
     }
 
     this.loginNotification = DeviceEventEmitter.addListener('LoginNotification', (closeCallback) => {
@@ -81,6 +88,13 @@ export default class NewHotScreen extends Component {
     this.newHotListScreenRefreshNotification = DeviceEventEmitter.addListener('NewHotScreenNotification', (index) => {
       this._tabSelectedIndex = index;
     });
+    this.showImagesNotification = DeviceEventEmitter.addListener('ShowImagesNotification', (object) => {
+      this.setState({
+        showImageViewer: true,
+        images: object.images,
+        imageIndex: object.index,
+      });
+    });
   }
 
   componentDidMount() {
@@ -94,7 +108,7 @@ export default class NewHotScreen extends Component {
     this.loginSuccessNotification.remove();
     this.doubleClickHotScreenNotification.remove();
     this.newHotListScreenRefreshNotification.remove();
-
+    this.showImagesNotification.remove();
     this._navListener.remove();
   }
 
@@ -194,6 +208,32 @@ export default class NewHotScreen extends Component {
         {
           this.state.showLogin == false ? null : (
             <NewLoginView visible={true} closeCallback={this.state.closeCallback} />
+          )
+        }
+        {
+          this.state.showImageViewer == false ? null : (
+            <Modal visible={true} transparent={true}>
+              <ImageViewer
+                imageUrls={this.state.images}
+                index={this.state.imageIndex}
+                onClick={() => {
+                  this.setState({
+                    showImageViewer: false,
+                  });
+                }}
+                loadingRender={() => (
+                  <ActivityIndicator
+                    color={global.colors.whiteColor}
+                    size="small"
+                    style={{
+                      height: global.constants.ScreenHeight,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                )}
+              />
+            </Modal>
           )
         }
       </View>

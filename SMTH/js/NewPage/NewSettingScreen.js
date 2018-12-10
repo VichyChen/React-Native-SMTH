@@ -25,6 +25,7 @@ import {
   CellBackground,
   PickerSelectView,
   NavigationBar,
+  ReactNavigation
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -62,13 +63,22 @@ export default class NewSettingScreen extends Component {
 
         <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
 
+          <View style={styles.rowView}>
+            <Text style={styles.leftText} >更多的设置内容正在开发中...敬请期待</Text>
+          </View>
+
           <SectionBlankHeader />
 
           <CellBackground onPress={() => {
-
+            if (global.login == true) {
+              ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: 'VichyChen' })
+            }
+            else {
+              DeviceEventEmitter.emit('LoginNotification', null);
+            }
           }} >
             <View style={styles.rowView}>
-              <Text style={styles.leftText} >意见反馈</Text>
+              <Text style={styles.leftText} >意见建议，Bug反馈</Text>
               <Image style={styles.rightArrow} source={global.images.icon_right_arrow} />
             </View>
           </CellBackground>

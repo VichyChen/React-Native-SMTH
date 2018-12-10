@@ -26,11 +26,12 @@ import {
     NavigationBar
 } from '../config/Common';
 
-var _user
-var _title;
-var _content;
-
 export default class NewMessageSendScreen extends Component {
+
+    _user
+    _title;
+    _content;
+
     constructor(props) {
         super(props);
 
@@ -40,17 +41,17 @@ export default class NewMessageSendScreen extends Component {
             title: this.props.navigation.state.params == null ? '' : this.props.navigation.state.params.title,
             content: this.props.navigation.state.params == null ? '' : this.props.navigation.state.params.content,
         }
-        _user = this.state.user;
-        _title = this.state.title;
-        _content = this.state.content;
+        this._user = this.state.user;
+        this._title = this.state.title;
+        this._content = this.state.content;
     }
 
     PostMail() {
-        if (_user.length == 0) {
+        if (this._user == null) {
             ToastUtil.info('请输入用户');
             return;
         }
-        if (_title.length == 0 || _content.length == 0) {
+        if (this._title == null || this._content == null) {
             ToastUtil.info('请输入标题和内容');
             return;
         }
@@ -58,7 +59,7 @@ export default class NewMessageSendScreen extends Component {
         this.setState({
             isLoading: true,
         });
-        NetworkManager.net_PostMail(_user, _title, _content, (result) => {
+        NetworkManager.net_PostMail(this._user, this._title, this._content, (result) => {
             this.props.navigation.goBack();
         }, (error) => {
             this.setState({
@@ -100,7 +101,7 @@ export default class NewMessageSendScreen extends Component {
                             spellCheck={false}
                             placeholder={'输入用户名'}
                             placeholderTextColor={global.colors.gray3Color}
-                            onChangeText={(text) => { this.setState({ user: text }); _user = text; }}
+                            onChangeText={(text) => { this.setState({ user: text }); this._user = text; }}
                             value={this.state.user}
                         />
                         <HorizontalSeperatorLine />
@@ -113,7 +114,7 @@ export default class NewMessageSendScreen extends Component {
                             placeholder={'输入标题'}
                             placeholderTextColor={global.colors.gray3Color}
                             autoCapitalize={'none'}
-                            onChangeText={(text) => { this.setState({ title: text }); _title = text; }}
+                            onChangeText={(text) => { this.setState({ title: text }); this._title = text; }}
                             value={this.state.title}
                         />
                         <HorizontalSeperatorLine />
@@ -130,7 +131,7 @@ export default class NewMessageSendScreen extends Component {
                             selection={this.state.selection}
                             onSelectionChange={(event) => this.setState({ selection: event.nativeEvent.selection })}
                             onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
-                            onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
+                            onChangeText={(text) => { this.setState({ content: text }); this._content = text; }}
                             value={this.state.content}
                         />
                     </ScrollView>

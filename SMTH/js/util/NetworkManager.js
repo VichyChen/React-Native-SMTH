@@ -61,11 +61,11 @@ export default class NetworkManager {
                 }
                 //其他情况？？？
                 else {
-                    if (result['error'] != null && result['error_description'] != null) {
-                        failure({ error: result['error'], message: result['error_description'] });
+                    if (result['error'] == null || result['error_description'] == null) {
+                        failure({ error: 99999, message: '未知错误' });
                     }
                     else {
-                        failure({ error: 99999, message: '未知错误' });
+                        failure({ error: result['error'], message: result['error_description'] });
                     }
                 }
 

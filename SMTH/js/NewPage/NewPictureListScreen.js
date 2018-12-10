@@ -19,7 +19,9 @@ import {
     SectionList,
     TouchableHighlight,
     TouchableWithoutFeedback,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Modal,
+    ActivityIndicator
 } from 'react-native';
 
 import {
@@ -108,7 +110,7 @@ export default class NewPictureListScreen extends Component {
                         this.$ = cio.load(elem, { decodeEntities: false });
                         attachment_list.push({
                             key: attachment_list.length,
-                            url: this.$('img').attr('src')
+                            url: this.$('img').attr('src'),
                         });
                     });
                 }
@@ -193,26 +195,62 @@ export default class NewPictureListScreen extends Component {
                             <View style={[styles.imageView, { width: (global.constants.ScreenWidth - (global.constants.Padding * 2)) + 10 }]} >
                                 {
                                     item.attachment_list.length > 0 ?
-                                        <CachedImage style={[styles.image, {
-                                            width: this._width,
-                                            height: this._height,
-                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[0].url }} />
+                                        <TouchableWithoutFeedback
+                                            onPress={() => {
+                                                var array = [];
+                                                for (var i = 0; i < item.attachment_list.length; i++) {
+                                                    array.push({
+                                                        url: ('https://exp.newsmth.net/' + item.attachment_list[i].url)
+                                                        // url: ('https://exp.newsmth.net/' + (item.attachment_list[i].url).replace('?w=300&amp;h=400', ''))
+                                                    });
+                                                }
+                                                DeviceEventEmitter.emit('ShowImagesNotification', { images: array, index: 0 });
+                                            }}>
+                                            <CachedImage style={[styles.image, {
+                                                width: this._width,
+                                                height: this._height,
+                                            }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[0].url }} />
+                                        </TouchableWithoutFeedback>
                                         : null
                                 }
                                 {
                                     item.attachment_list.length > 1 ?
-                                        <CachedImage style={[styles.image, {
-                                            width: this._width,
-                                            height: this._height,
-                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[1].url }} />
+                                        <TouchableWithoutFeedback
+                                            onPress={() => {
+                                                var array = [];
+                                                for (var i = 0; i < item.attachment_list.length; i++) {
+                                                    array.push({
+                                                        url: ('https://exp.newsmth.net/' + item.attachment_list[i].url)
+                                                        // url: ('https://exp.newsmth.net/' + (item.attachment_list[i].url).replace('?w=300&amp;h=400', ''))
+                                                    });
+                                                }
+                                                DeviceEventEmitter.emit('ShowImagesNotification', { images: array, index: 1 });
+                                            }}>
+                                            <CachedImage style={[styles.image, {
+                                                width: this._width,
+                                                height: this._height,
+                                            }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[1].url }} />
+                                        </TouchableWithoutFeedback>
                                         : null
                                 }
                                 {
                                     item.attachment_list.length > 2 ?
-                                        <CachedImage style={[styles.image, {
-                                            width: this._width,
-                                            height: this._height,
-                                        }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[2].url }} />
+                                        <TouchableWithoutFeedback
+                                            onPress={() => {
+                                                var array = [];
+                                                for (var i = 0; i < item.attachment_list.length; i++) {
+                                                    array.push({
+                                                        url: ('https://exp.newsmth.net/' + item.attachment_list[i].url)
+                                                        // url: ('https://exp.newsmth.net/' + (item.attachment_list[i].url).replace('?w=300&amp;h=400', ''))
+                                                    });
+                                                }
+                                                DeviceEventEmitter.emit('ShowImagesNotification', { images: array, index: 2 });
+                                            }}>
+                                            <CachedImage style={[styles.image, {
+                                                width: this._width,
+                                                height: this._height,
+                                            }]} source={{ uri: 'https://exp.newsmth.net' + item.attachment_list[2].url }} />
+                                        </TouchableWithoutFeedback>
                                         : null
                                 }
                             </View>
