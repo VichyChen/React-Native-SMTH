@@ -76,7 +76,7 @@
 #if FREEVERSION
 
 //友盟appkey
-////正式
+//正式
 //#define kUmengAppKey @"5a470b8cf43e487a6a000188"
 //测试
 #define kUmengAppKey @"5a470acdf29d9838d60000dc"
@@ -84,14 +84,10 @@
 //广点通
 //正式
 //#define kGDTAppKey @"1106572785"
-//#define kGDTBannerPlacementID @""
 //#define kGDTSplashPlacementID @"1050322993120521"
-//#define kGDTNativeExpressPlacementID @""
 //测试
 #define kGDTAppKey @"1105344611"
-#define kGDTBannerPlacementID @"4090812164690039"
 #define kGDTSplashPlacementID @"9040714184494018"
-#define kGDTNativeExpressPlacementID @"9090529359814184"
 
 #define kGDTSplashTShowTimeInterVal 1800
 

@@ -110,9 +110,9 @@ export default class NewUserScreen extends Component {
                     rightButtonTintColor={global.colors.whiteColor}
                     rightButtonImageMargin={28}
                     rightButtonOnPress={() => {
-                        if (this.props.navigation.state.params.id != null) {
+                        if (this.props.navigation.state.params.id != null || this.state.id != null) {
                             var shareManager = NativeModules.ShareManager;
-                            shareManager.share(this.props.navigation.state.params.name + ' - 水木社区', 'https://exp.newsmth.net/account/' + this.props.navigation.state.params.id);
+                            shareManager.share(this.props.navigation.state.params.name + ' - 水木社区', 'https://exp.newsmth.net/account/' + this.props.navigation.state.params.id != null ? this.props.navigation.state.params.id : this.state.id);
                         }
                     }}
                 />
