@@ -103,7 +103,7 @@ export default class NewHotListScreen extends Component {
                 this.$ = cio.load(elem);
                 var index = i + ((page - 1) * 20);
                 array.push({
-                    key: index,
+                    key: uuid.v4(),
                     id: this.$('a[class=article-subject]').attr('href').split('/')[2],
                     avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
                     authorID: this.$('div[class=article-account-name]').children().first().attr('href').split('/')[2],
@@ -119,13 +119,14 @@ export default class NewHotListScreen extends Component {
                     picture: this.$('span[class*=glyphicon-picture]').parent().text(),
                 });
 
-                if (pageIndex == 0 && [10, 20, 30, 40].indexOf(index) != -1) {
+                if (pageIndex == 0 && page < 3 && [5, 15].indexOf(i) != -1) {
                     array.push({
                         key: 'ad' + uuid.v4(),
                         type: 'ad',
-                        adTag: { '10': 200, '20': 201, '30': 202, '40': 203 }[index.toString()],
+                        adTag: { '5': 200, '15': 201, '25': 202, '35': 203 }[(i + ((page - 1) * 20)).toString()],
                     });
                 }
+
             });
 
             // var login = this.$('ul[class*=navbar-right]').children().first().children().first().text();

@@ -128,11 +128,11 @@ export default class NewPictureListScreen extends Component {
                     attachment_list: attachment_list,
                 });
 
-                if ([10, 20, 30, 40].indexOf(index) != -1) {
+                if (page < 3 && [5, 15].indexOf(i) != -1) {
                     array.push({
                         key: 'ad' + uuid.v4(),
                         type: 'ad',
-                        adTag: { '10': 300, '20': 301, '30': 302, '40': 303 }[index.toString()],
+                        adTag: { '5': 300, '15': 301, '25': 302, '35': 303 }[(i + ((page - 1) * 20)).toString()],
                     });
                 }
             });
