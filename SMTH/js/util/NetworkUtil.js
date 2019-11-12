@@ -170,6 +170,71 @@ export default class NetworkUtil {
     });
   }
 
+  static getNewSMTH(url, params) {
+    console.log('NetworkUtil get');
+    return new Promise(function (resolve, reject) {
+      if (params) {
+        let paramsArray = [];
+        Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
+        if (url.search(/\?/) === -1) {
+          url += '?' + paramsArray.join('&')
+        } else {
+          url += '&' + paramsArray.join('&')
+        }
+      }
+      NetworkUtil.timeout(15000, fetch(url, {
+        method: 'GET',
+        headers: {
+           "user-agent": _pcUserAgent,
+           "X-Requested-With": "XMLHttpRequest",
+        },
+        credentials: 'include'
+      }))
+        .then((responseData) => {
+          console.log('result:', url, responseData._bodyInit);
+          resolve(responseData);
+        })
+        .catch((err) => {
+          console.log('error:', url, err);
+          reject(err);
+        });
+    });
+  }
+
+  static postNewSMTH(url, params) {
+    let paramsArray = [];
+    Object.keys(params).forEach(key => paramsArray.push(key + '=' + params[key]))
+
+    console.log('\n\n');
+    console.log('*****************************************************************');
+    console.log('Post:\n' + url);
+    console.log('paramsArray.join(): ' + paramsArray.join('&'))
+
+    return new Promise(function (resolve, reject) {
+      NetworkUtil.timeout(15000, fetch(url, {
+        method: 'POST',
+        headers: {
+          "user-agent": _pcUserAgent,
+          "X-Requested-With": "XMLHttpRequest",
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+        credentials: 'include',
+        body: paramsArray.join('&')
+      }))
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log('ResponseJson:\n' + JSON.stringify(responseData));
+          resolve(responseData);
+        })
+        .catch((error) => {
+          console.log('error:' + error);
+          console.log('error.name====' + error.name);
+          console.log('error.message====' + error.message);
+          reject(error);
+        });
+    });
+  }
+
   static timeout(time, promise) {
     return new Promise(function (resolve, reject) {
       const timeoutId = setTimeout(function () {

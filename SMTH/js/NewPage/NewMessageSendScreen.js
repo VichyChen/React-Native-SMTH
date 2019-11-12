@@ -59,7 +59,20 @@ export default class NewMessageSendScreen extends Component {
         this.setState({
             isLoading: true,
         });
-        NetworkManager.net_PostMail(this._user, this._title, this._content, (result) => {
+        // NetworkManager.net_PostMail(this._user, this._title, this._content, (result) => {
+        //     this.props.navigation.goBack();
+        // }, (error) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     });
+        //     ToastUtil.error(error);
+        // }, (errorMessage) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     });
+        //     ToastUtil.error(errorMessage);
+        // });
+        NetworkManager.postNewSMTHSendMail(this._user, this._title, this._content, 0, 'on', '', (result) => {
             this.props.navigation.goBack();
         }, (error) => {
             this.setState({

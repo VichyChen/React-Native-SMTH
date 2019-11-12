@@ -38,7 +38,7 @@ import AsyncStorageManger from '../storage/AsyncStorageManger';
 
 var _dataArray;
 
-export default class NewFavouriteBoardScreen extends Component {
+export default class NewSMTHFavouriteBoardScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -99,11 +99,11 @@ export default class NewFavouriteBoardScreen extends Component {
     }
 
     net_LoadFavorites() {
-        NetworkManager.net_LoadFavorites(0, (result) => {
-            for (var i = 0; i < result['favorites'].length; i++) {
-                result['favorites'][i].key = i;
+        NetworkManager.getNewSMTHFav((result) => {
+            for (var i = 0; i < result.length; i++) {
+                result[i].key = i;
             }
-            _dataArray = result['favorites'];
+            _dataArray = result;
             this.setState({
                 dataArray: _dataArray,
                 pullLoading: false,
@@ -130,8 +130,11 @@ export default class NewFavouriteBoardScreen extends Component {
             isDeleting: true,
             screenStatus: global.screen.loadingClear,
         });
-        NetworkManager.net_DelFav(item.id, (result) => {
+        NetworkManager.postNewSMTHDelFav(item.name, (result) => {
             _dataArray.splice(item.key, 1);
+            for (var i = 0; i < _dataArray.length; i++) {
+                _dataArray[i].key = i;
+            }
             this.setState({
                 dataArray: _dataArray,
                 isDeleting: false,
@@ -195,12 +198,9 @@ export default class NewFavouriteBoardScreen extends Component {
                                             return (
                                                 <View key={i} >
                                                     <Text style={CommonCSS.itemBoard} onPress={() => {
-                                                        if (global.boards.all[item.id] == null) {
-                                                            return;
-                                                        }
-                                                        ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: global.boards.all[item.id].id, name: item.name, title: item.id });
+                                                        ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: '', name: item.description, title: item.name });
                                                     }}>
-                                                        {item.name}
+                                                        {item.description}
                                                     </Text> 
                                                     {
                                                         this.state.editing == true

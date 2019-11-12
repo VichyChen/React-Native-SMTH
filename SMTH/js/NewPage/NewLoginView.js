@@ -28,6 +28,7 @@ import {
     NavigationBar
 } from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import Cookie from 'react-native-cookie';
 
 var _username = '';
 var _password = '';
@@ -53,33 +54,34 @@ export default class NewLoginView extends Component {
         this.getPassword();
 
 
-        NetworkManager.getNewAuthorize((result) => {
+        // NetworkManager.getNewAuthorize((result) => {
 
-            this.refreshCaptcha();
+        //     this.refreshCaptcha();
 
-        }, (error) => {
+        // }, (error) => {
 
-        }, (errorMessage) => {
+        // }, (errorMessage) => {
 
-        });
+        // });
 
     }
 
-    refreshCaptcha() {
-        NetworkManager.getNewCaptcha((result1) => {
+    // refreshCaptcha() {
+    //     NetworkManager.getNewCaptcha((result1) => {
 
-            this.setState({
-                image: 'data:image/png;base64,' + result1
-            });
-        }, (error) => {
+    //         this.setState({
+    //             image: 'data:image/png;base64,' + result1
+    //         });
+    //     }, (error) => {
 
-        }, (errorMessage) => {
+    //     }, (errorMessage) => {
 
-        });
-    }
+    //     });
+    // }
 
     login() {
-        if (_username.length == 0 || _password.length == 0 || _captcha.length == 0) {
+        // if (_username.length == 0 || _password.length == 0 || _captcha.length == 0) {
+        if (_username.length == 0 || _password.length == 0) {
             this.setState({
                 screenText: '',
             })
@@ -89,38 +91,31 @@ export default class NewLoginView extends Component {
             isLoading: true,
         })
 
-        NetworkManager.postNewSignIn(_username, _password, _captcha, (result) => {
+        // NetworkManager.postNewSignIn(_username, _password, _captcha, (result) => {
 
-            NetworkManager.login(_username, _password, () => {
+        // NetworkManager.login(_username, _password, () => {
 
-                AsyncStorageManger.setLogin(true);
-                global.login = true;
-                global.current.username = _username;
+        NetworkManager.postNewSMTHLogin(_username, _password, 2, (result) => {
 
-                DeviceEventEmitter.emit('LoginSuccessNotification', _username);
-                if (this.props.closeCallback != null) {
-                    this.props.closeCallback();
-                }
+            Cookie.get('http://www.newsmth.net')
+                .then((res) => {
+                    console.log('http://www.newsmth.net CookieManager.get =>', res); // => 'user_session=abcdefg; path=/;'
+                });
 
-                this.setState({
-                    isLoading: false,
-                })
-            }, (error) => {
-                this.setState({
-                    isLoading: false,
-                })
-            }, (errorMessage) => {
-                this.setState({
-                    isLoading: false,
-                })
-            });
+            AsyncStorageManger.setLogin(true);
+            global.login = true;
+            global.current.username = _username;
 
-        }, (error) => {
-            this.refreshCaptcha();
-            _captcha = '';
+            DeviceEventEmitter.emit('LoginSuccessNotification', result);
+            if (this.props.closeCallback != null) {
+                this.props.closeCallback();
+            }
+
             this.setState({
-                captcha: '',
-                screenText: error,
+                isLoading: false,
+            })
+        }, (error) => {
+            this.setState({
                 isLoading: false,
             })
         }, (errorMessage) => {
@@ -128,6 +123,30 @@ export default class NewLoginView extends Component {
                 isLoading: false,
             })
         });
+
+        // }, (error) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     })
+        // }, (errorMessage) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     })
+        // });
+
+        // }, (error) => {
+        //     this.refreshCaptcha();
+        //     _captcha = '';
+        //     this.setState({
+        //         captcha: '',
+        //         screenText: error,
+        //         isLoading: false,
+        //     })
+        // }, (errorMessage) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     })
+        // });
     }
 
     componentWillUnmount() {
@@ -154,11 +173,12 @@ export default class NewLoginView extends Component {
                 animationType={"slide"}
                 transparent={false}
                 visible={this.props.visible}
-                onRequestClose={() => { alert("Modal has been closed.") }}
+                onRequestClose={() => { alert("Modal has been closed.") }
+                }
             >
                 {/* <View> */}
 
-                <NavigationBar
+                < NavigationBar
                     title={'天天水木'}
                     showCloseButton={true}
                     closeButtonOnPress={() => {
@@ -215,7 +235,7 @@ export default class NewLoginView extends Component {
                                 placeholder={'密码'}
                             />
                         </View>
-                        <View style={[{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginTop: 20 }]}>
+                        {/* <View style={[{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginTop: 20 }]}>
                             <View style={[styles.textInputView, styles.textInputViewShadow, { width: ((global.constants.ScreenWidth - 40) / 2) }]}>
                                 <Image style={[styles.textInputLeftImage]} source={global.images.icon_login_captcha} />
                                 <TextInput
@@ -246,7 +266,7 @@ export default class NewLoginView extends Component {
                                 </View>
                             </View>
 
-                        </View>
+                        </View> */}
 
                         {
                             this.state.isLoading == true ?

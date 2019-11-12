@@ -45,6 +45,16 @@ import NewSearchArticleScreen from '../../NewPage/NewSearchArticleScreen';
 import NewSearchBoardScreen from '../../NewPage/NewSearchBoardScreen';
 import NewSearchAccountScreen from '../../NewPage/NewSearchAccountScreen';
 
+import NewSMTHBoardScreen from '../../NewSMTHPage/NewSMTHBoardScreen';
+import NewSMTHMyScreen from '../../NewSMTHPage/NewSMTHMyScreen';
+import NewSMTHFavouriteBoardScreen from '../../NewSMTHPage/NewSMTHFavouriteBoardScreen';
+import NewSMTHThreadDetailScreen from '../../NewSMTHPage/NewSMTHThreadDetailScreen';
+import NewSMTHReplyThreadScreen from '../../NewSMTHPage/NewSMTHReplyThreadScreen';
+import NewSMTHPostThreadScreen from '../../NewSMTHPage/NewSMTHPostThreadScreen';
+import NewSMTHThreadDetailLikeScreen from '../../NewSMTHPage/NewSMTHThreadDetailLikeScreen';
+import NewSMTHSearchThreadScreen from '../../NewSMTHPage/NewSMTHSearchThreadScreen';
+import NewSMTHSearchThreadResultScreen from '../../NewSMTHPage/NewSMTHSearchThreadResultScreen';
+
 import {
     Color
 } from '../../config/Common';
@@ -90,6 +100,16 @@ const SMTHStackNavigator = StackNavigator({
     newSearchArticleScreen: { screen: NewSearchArticleScreen },
     newSearchBoardScreen: { screen: NewSearchBoardScreen },
     newSearchAccountScreen: { screen: NewSearchAccountScreen },
+
+    newSMTHBoardScreen: { screen: NewSMTHBoardScreen },
+    newSMTHMyScreen: { screen: NewSMTHMyScreen },
+    newSMTHFavouriteBoardScreen: { screen: NewSMTHFavouriteBoardScreen },
+    newSMTHThreadDetailScreen: { screen: NewSMTHThreadDetailScreen },
+    newSMTHReplyThreadScreen: { screen: NewSMTHReplyThreadScreen },
+    newSMTHPostThreadScreen: { screen: NewSMTHPostThreadScreen },
+    newSMTHThreadDetailLikeScreen: { screen: NewSMTHThreadDetailLikeScreen },
+    newSMTHSearchThreadScreen: { screen: NewSMTHSearchThreadScreen },
+    newSMTHSearchThreadResultScreen: { screen: NewSMTHSearchThreadResultScreen },
 },
     {
         navigationOptions: {

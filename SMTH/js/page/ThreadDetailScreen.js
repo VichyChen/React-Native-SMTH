@@ -343,14 +343,14 @@ export default class ThreadDetailScreen extends Component {
             if (global.boards.all[unescape(this.props.navigation.state.params.board)] == null) {
               return;
             }
-            ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', {
+            ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', {
               id: global.boards.all[unescape(this.props.navigation.state.params.board)].id,
               name: global.boards.all[unescape(this.props.navigation.state.params.board)].name,
               title: unescape(this.props.navigation.state.params.board),
             });
           }}
           showBackButton={true}
-          showBottomLine={true}
+          showBottomLine={false}
           navigation={this.props.navigation}
           rightButtonImage={this.state.screenStatus == global.screen.loading ? null : global.images.icon_more}
           rightButtonOnPress={() => {

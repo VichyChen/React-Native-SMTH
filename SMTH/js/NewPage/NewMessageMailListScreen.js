@@ -28,12 +28,12 @@ import {
     ReactNavigation
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
+import cio from 'cheerio-without-node-native';
 
 export default class NewMessageMailListScreen extends Component {
 
-    from = 0;
-    size = 20;
-
+    page = 1;
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -42,23 +42,44 @@ export default class NewMessageMailListScreen extends Component {
             screenStatus: global.screen.loading,
             screenText: null,
             dataArray: [],
+            totalCount: 0,
+            totalPage: 0,
         }
 
-        this.from = 0;
-        this.net_LoadMailList(this.from, this.size);
+        this.page = 1;
+        this.getNewSMTHMail(this.page);
     }
 
-    net_LoadMailList(from, size) {
-        NetworkManager.net_LoadMailList(from, size, (result) => {
-            for (var i = 0; i < result['mails'].length; i++) {
-                result['mails'][i].key = from + i;
+    getNewSMTHMail(page) {
+        NetworkManager.getNewSMTHMail(page, (result) => {
+            this.$ = cio.load(result);
+            var totalCount = this.$('li[class=page-pre]').first().children().first().text();
+
+            this.$ = cio.load(this.$('table[class=m-table]').html());
+            var dataArray = [];
+            if (page != 1) {
+                dataArray = dataArray.concat(this.state.dataArray);
             }
+            this.$('tr').each(function (i, elem) {
+                this.$ = cio.load(elem);
+                dataArray.push({
+                    key: page * 20 + i,
+                    author_id: this.$('td').first().next().children().first().text(),
+                    subject: this.$('td').first().next().next().children().first().text(),
+                    time: this.$('td').last().text(),
+                    url: this.$('td').first().next().next().children().first().attr('href'),
+                    isRead: true,
+                });
+            });
+
             this.setState({
-                dataArray: from == 0 ? result['mails'] : this.state.dataArray.concat(result['mails']),
+                dataArray: dataArray,
+                totalCount: totalCount,
+                totalPage: totalCount % 20 == 0 ? (totalCount / 20) : (totalCount / 20 + 1),
                 pullLoading: false,
                 pullMoreLoading: false,
-                screenStatus: global.screen.none,
-                screenText: result['mails'].length == 0 ? '您没有任何邮件' : null
+                screenStatus: dataArray.length == 0 ? global.screen.text : global.screen.none,
+                screenText: dataArray.length == 0 ? '收件箱没有邮件' : null
             });
         }, (error) => {
             this.setState({
@@ -96,7 +117,7 @@ export default class NewMessageMailListScreen extends Component {
                                 uri={NetworkManager.net_getFace(item.author_id)} />
                             <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.author_id}</Text>
                         </View>
-                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(item.time)}</Text>
+                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{item.time}</Text>
                         <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
                     </View>
                     <SeperatorLine />
@@ -111,7 +132,7 @@ export default class NewMessageMailListScreen extends Component {
                 this.setState({
                     screenStatus: global.screen.loading,
                 });
-                this.net_LoadMailList(this.from, this.size);
+                this.getNewSMTHMail(this.page);
             }} >
                 <View style={[styles.content]}>
                     <FlatList
@@ -125,16 +146,16 @@ export default class NewMessageMailListScreen extends Component {
                             this.setState({
                                 pullLoading: true
                             });
-                            this.from = 0;
-                            this.net_LoadMailList(this.from, this.size);
+                            this.page = 1;
+                            this.getNewSMTHMail(this.page);
                         }}
                         onEndReached={() => {
-                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this.page + 1 <= this.state.totalPage) {
                                 this.setState({
                                     pullMoreLoading: true
                                 });
-                                this.from = this.from + this.size;
-                                this.net_LoadMailList(this.from, this.size);
+                                this.page++;
+                                this.getNewSMTHMail(this.page);
                             }
                         }}
                         onEndReachedThreshold={0.2}

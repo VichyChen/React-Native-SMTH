@@ -43,21 +43,30 @@ var _rightDataArray = [];
 var _leftSelectedItem = 0;
 var _catchDataArray = [];
 
-export default class NewBoardScreen extends Component {
+export default class NewSMTHBoardsScreen extends Component {
 
     constructor(props) {
         super(props);
+
+
+        var array = [];
+        for (var i = 0; i < global.smthBoards.all[0].boards.length; i++) {
+            this.$ = cio.load(global.smthBoards.all[0].boards[i]['t']);
+            array.push({
+                key: i,
+                id: this.$('a').first().attr('href').split('/')[3],
+                name: this.$('a').first().text(),
+            });
+        }
+
         this.state = {
-            screenStatus: global.screen.loading,
-            leftDataArray: global.sections.all,
-            rightDataArray: [],
+            leftDataArray: global.smthBoards.all,
+            rightDataArray: array,
         }
 
         this.refreshViewNotification = DeviceEventEmitter.addListener('RefreshViewNotification', () => {
             this.setState({});
         });
-
-        this.getSectionsFromCatch(0, this.state.leftDataArray[0].id);
     }
 
     componentDidMount() {
@@ -71,17 +80,33 @@ export default class NewBoardScreen extends Component {
         this._navListener.remove();
     }
 
-    getSectionsFromCatch(key, id) {
-        BoardListModel.read(id).then((object) => {
-            this.refs.scrollView.scrollTo({ x: 0, y: 0, animated: false });
-            this.setState({
-                screenStatus: object == null ? global.screen.loading : global.screen.none,
-                rightDataArray: object == null ? [] : JSON.parse(object.json)
+    getSectionsFromCatch(index) {
+        var array = [];
+        for (var i = 0; i < global.smthBoards.all[index].boards.length; i++) {
+            this.$ = cio.load(global.smthBoards.all[index].boards[i]['t']);
+            array.push({
+                key: i,
+                id: this.$('a').first().attr('href').split('/')[3],
+                name: this.$('a').first().text(),
             });
-            if (_catchDataArray.indexOf(id) == -1) {
-                this.getSections(key, id);
-            }
+        }
+        this.refs.scrollView.scrollTo({ x: 0, y: 0, animated: false });
+        this.setState({
+            screenStatus: global.screen.none,
+            rightDataArray: array
         });
+
+
+        // BoardListModel.read(id).then((object) => {
+        //     this.refs.scrollView.scrollTo({ x: 0, y: 0, animated: false });
+        //     this.setState({
+        //         screenStatus: object == null ? global.screen.loading : global.screen.none,
+        //         rightDataArray: object == null ? [] : JSON.parse(object.json)
+        //     });
+        // if (_catchDataArray.indexOf(id) == -1) {
+        //     this.getSections(key, id);
+        // }
+        // });
     }
 
     getSections(index, section_id) {
@@ -137,7 +162,7 @@ export default class NewBoardScreen extends Component {
                 showSelect={false}
                 onPress={() => {
                     _leftSelectedItem = item.key;
-                    this.getSectionsFromCatch(item.key, item.id);
+                    this.getSectionsFromCatch(item.key);
                 }}
             >
                 <View>
@@ -174,11 +199,7 @@ export default class NewBoardScreen extends Component {
                                     this.state.rightDataArray.map((item, i) => {
                                         return (
                                             <Text key={i} style={CommonCSS.itemBoard} onPress={() => {
-                                                ReactNavigation.navigate(this.props.navigation, 'newBoardListScreen', {
-                                                    id: item.id,
-                                                    name: item.name,
-                                                    title: item.title
-                                                });
+                                                ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: '', name: item.name, title: item.id });
                                             }}>
                                                 {item.name}
                                             </Text>

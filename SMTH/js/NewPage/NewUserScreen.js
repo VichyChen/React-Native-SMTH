@@ -73,21 +73,22 @@ export default class NewUserScreen extends Component {
     }
 
     queryUser() {
-        NetworkManager.net_QueryUser(this.props.navigation.state.params.name, (result) => {
+        NetworkManager.getNewSMTHQueryUser(this.props.navigation.state.params.name, (result) => {
             this.setState({
                 isLoading: false,
-                nick: result['user'].nick,
-                uid: result['user'].uid,
-                gender: result['user'].gender,
-                title: result['user'].title,
-                posts: result['user'].posts,
-                logins: result['user'].logins,
-                level: result['user'].level,
-                score: result['user'].score,
-                first_login: result['user'].first_login,
-                last_login: result['user'].last_login,
-                age: result['user'].age,
-                life: result['user'].life,
+                nick: result['user_name'],
+                uid: result['id'],
+                gender: result['gender'],
+                title: result['level'],
+                posts: result['post_count'],
+                logins: result['login_count'],
+                level: result['life'],
+                score: result['score_user'],
+                // first_login: result['user'].first_login,
+                last_login: result['last_login_time'],
+                last_login_ip: result['last_login_ip'],
+                // age: result['user'].age,
+                life: result['life'],
             });
         }, (error) => {
 
@@ -148,7 +149,7 @@ export default class NewUserScreen extends Component {
                     showSelect={false}
                     onPress={() => {
                         if (global.login == true) {
-                            NetworkManager.net_AddUserFriend(this.props.navigation.state.params.name, (result) => {
+                            NetworkManager.postNewSMTHAddFriend(this.props.navigation.state.params.name, (result) => {
                                 ToastUtil.info("关注成功");
                             }, (error) => {
                                 ToastUtil.info(error.message);
@@ -230,8 +231,8 @@ export default class NewUserScreen extends Component {
                             {
                                 '上次登录 ' +
                                 (global.login == true && this.state.last_login != null ? DateUtil.formatTimeStamp(this.state.last_login) : '无') +
-                                '  |  注册于 ' +
-                                (global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
+                                '  |  最后访问IP ' + this.state.last_login_ip
+                                // (global.login == true && this.state.first_login != null ? DateUtil.formatTimeStamp(this.state.first_login) : '无')
                             }
                         </Text>
                     </View>

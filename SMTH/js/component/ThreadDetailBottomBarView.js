@@ -18,7 +18,7 @@ export default class ThreadDetailBottomBarView extends Component {
     render() {
         return (
             <View style={styles.background}>
-                <HorizontalSeperatorLine />
+                {/* <HorizontalSeperatorLine /> */}
                 <View style={styles.container} >
                     <Button
                         onPress={this.props.onPreviousClick}

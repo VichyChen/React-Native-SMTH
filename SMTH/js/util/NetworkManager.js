@@ -6,6 +6,8 @@ import NetworkUtil from './NetworkUtil';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import RNFetchBlob from "react-native-fetch-blob";
 
+import LoginManager from '../util/LoginManager';
+
 const base_url = "http://open.newsmth.net/";
 
 const client_id = "testapp";
@@ -1116,7 +1118,7 @@ export default class NetworkManager {
     }
 
     //搜索版面
-    static getNewSearchBoard(keyword, page, success, failure, netError) {   
+    static getNewSearchBoard(keyword, page, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/search?mode=board&keyword=' + keyword + '&page=' + page, null, result => {
             success(result._bodyInit);
         }, error => {
@@ -1127,7 +1129,7 @@ export default class NetworkManager {
     }
 
     //搜索用户
-    static getNewSearchAccount(keyword, page, success, failure, netError) {   
+    static getNewSearchAccount(keyword, page, success, failure, netError) {
         NetworkManager.getNew('https://exp.newsmth.net/search?mode=account&keyword=' + keyword + '&page=' + page, null, result => {
             success(result._bodyInit);
         }, error => {
@@ -1306,10 +1308,10 @@ export default class NetworkManager {
     static postUpload(images, success, failure, netError) {
         var length = images.length;
         var count = 0;
-        console.log('length:' +length);
+        console.log('length:' + length);
         for (var i = 0; i < length; i++) {
             var array = images[i].uri.split('/');
-            NetworkUtil.uploadNew('https://exp.newsmth.net/compose/upload', 'files', images[i].uri, array[array.length -1]).then(async result => {
+            NetworkUtil.uploadNew('https://exp.newsmth.net/compose/upload', 'files', images[i].uri, array[array.length - 1]).then(async result => {
                 if (result.error == '') {
                     count++;
                     if (count == length) {
@@ -1330,5 +1332,534 @@ export default class NetworkManager {
             });
 
         }
+    }
+
+    //**************************************** http://www.newsmth.net/ ****************************************/
+
+
+    //获取SMTH首页
+    static getNewSMTHFirst(success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/', null
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    //获取SMTH首页
+    static getNewSMTHHome(success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/mainpage?ajax', null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    //获取板块主题
+    static getNewSMTHBoardThreadList(board, page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/board/' + board + '?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    //登陆
+    static postNewSMTHLogin(id, password, cookieDate, success, failure, netError) {
+        let params = {
+            id: id,
+            passwd: password,
+            CookieDate: cookieDate,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/user/ajax_login.json', params
+        ).then(async result => {
+            AsyncStorageManger.setUsername(id);
+            AsyncStorageManger.setPassword(password);
+            success(result);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 退出注销
+    static postNewSMTHLogout(success, failure, netError) {
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/user/ajax_logout.json', {}
+        ).then(async result => {
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 登陆用户session数据
+    static getNewSMTHAjaxSession(success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/user/ajax_session.json', {}
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 用户查询
+    static getNewSMTHQueryUser(username, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/user/query/' + username + '.json', {}
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+
+
+    // 收藏版面
+    static getNewSMTHFav(success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/fav/0.json?_t=' + '', {}
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 删除收藏版面
+    static postNewSMTHDelFav(board, success, failure, netError) {
+        let params = {
+            ac: 'db',
+            v: board,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/fav/op/0.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 添加收藏版面
+    static postNewSMTHAddFav(board, success, failure, netError) {
+        let params = {
+            ac: 'ab',
+            v: board,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/fav/op/0.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 删除驻版
+    static postNewSMTHDelMember(board, success, failure, netError) {
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/board/' + board + '/ajax_quit_member.json', {}
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 添加驻版
+    static postNewSMTHAddMember(board, success, failure, netError) {
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/board/' + board + '/ajax_join_member.json', {}
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 添加好友
+    static postNewSMTHAddFriend(username, success, failure, netError) {
+        let params = {
+            id: username,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/friend/ajax_add.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 删除好友(未完成，动态key不知道怎么搞)
+    static postNewSMTHDelFriend(username, success, failure, netError) {
+        // var key = 'f_' + username;
+        let params = {
+            // key: 'on',   ??????????
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/friend/ajax_delete.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success();
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 发私信
+    static postNewSMTHSendMail(id, title, content, signature, backup, num, success, failure, netError) {
+        let params = {
+            id: id,
+            title: title,
+            content: content,
+            signature: signature,
+            backup: backup,
+            num: num,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/mail/NULL/ajax_send.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 收件箱
+    static getNewSMTHMail(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/mail?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 收件箱详情
+    static getNewSMTHMailDetail(url, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net' + url, null
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 发件箱
+    static getNewSMTHOutbox(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/mail/outbox?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 发件箱详情
+    static getNewSMTHOutboxDetail(url, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net' + url, null
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // at我
+    static getNewSMTHAt(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/refer/at?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 回复我
+    static getNewSMTHReply(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/refer/reply?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // like我
+    static getNewSMTHLike(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/refer/like?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // like我
+    static getNewSMTHLike(page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/refer/like?ajax&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 获取帖子详情
+    static getNewSMTHThread(board, id, author, page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/' + id + '?ajax&p=' + page + (author.length > 0 ? '&au=' + author : ''), null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 获取回帖详情
+    static getNewSMTHReplyThreadDetail(board, id, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/post/' + id + '?ajax', null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 回帖
+    static postNewSMTHReplyThread(board, subject, content, id, success, failure, netError) {
+        let params = {
+            subject: subject,
+            content: content,
+            id: id,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/ajax_post.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 获取发帖详情
+    static getNewSMTHPostThreadDetail(board, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/post?ajax', null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // 发帖
+    static postNewSMTHPostThread(board, subject, content, success, failure, netError) {
+        let params = {
+            subject: subject,
+            content: content,
+            id: 0,
+            signature: 0,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/ajax_post.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    // Like
+    static postNewSMTHLike(board, id, score, msg, tag, success, failure, netError) {
+        let params = {
+            score: score,
+            msg: msg,
+            tag: tag,
+        }
+        NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/ajax_add_like/' + id + '.json', params
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
+    //搜索帖子
+    static getNewSMTHSearchThread(board, title, author, page, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/s/article?ajax&t1=' + title + '&au=' + author + '&b=' + board + '&p=' + page, null
+        ).then(async result => {
+            LoginManager.update();
+            success(result._bodyInit);
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
     }
 }

@@ -64,6 +64,7 @@ import NewMessageMailListScreen from '../NewPage/NewMessageMailListScreen';
 import NewMessageSendMailListScreen from '../NewPage/NewMessageSendMailListScreen';
 import NewMessageReplyListScreen from '../NewPage/NewMessageReplyListScreen';
 import NewMessageAtListScreen from '../NewPage/NewMessageAtListScreen';
+import NewMessageLikeListScreen from '../NewPage/NewMessageLikeListScreen';
 
 import GDTNativeExpressView from '../GDT/GDTNativeExpressView';
 
@@ -125,6 +126,7 @@ export {
     NewMessageSendMailListScreen,
     NewMessageReplyListScreen,
     NewMessageAtListScreen,
+    NewMessageLikeListScreen,
 
     GDTNativeExpressView,
     NewSearchArticleScreen,

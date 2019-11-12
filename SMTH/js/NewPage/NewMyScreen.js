@@ -536,12 +536,16 @@ export default class NewMyScreen extends Component {
               <CellBackground
                 showSelect={false}
                 onPress={() => {
-                  if (this.state.login == true) {
-                    ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
-                  }
-                  else {
-                    this.showLogin();
-                  }
+                  // if (this.state.login == true) {
+                  //   ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
+                  // }
+                  // else {
+                  //   this.showLogin();
+                  // }
+
+                  // ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: 'Stock', text: '股市' })
+                  ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: global.boards.all['Stock'].id, name: '股市', title: 'Stock' });
+
                 }}
               >
                 <View style={[styles.content]}>

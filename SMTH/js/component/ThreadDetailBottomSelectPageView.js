@@ -43,7 +43,6 @@ export default class ThreadDetailBottomSelectPageView extends Component {
         var array = new Array();
         for (var i = 1; i < parseInt(this.props.totalPage) + 1; i++) {
             array[i - 1] = { value: i.toString(), label: i.toString() };
-            console.log('i=' + i);
         }
 
         Animated.timing(this.state.translateY, {

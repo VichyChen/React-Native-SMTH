@@ -30,7 +30,7 @@ import {
 import { CommonCSS } from 'CommonCSS';
 import cio from 'cheerio-without-node-native';
 
-export default class NewMessageSendMailListScreen extends Component {
+export default class NewMessageLikeListScreen extends Component {
 
     page = 1;
 
@@ -47,11 +47,11 @@ export default class NewMessageSendMailListScreen extends Component {
         }
 
         this.page = 1;
-        this.getNewSMTHOutbox(this.page);
+        this.getNewSMTHLike(this.page);
     }
 
-    getNewSMTHOutbox(page) {
-        NetworkManager.getNewSMTHOutbox(page, (result) => {
+    getNewSMTHLike(page) {
+        NetworkManager.getNewSMTHLike(page, (result) => {
             this.$ = cio.load(result);
             var totalCount = this.$('li[class=page-pre]').first().children().first().text();
 
@@ -62,14 +62,17 @@ export default class NewMessageSendMailListScreen extends Component {
             }
             this.$('tr').each(function (i, elem) {
                 this.$ = cio.load(elem);
-                dataArray.push({
-                    key: page * 20 + i,
-                    author_id: this.$('td').first().next().children().first().text(),
-                    subject: this.$('td').first().next().next().children().first().text(),
-                    time: this.$('td').last().text(),
-                    url: this.$('td').first().next().next().children().first().attr('href'),
-                    isRead: true,
-                });
+                if (i != 0 && this.$('td').first().attr('colspan') != 5) {
+                    dataArray.push({
+                        key: page * 20 + i,
+                        user_id: this.$('td').first().next().children().first().text(),
+                        board_id: this.$('td').first().next().next().children().first().text(),
+                        subject: this.$('td').first().next().next().next().children().first().text(),
+                        time: this.$('td').last().text(),
+                        url: this.$('td').first().next().next().next().children().first().attr('href'),
+                        isRead: true,
+                    });
+                }
             });
 
             this.setState({
@@ -79,7 +82,7 @@ export default class NewMessageSendMailListScreen extends Component {
                 pullLoading: false,
                 pullMoreLoading: false,
                 screenStatus: dataArray.length == 0 ? global.screen.text : global.screen.none,
-                screenText: dataArray.length == 0 ? '发信箱没有邮件' : null
+                screenText: dataArray.length == 0 ? '不存在任何文章' : null
             });
         }, (error) => {
             this.setState({
@@ -102,7 +105,7 @@ export default class NewMessageSendMailListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'newMessageSendMailDetailScreen', { message: item })
+                    ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
                 }}
             >
                 <View>
@@ -112,13 +115,23 @@ export default class NewMessageSendMailListScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.author_id });
+                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.user_id });
                                 }}
-                                uri={NetworkManager.net_getFace(item.author_id)} />
-                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.author_id}</Text>
+                                uri={NetworkManager.net_getFace(item.user_id)} />
+                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.user_id}</Text>
                         </View>
                         <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{item.time}</Text>
                         <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
+
+                        <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
+                            <Text style={[CommonCSS.listBoardEN]} >{item.board_id}</Text>
+                            {
+                                global.boards.all[item.board_id] == null ? null :
+                                    (
+                                        <Text style={[CommonCSS.listBoardCH, { marginLeft: 8 }]} >{global.boards.all[item.board_id].name}</Text>
+                                    )
+                            }
+                        </View>
                     </View>
                     <SeperatorLine />
                 </View>
@@ -132,7 +145,7 @@ export default class NewMessageSendMailListScreen extends Component {
                 this.setState({
                     screenStatus: global.screen.loading,
                 });
-                this.getNewSMTHOutbox(this.page);
+                this.getNewSMTHLike(this.page);
             }} >
                 <View style={[styles.content]}>
                     <FlatList
@@ -147,7 +160,7 @@ export default class NewMessageSendMailListScreen extends Component {
                                 pullLoading: true
                             });
                             this.page = 1;
-                            this.getNewSMTHOutbox(this.page);
+                            this.getNewSMTHLike(this.page);
                         }}
                         onEndReached={() => {
                             if (this.state.pullLoading == false && this.state.pullMoreLoading == false && this.page + 1 <= this.state.totalPage) {
@@ -155,7 +168,7 @@ export default class NewMessageSendMailListScreen extends Component {
                                     pullMoreLoading: true
                                 });
                                 this.page++;
-                                this.getNewSMTHOutbox(this.page);
+                                this.getNewSMTHLike(this.page);
                             }
                         }}
                         onEndReachedThreshold={0.2}

@@ -32,13 +32,14 @@ import { CommonCSS } from 'CommonCSS';
 import cio from 'cheerio-without-node-native';
 import HTMLView from 'react-native-htmlview';
 import AutoHeightImage from 'react-native-auto-height-image';
-import {CachedImage} from "react-native-img-cache";
+import { CachedImage } from "react-native-img-cache";
 
 export default class NewUserArticleScreen extends Component {
 
     _page = 1;
     _currentPage;
     _totalPage;
+    _name;
 
     constructor(props) {
         super(props);
@@ -49,6 +50,7 @@ export default class NewUserArticleScreen extends Component {
             screenText: null,
             dataArray: [],
         }
+        this._name = this.props.navigation.state.params.name;
         console.log('this.props.id:' + this.props.id);
         console.log('this.props.navigation.state.params.id:' + this.props.navigation.state.params.id);
         this.getNewAccountArticles(this._page);
@@ -151,8 +153,76 @@ export default class NewUserArticleScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id, type: 'article' });
-                }}
+                    var name = this.props.navigation.state.params.name;
+                    var t1 = item.title;
+                    if (item.title.substr(0, 'Re:'.length) == 'Re:') {
+                        t1 = item.title.replace('Re:', '').trim();
+                    }
+                    NetworkManager.getNewSMTHSearchThread(item.boardName, t1, '', 1, (result) => {
+                        this.$ = cio.load(result, { decodeEntities: false });
+                        this.$ = cio.load(this.$('div[class=b-content]').html());
+                        var dataArray = [];
+                        this.$('tr').each(function (i, elem) {
+                            if (i != 0) {
+                                this.$ = cio.load(elem, { decodeEntities: false });
+                                var title = this.$('td[class=title_9]').children().first().text();
+                                var author = this.$('td[class=title_12]').first().children().first().text();
+                                var time = this.$('td[class=title_9]').next().text();
+                                // var match = false;
+                                // console.log('time + ' + time);
+                                // console.log('item.time + ' + item.time);
+                                // if (item.time.indexOf('月') != -1) {
+                                //     console.log('item.time111111 + ' + (new Date()).getFullYear + '-' + item.time.replace('月', '-').replace('日', ''));
+                                //     if (time == (new Date()).getFullYear() + '-' + item.time.replace('月', '-').replace('日', '')) {
+                                //         match = true;
+                                //     }
+                                // }
+                                // else if (time == item.time) {
+                                //     match = true;
+                                // }
+
+                                if (item.title.substr(0, 'Re:'.length) == 'Re:') {
+                                    if (title.indexOf(t1) != -1) {
+                                        dataArray.push({
+                                            key: dataArray.length,
+                                            id: this.$('td[class=title_9]').children().first().attr('href').split('/')[4],
+                                            time: time,
+                                            title: title,
+                                            author: author,
+                                        });
+                                    }
+                                }
+                                else {
+                                    if (title == t1) {
+                                        dataArray.push({
+                                            key: dataArray.length,
+                                            id: this.$('td[class=title_9]').children().first().attr('href').split('/')[4],
+                                            time: time,
+                                            title: title,
+                                            author: author,
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                        if (dataArray.length == 0) {
+                            // ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id, type: 'article' });
+                        }
+                        // 只有一条，直接进新版详情
+                        else if (dataArray.length == 1) {
+                            ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: dataArray[0].id, board: item.boardName });
+                        }
+                        // 多条，进NewSMTHSearchThreadResultScreen
+                        else {
+                            ReactNavigation.navigate(this.props.navigation, 'newSMTHSearchThreadResultScreen', { dataArray: dataArray, board: item.boardName });
+                        }
+                    }, (error) => {
+                        ToastUtil.info(error);
+                    }, (errorMessage) => {
+                        ToastUtil.info(errorMessage);
+                    });
+                }
+                }
             >
                 <View>
                     <View style={styles.container} >
@@ -181,7 +251,7 @@ export default class NewUserArticleScreen extends Component {
                     </View>
                     <SeperatorLine />
                 </View>
-            </CellBackground>
+            </CellBackground >
         );
     };
 

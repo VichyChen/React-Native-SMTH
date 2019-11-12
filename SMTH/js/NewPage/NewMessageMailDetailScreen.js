@@ -49,13 +49,13 @@ export default class NewMessageMailDetailScreen extends Component {
     }
 
     net_GetMail() {
-        NetworkManager.net_GetMail(this.props.navigation.state.params.message.position, (result) => {
+        NetworkManager.getNewSMTHMailDetail(this.props.navigation.state.params.message.url, (result) => {
             this.setState({
                 screenStatus: global.screen.none,
-                author_id: result['mail'].author_id,
-                subject: result['mail'].subject,
-                time: result['mail'].time,
-                body: result['mail'].body.trim(),
+                // author_id: result['mail'].author_id,
+                // subject: result['mail'].subject,
+                // time: result['mail'].time,
+                body: result['content'],
             });
         }, (error) => {
             ToastUtil.info(error.message);

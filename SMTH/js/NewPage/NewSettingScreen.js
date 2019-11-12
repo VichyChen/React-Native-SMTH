@@ -31,6 +31,7 @@ import {
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import Cookie from 'react-native-cookie';
 import { NativeModules } from 'react-native';
+import LoginManager from '../util/LoginManager';
 
 var maxFontSize = 20;
 var minFontSize = 14;
@@ -146,14 +147,10 @@ export default class NewSettingScreen extends Component {
             global.login == true
               ?
               <Button onPress={() => {
-                Cookie.clear();
-                AsyncStorageManger.setAccessToken('');
-                AsyncStorageManger.setID('');
-                AsyncStorageManger.setLogin(false);
-                global.login = false;
-                global.current.username = '';
-                DeviceEventEmitter.emit('LogoutNotification', null);
-
+               
+                LoginManager.logout();
+                LoginManager.postNewSMTHLogout();
+                
                 this.props.navigation.goBack();
               }} text='退出登录' />
               :

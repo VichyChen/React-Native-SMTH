@@ -20,13 +20,18 @@ import NewFavouriteScreen from '../../NewPage/NewFavouriteScreen';
 import NewFavouriteBoardScreen from '../../NewPage/NewFavouriteBoardScreen';
 import NewMyScreen from '../../NewPage/NewMyScreen';
 
+import NewSMTHPageHotScreen from '../../NewSMTHPage/NewSMTHPageHotScreen';
+import NewSMTHMyScreen from '../../NewSMTHPage/NewSMTHMyScreen';
+import NewSMTHFavouriteBoardScreen from '../../NewSMTHPage/NewSMTHFavouriteBoardScreen';
+import NewSMTHBoardsScreen from '../../NewSMTHPage/NewSMTHBoardsScreen';
+
 import {
     CustomDoubleClick
 } from '../../config/Common';
 
 const SMTHTabNavigator = TabNavigator({
     HotScreen: {
-        screen: NewHotScreen,
+        screen: NewSMTHPageHotScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '首页',
             tabBarIcon: ({ tintColor, focused }) => (
@@ -49,7 +54,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     BoardScreen: {
-        screen: NewBoardScreen,
+        screen: NewSMTHBoardsScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '版块',
             tabBarIcon: ({ tintColor, focused }) => (
@@ -64,7 +69,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     FavouriteScreen: {
-        screen: NewFavouriteBoardScreen,
+        screen: NewSMTHFavouriteBoardScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '收藏',
             tabBarIcon: ({ tintColor, focused }) => (
@@ -79,7 +84,7 @@ const SMTHTabNavigator = TabNavigator({
         })
     },
     MyScreen: {
-        screen: NewMyScreen,
+        screen: NewSMTHMyScreen,
         navigationOptions: ({ navigation }) => ({
             tabBarLabel: '我的',
             tabBarOnPress: () => {
@@ -111,6 +116,7 @@ const SMTHTabNavigator = TabNavigator({
             }, global.bool.iOS ? {} : { marginTop: -3 }],
             style: [{
                 backgroundColor: global.colors.whiteColor,
+                borderTopWidth: 0
             }, global.bool.iOS ? {} : { height: 50 }],
         },
     }

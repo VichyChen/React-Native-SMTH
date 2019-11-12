@@ -652,7 +652,7 @@ export default class NewThreadDetailScreen extends Component {
             });
           }}
           showBackButton={true}
-          showBottomLine={true}
+          showBottomLine={false}
           navigation={this.props.navigation}
           rightButtonImage={this.state.screenStatus == global.screen.loading ? null : global.images.icon_more}
           rightButtonOnPress={() => {

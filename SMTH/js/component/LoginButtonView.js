@@ -39,6 +39,7 @@ export default class LoginButtonView extends Component {
                         backgroundColor={global.colors.themeColor}
                         height={40}
                         onPress={() => {
+                            console.log(11111);
                             DeviceEventEmitter.emit('LoginNotification', null);
                         }}
                     />
