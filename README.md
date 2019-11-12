@@ -31,3 +31,17 @@ API从这个项目的Lib中获得 [GitHub](https://github.com/smthapp/Android)�
 ```
 4、使用 Xcode 或者 Android Studio 运行
 ```
+
+brew install node
+brew install watchman
+brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk8
+
+npm install -g react-native-cli
+
+npm install -g node@10.15.0
+
+npm install
+
+node version:v10.15.0
+realm@2.21.1
