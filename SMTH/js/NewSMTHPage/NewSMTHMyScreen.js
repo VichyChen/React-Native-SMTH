@@ -26,7 +26,8 @@ import {
     HorizontalSeperatorLine,
     NavigationBar,
     DateUtil,
-    ReactNavigation
+    ReactNavigation,
+    HTMLParseManager
 } from '../config/Common';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
@@ -465,10 +466,7 @@ export default class NewSMTHMyScreen extends Component {
                                 showSelect={false}
                                 onPress={() => {
                                     if (this.state.login == true) {
-                                        AsyncStorageManger.getID().then(id => {
-                                            // StatusBar.setBarStyle('dark-content');
-                                            ReactNavigation.navigate(this.props.navigation, 'newUserArticleScreen', { id: id });
-                                        });
+                                        ReactNavigation.navigate(this.props.navigation, 'newUserArticleScreen', { id: this.state.username, type: 1 });
                                     }
                                     else {
                                         this.showLogin();
@@ -505,16 +503,12 @@ export default class NewSMTHMyScreen extends Component {
                             <CellBackground
                                 showSelect={false}
                                 onPress={() => {
-                                    // if (this.state.login == true) {
-                                    //   ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
-                                    // }
-                                    // else {
-                                    //   this.showLogin();
-                                    // }
-
-                                    // ReactNavigation.navigate(this.props.navigation, 'boardListScreen', { id: 'Stock', text: '股市' })
-                                    ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: global.boards.all['Stock'].id, name: '股市', title: 'Stock' });
-
+                                    if (this.state.login == true) {
+                                      ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
+                                    }
+                                    else {
+                                      this.showLogin();
+                                    }
                                 }}
                             >
                                 <View style={[styles.content]}>

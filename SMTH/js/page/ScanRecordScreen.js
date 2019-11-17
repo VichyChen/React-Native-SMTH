@@ -70,12 +70,7 @@ export default class ScanRecordScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    if (item.type == 'new') {
-                        ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
-                    }
-                    else {
-                        ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: item.board_id, subject: item.subject })
-                    }
+                    ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: item.id, board: unescape(item.board_id) });
                 }}
             >
                 <View>

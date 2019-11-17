@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const ScanRecordSchema = {
-    name: 'new_scanrecord',
+    name: 'newsmth_scanrecord',
     primaryKey: 'id',
     properties: {
         type: 'string',

@@ -441,7 +441,12 @@ export default class NewSMTHThreadDetailScreen extends Component {
                                     borderRadius={15}
                                     widthAndHeight={30}
                                     onPressClick={() => {
-                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                        if (global.login == true) {
+                                            ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                        }
+                                        else {
+                                            DeviceEventEmitter.emit('LoginNotification', null);
+                                        }
                                     }}
                                     uri={NetworkManager.net_getFace(item.name)}
                                 />
@@ -517,7 +522,12 @@ export default class NewSMTHThreadDetailScreen extends Component {
                                 borderRadius={10}
                                 widthAndHeight={20}
                                 onPressClick={() => {
-                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                    if (global.login == true) {
+                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                    }
+                                    else {
+                                        DeviceEventEmitter.emit('LoginNotification', null);
+                                    }
                                 }}
                                 uri={NetworkManager.net_getFace(item.name)}
                             />
@@ -563,7 +573,12 @@ export default class NewSMTHThreadDetailScreen extends Component {
                                 borderRadius={15}
                                 widthAndHeight={30}
                                 onPressClick={() => {
-                                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                    if (global.login == true) {
+                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: item.avatarID, name: item.name });
+                                    }
+                                    else {
+                                        DeviceEventEmitter.emit('LoginNotification', null);
+                                    }
                                 }}
                                 uri={NetworkManager.net_getFace(item.name)}
                             />
@@ -665,7 +680,6 @@ export default class NewSMTHThreadDetailScreen extends Component {
                                     else {
                                         DeviceEventEmitter.emit('LoginNotification', null);
                                     }
-
                                 }}
                             />
                         </View>

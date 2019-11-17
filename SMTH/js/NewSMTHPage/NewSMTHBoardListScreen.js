@@ -155,7 +155,12 @@ export default class NewSMTHBoardListScreen extends Component {
                                     borderRadius={20}
                                     widthAndHeight={40}
                                     onPressClick={() => {
-                                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.authorID });
+                                        if (global.login == true) {
+                                            ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.authorID });
+                                        }
+                                        else {
+                                            DeviceEventEmitter.emit('LoginNotification', null);
+                                        }
                                     }}
                                     uri={NetworkManager.net_getFace(item.authorID)} />
 

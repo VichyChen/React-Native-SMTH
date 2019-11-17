@@ -2,7 +2,7 @@
 const Realm = require('realm');
 
 const FavouriteThreadSchema = {
-    name: 'new_favouritethread',
+    name: 'newsmth_favouritethread',
     primaryKey: 'id',
     properties: {
         type: 'string',

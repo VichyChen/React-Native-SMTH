@@ -244,7 +244,12 @@ export default class NewMyScreen extends Component {
                 onPress={() => {
                   if (this.state.login == true) {
                     AsyncStorageManger.getID().then(id => {
-                      ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: id, name: this.state.username });
+                      if (global.login == true) {
+                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: id, name: this.state.username });
+                      }
+                      else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                      }
                     });
                   }
                   else {

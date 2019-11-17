@@ -25,7 +25,8 @@ import {
     CellBackground,
     NavigationBar,
     ToastUtil,
-    ReactNavigation
+    ReactNavigation,
+    HTMLParseManager
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
@@ -37,6 +38,7 @@ import { CachedImage } from "react-native-img-cache";
 export default class NewUserArticleScreen extends Component {
 
     _page = 1;
+    _id;
     _currentPage;
     _totalPage;
     _name;
@@ -51,13 +53,42 @@ export default class NewUserArticleScreen extends Component {
             dataArray: [],
         }
         this._name = this.props.navigation.state.params.name;
-        console.log('this.props.id:' + this.props.id);
-        console.log('this.props.navigation.state.params.id:' + this.props.navigation.state.params.id);
-        this.getNewAccountArticles(this._page);
+        this._id = this.props.navigation.state.params.id;
+
+        if (this.props.navigation.state.params.type == 1) {
+            this.getNewSearchAccount();
+        }
+        else {
+            this.getNewAccountArticles(this._page);
+        }
+    }
+
+    getNewSearchAccount() {
+        NetworkManager.getNewSearchAccount(this.props.navigation.state.params.id, 1, (html) => {
+            HTMLParseManager.parseNewSearchAccount(html, this.props.navigation.state.params.id, (id) => {
+                this._id = id;
+                this.getNewAccountArticles(this._page);
+            });
+        }, (error) => {
+            ToastUtil.info(error);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.error : global.screen.none,
+                screenText: error,
+            });
+        }, (errorMessage) => {
+            ToastUtil.info(errorMessage);
+            this.setState({
+                pullLoading: false,
+                pullMoreLoading: false,
+                screenStatus: this.state.screenStatus == global.screen.loading ? global.screen.networkError : global.screen.none,
+            });
+        });
     }
 
     getNewAccountArticles(page) {
-        NetworkManager.getNewAccountArticles(this.props.id != null ? this.props.id : this.props.navigation.state.params.id, page, (result) => {
+        NetworkManager.getNewAccountArticles(this.props.id != null ? this.props.id : this._id, page, (result) => {
             this.$ = cio.load(result, { decodeEntities: false });
             this.$ = cio.load(this.$('ul[class=pagination]').html());
             this._currentPage = this.$('.active').children().first().text() == null ? 1 : this.$('.active').children().first().text();
@@ -280,7 +311,12 @@ export default class NewUserArticleScreen extends Component {
                         screenStatus: global.screen.loading,
                     });
                     this._page = 1;
-                    this.getNewAccountArticles(this._page);
+                    if (this.props.navigation.state.params.type == 1) {
+                        this.getNewSearchAccount();
+                    }
+                    else {
+                        this.getNewAccountArticles(this._page);
+                    }            
                 }} >
                     <FlatList
                         removeClippedSubviews={false}

@@ -115,10 +115,15 @@ export default class NewUserFriendsScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'newUserScreen', {
-                        id: item.id,
-                        name: item.name
-                    });
+                    if (global.login == true) {
+                        ReactNavigation.navigate(this.props.navigation, 'newUserScreen', {
+                            id: item.id,
+                            name: item.name
+                        });
+                    }
+                    else {
+                        DeviceEventEmitter.emit('LoginNotification', null);
+                    }
                 }}
             >
                 <View>
