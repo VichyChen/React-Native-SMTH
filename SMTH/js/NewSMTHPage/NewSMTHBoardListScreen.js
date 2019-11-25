@@ -79,19 +79,24 @@ export default class NewSMTHBoardListScreen extends Component {
                 this.$ = cio.load(elem);
                 // if (this.$('a[class=article-subject]').attr('href') != null) {
                 var index = i + ((page - 1) * 20);
-                dataArray.push({
-                    key: uuid.v4(),
-                    id: this.$('td[class=title_9]').children().first().attr('href').split('/')[4],
-                    // avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
-                    authorID: this.$('td[class=title_12]').first().children().first().attr('href').split('/')[4],
-                    // authorName: this.$('a[class=article-account-avatar]').children().first().attr('title'),
-                    // name: this.$('div[class=article-account-name]').children().first().text(),
-                    time: this.$('td[class=title_9]').next().text(),
-                    title: this.$('td[class=title_9]').children().first().text().trim(),
-                    score: this.$('td[class*=title_11]').first().text(),
-                    like: this.$('td[class*=title_11]').first().next().text(),
-                    comment: this.$('td[class*=title_11]').last().text(),
-                });
+                console.log('12313211223' + this.$().parent().text());
+                console.log('12313211223' + this.$().parent().html());
+                console.log('12313211223' + this.$().parent().attr('class'));
+                if (!this.$().parent().html().startsWith("<tr class=")) {
+                    dataArray.push({
+                        key: uuid.v4(),
+                        id: this.$('td[class=title_9]').children().first().attr('href').split('/')[4],
+                        // avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
+                        authorID: this.$('td[class=title_12]').first().children().first().attr('href').split('/')[4],
+                        // authorName: this.$('a[class=article-account-avatar]').children().first().attr('title'),
+                        // name: this.$('div[class=article-account-name]').children().first().text(),
+                        time: this.$('td[class=title_9]').next().text(),
+                        title: this.$('td[class=title_9]').children().first().text().trim(),
+                        score: this.$('td[class*=title_11]').first().text(),
+                        like: this.$('td[class*=title_11]').first().next().text(),
+                        comment: this.$('td[class*=title_11]').last().text(),
+                    });
+                    }
                 // }
             });
 
@@ -143,7 +148,6 @@ export default class NewSMTHBoardListScreen extends Component {
             return (
                 <CellBackground
                     onPress={() => {
-                        // ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.id, board: this.props.board, subject: item.title })
                         ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: item.id, board: this.props.board })
                     }}
                 >
@@ -152,8 +156,8 @@ export default class NewSMTHBoardListScreen extends Component {
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                                 <AvatorImage
                                     style={styles.avator}
-                                    borderRadius={20}
-                                    widthAndHeight={40}
+                                    borderRadius={10}
+                                    widthAndHeight={20}
                                     onPressClick={() => {
                                         if (global.login == true) {
                                             ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.authorID });
@@ -164,12 +168,12 @@ export default class NewSMTHBoardListScreen extends Component {
                                     }}
                                     uri={NetworkManager.net_getFace(item.authorID)} />
 
-                                <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.authorID}</Text>
+                                <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.authorID}</Text>
+                                <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.time}</Text>
                             </View>
-                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
-                            <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
+                            <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]} >{item.title}</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                                <Text style={[CommonCSS.listDescript, { marginTop: 10, marginLeft: -2, }]} >{(item.score.length > 0 ? (item.score + '评分 ') : '') + (item.like.length > 0 ? (item.like + 'Like ') : '') + (item.comment.length > 0 ? (item.comment + '回复 ') : '')}</Text>
+                                <Text style={[CommonCSS.listDescript, { marginTop: 10, marginLeft: 0, }]} >{(item.score.length > 0 ? (item.score + '评分 ') : '') + (item.like.length > 0 ? (item.like + 'Like ') : '') + (item.comment.length > 0 ? (item.comment + '回复 ') : '')}</Text>
                             </View>
                         </View>
                         <SeperatorLine />

@@ -76,43 +76,48 @@ export default class NewSMTHSearchThreadScreen extends Component {
                     value={this.state.board}
                     placeholder={'板块'}
                 /> */}
+                <View style={[styles.textInputView, styles.textInputViewShadow, { marginTop: 20 }]}>
+                    <TextInput
+                        style={styles.textInput}
+                        underlineColorAndroid={'transparent'}
+                        clearButtonMode={'while-editing'}
+                        autoCorrect={false}
+                        spellCheck={false}
+                        autoCapitalize={'none'}
+                        onChangeText={(text) => {
+                            this.setState({
+                                title: text
+                            });
+                            this._title = text;
+                        }}
+                        value={this.state.title}
+                        placeholder={'标题'}
+                    />
+                </View>
 
-                <TextInput
-                    style={styles.textInput}
-                    underlineColorAndroid={'transparent'}
-                    clearButtonMode={'while-editing'}
-                    autoCorrect={false}
-                    spellCheck={false}
-                    autoCapitalize={'none'}
-                    onChangeText={(text) => {
-                        this.setState({
-                            title: text
-                        });
-                        this._title = text;
-                    }}
-                    value={this.state.title}
-                    placeholder={'标题'}
-                />
-
-                <TextInput
-                    style={styles.textInput}
-                    underlineColorAndroid={'transparent'}
-                    clearButtonMode={'while-editing'}
-                    autoCorrect={false}
-                    spellCheck={false}
-                    autoCapitalize={'none'}
-                    onChangeText={(text) => {
-                        this.setState({
-                            author: text
-                        });
-                        this._author = text;
-                    }}
-                    value={this.state.author}
-                    placeholder={'作者'}
-                />
+                <View style={[styles.textInputView, styles.textInputViewShadow, { marginTop: 20 }]}>
+                    <TextInput
+                        style={styles.textInput}
+                        underlineColorAndroid={'transparent'}
+                        clearButtonMode={'while-editing'}
+                        autoCorrect={false}
+                        spellCheck={false}
+                        autoCapitalize={'none'}
+                        onChangeText={(text) => {
+                            this.setState({
+                                author: text
+                            });
+                            this._author = text;
+                        }}
+                        value={this.state.author}
+                        placeholder={'作者'}
+                    />
+                </View>
 
                 <Button
-                    style={styles.moreLikeButton}
+                    style={[styles.textInputView, { borderRadius: 22, marginTop: 40, }]}
+                    fontColor={global.colors.whiteColor}
+                    backgroundColor={global.colors.themeColor}
                     onPress={() => {
                         ReactNavigation.navigate(this.props.navigation, 'newSMTHSearchThreadResultScreen', {
                             board: this.props.navigation.state.params.board,
@@ -132,13 +137,25 @@ var styles = {
     get container() {
         return {
             flex: 1,
-            backgroundColor: global.colors.whiteColor
+            backgroundColor: global.colors.whiteColor,
+        }
+    },
+    get textInputView() {
+        return {
+            marginLeft: global.constants.Margin,
+            marginRight: global.constants.Margin,
+        }
+    },
+    get textInputViewShadow() {
+        return {
+            shadowColor: global.colors.backgroundGrayColor,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 1,
+            shadowRadius: 6,
         }
     },
     get textInput() {
         return {
-            marginLeft: global.constants.Margin,
-            marginRight: global.constants.Margin,
             height: 44,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,

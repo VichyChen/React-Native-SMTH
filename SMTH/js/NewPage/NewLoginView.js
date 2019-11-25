@@ -95,7 +95,7 @@ export default class NewLoginView extends Component {
 
         // NetworkManager.login(_username, _password, () => {
 
-        NetworkManager.postNewSMTHLogin(_username, _password, 2, (result) => {
+        NetworkManager.postNewSMTHLogin(_username, _password, 99999, (result) => {
 
             Cookie.get('http://www.newsmth.net')
                 .then((res) => {
@@ -155,6 +155,7 @@ export default class NewLoginView extends Component {
 
     async getUsername() {
         _username = await AsyncStorageManger.getUsername();
+        console.log('1231231231' + _username);
         this.setState({
             username: _username,
         });

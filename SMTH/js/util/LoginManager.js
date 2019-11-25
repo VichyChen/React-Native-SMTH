@@ -23,7 +23,6 @@ export default class LoginManager {
         Cookie.clear();
         AsyncStorageManger.setAccessToken('');
         AsyncStorageManger.setID('');
-        AsyncStorageManger.setUsername('');
         AsyncStorageManger.setLogin(false);
         global.login = false;
         global.current.username = '';

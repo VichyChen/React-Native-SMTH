@@ -167,7 +167,8 @@ export default class NewSMTHThreadDetailScreen extends Component {
                 var currentPage = this.$('li[class=page-select]').first().children().first().text();
                 console.log('currentPage:::::' + currentPage);
                 console.log(this.$('li[class=page-pre]').first().children().first().text());
-                var totalPage = parseInt(this.$('li[class=page-pre]').first().children().first().text() / 10) + 1;
+                var totalPage = this.$('li[class=page-pre]').first().children().first().text();
+                totalPage = parseInt(totalPage % 10) == 0 ? parseInt(totalPage / 10) : parseInt(totalPage / 10) + 1;
                 console.log('totalPage:::::' + totalPage);
 
                 // ????? this.realArticleId = this.$('.pagination').children().last().attr('class') == 'disabled' ? null : this.$('.pagination').children().last().children().attr('href').split('/')[2];
@@ -358,7 +359,7 @@ export default class NewSMTHThreadDetailScreen extends Component {
                         totalPage: totalPage,
                         currentPage: page,
                         likeCount: likeCount,
-                        threadCount: threadCount,
+                        threadCount: threadCount == undefined ? this.state.threadCount : threadCount,
                         hostID: hostID,
                         hostTime: hostTime,
                         boardName: boardName,

@@ -65,6 +65,7 @@ export default class NewMessageAtListScreen extends Component {
                 if (i != 0) {
                     dataArray.push({
                         key: page * 20 + i,
+                        id: this.$('td').first().next().next().next().children().first().attr('href').split('/')[5].split('.json')[0],
                         user_id: this.$('td').first().next().children().first().text(),
                         board_id: this.$('td').first().next().next().children().first().text(),
                         subject: this.$('td').first().next().next().next().children().first().text(),
@@ -74,7 +75,7 @@ export default class NewMessageAtListScreen extends Component {
                     });
                 }
             });
-
+console.log(dataArray);
             this.setState({
                 dataArray: dataArray,
                 totalCount: totalCount,
@@ -105,7 +106,7 @@ export default class NewMessageAtListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'threadDetail', { id: item.re_id, board: item.board_id, subject: item.subject })
+                    ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadSingleDetailScreen', { id: item.id, board: item.board_id })
                 }}
             >
                 <View>

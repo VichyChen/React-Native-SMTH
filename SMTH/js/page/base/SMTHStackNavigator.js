@@ -49,6 +49,7 @@ import NewSMTHBoardScreen from '../../NewSMTHPage/NewSMTHBoardScreen';
 import NewSMTHMyScreen from '../../NewSMTHPage/NewSMTHMyScreen';
 import NewSMTHFavouriteBoardScreen from '../../NewSMTHPage/NewSMTHFavouriteBoardScreen';
 import NewSMTHThreadDetailScreen from '../../NewSMTHPage/NewSMTHThreadDetailScreen';
+import NewSMTHThreadSingleDetailScreen from '../../NewSMTHPage/NewSMTHThreadSingleDetailScreen';
 import NewSMTHReplyThreadScreen from '../../NewSMTHPage/NewSMTHReplyThreadScreen';
 import NewSMTHPostThreadScreen from '../../NewSMTHPage/NewSMTHPostThreadScreen';
 import NewSMTHThreadDetailLikeScreen from '../../NewSMTHPage/NewSMTHThreadDetailLikeScreen';
@@ -105,6 +106,7 @@ const SMTHStackNavigator = StackNavigator({
     newSMTHMyScreen: { screen: NewSMTHMyScreen },
     newSMTHFavouriteBoardScreen: { screen: NewSMTHFavouriteBoardScreen },
     newSMTHThreadDetailScreen: { screen: NewSMTHThreadDetailScreen },
+    newSMTHThreadSingleDetailScreen: { screen: NewSMTHThreadSingleDetailScreen },
     newSMTHReplyThreadScreen: { screen: NewSMTHReplyThreadScreen },
     newSMTHPostThreadScreen: { screen: NewSMTHPostThreadScreen },
     newSMTHThreadDetailLikeScreen: { screen: NewSMTHThreadDetailLikeScreen },

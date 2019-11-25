@@ -1751,6 +1751,22 @@ export default class NetworkManager {
         });
     }
 
+    // 获取单个帖子详情
+    static getNewSMTHSingleThread(board, id, success, failure, netError) {
+        NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/ajax_single/' + id + '.json', null
+        ).then(async result => {
+            LoginManager.update();
+            success(JSON.parse(result._bodyInit));
+        }).catch(error => {
+            if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                netError('网络连接出错');
+            }
+            else {
+                failure(error.message);
+            }
+        });
+    }
+
     // 获取回帖详情
     static getNewSMTHReplyThreadDetail(board, id, success, failure, netError) {
         NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/post/' + id + '?ajax', null
