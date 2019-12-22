@@ -33,7 +33,7 @@ import cio from 'cheerio-without-node-native';
 export default class NewMessageMailListScreen extends Component {
 
     page = 1;
-    
+
     constructor(props) {
         super(props);
         this.state = {
@@ -109,15 +109,15 @@ export default class NewMessageMailListScreen extends Component {
                     <View style={{ padding: global.constants.Padding, backgroundColor: global.colors.whiteColor }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <AvatorImage style={styles.avator}
-                                borderRadius={15}
-                                widthAndHeight={30}
+                                borderRadius={10}
+                                widthAndHeight={20}
                                 onPressClick={() => {
                                     ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.author_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.author_id)} />
-                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.author_id}</Text>
+                            <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.author_id}</Text>
+                            <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.time}</Text>
                         </View>
-                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{item.time}</Text>
                         <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
                     </View>
                     <SeperatorLine />

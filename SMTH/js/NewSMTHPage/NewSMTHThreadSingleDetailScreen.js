@@ -26,11 +26,13 @@ import {
     Screen,
     HorizontalSeperatorLine,
     NavigationBar,
-    ReactNavigation
+    ReactNavigation,
+    ToastUtil
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import HTMLView from 'react-native-htmlview';
 
 export default class NewSMTHThreadSingleDetailScreen extends Component {
 
@@ -50,13 +52,30 @@ export default class NewSMTHThreadSingleDetailScreen extends Component {
 
     getNewSMTHSingleThread() {
         NetworkManager.getNewSMTHSingleThread(this.props.navigation.state.params.board, this.props.navigation.state.params.id, (result) => {
-            this.setState({
-                screenStatus: global.screen.none,
-                // author_id: result['mail'].author_id,
-                // subject: result['mail'].subject,
-                // time: result['mail'].time,
-                body: result['content'],
-            });
+            if (result['ajax_code'] == '0005') {
+                var subject = result['content'].split('标&nbsp;&nbsp;题:')[1].split('<br /> 发信站:')[0];
+                var author_id = result['content'].split('发信人: ')[1].split('<br /> 标&nbsp;&nbsp;题:')[0].split(' (')[0];
+                var time = result['content'].split('发信站: 水木社区 (')[1].split('), 站内 <br />&nbsp;&nbsp;<br />')[0].replace('&nbsp;&nbsp;', ' ');
+                var content = '<p>' + result['content'].split(result['content'].split('<br />&nbsp;&nbsp;<br /> ')[0] + '<br />&nbsp;&nbsp;<br /> ')[1].replace('&nbsp;', '').replace('', '') + '</p>';
+
+                var id = result['group_id'];
+                var board = result['board_name'];
+
+                this.setState({
+                    screenStatus: global.screen.none,
+                    author_id: author_id,
+                    subject: subject,
+                    time: time,
+                    body: content,
+                    id: id,
+                    board: board,
+                });
+            } else if (result['ajax_code'] == '0300') {
+                this.setState({
+                    screenStatus: global.screen.text,
+                    screenText: result['ajax_msg'],
+                });
+            }
         }, (error) => {
             ToastUtil.info(error.message);
             this.setState({
@@ -75,9 +94,13 @@ export default class NewSMTHThreadSingleDetailScreen extends Component {
             <View style={styles.container}>
                 <NavigationBar
                     navigation={this.props.navigation}
-                    title='消息'
+                    title={this.props.navigation.state.params.title}
                     showBackButton={true}
-                    showBottomLine={true} />
+                    showBottomLine={true}
+                    rightButtonTitle={'展开'}
+                    rightButtonOnPress={() => {
+                        ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: this.state.id, board: this.state.board })
+                    }} />
                 <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                     this.setState({
                         screenStatus: global.screen.loading,
@@ -101,8 +124,8 @@ export default class NewSMTHThreadSingleDetailScreen extends Component {
                                     uri={NetworkManager.net_getFace(this.state.author_id)} />
                                 <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{this.state.author_id}</Text>
                             </View>
-                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(this.state.time)}</Text>
-                            <Text style={[CommonCSS.content, { marginTop: 10 }]}>{this.state.body}</Text>
+                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{this.state.time}</Text>
+                            <HTMLView style={[{ marginTop: 10, marginLeft: -2, marginRight: -2, }]} stylesheet={styles.content} value={this.state.body} />
                         </View>
                     </ScrollView>
                 </Screen>
@@ -156,6 +179,19 @@ var styles = {
             marginRight: 13,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
+        }
+    },
+    get content() {
+        return {
+            p: {
+                marginBottom: -15,
+                lineHeight: global.constants.LineHeight,
+                fontSize: global.configures.fontSize17,
+                color: global.colors.fontColor,
+            },
+            a: {
+                color: global.colors.fontColor,
+            }
         }
     },
 }

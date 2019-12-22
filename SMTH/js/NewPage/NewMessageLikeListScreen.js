@@ -106,22 +106,22 @@ export default class NewMessageLikeListScreen extends Component {
         return (
             <CellBackground
                 onPress={() => {
-                    ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadSingleDetailScreen', { id: item.id, board: item.board_id })
+                    ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadSingleDetailScreen', { id: item.id, board: item.board_id, title: 'Like我' })
                 }}
             >
                 <View>
                     <View style={{ padding: global.constants.Padding, backgroundColor: global.colors.whiteColor }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <AvatorImage style={styles.avator}
-                                borderRadius={15}
-                                widthAndHeight={30}
+                                borderRadius={10}
+                                widthAndHeight={20}
                                 onPressClick={() => {
                                     ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: item.user_id });
                                 }}
                                 uri={NetworkManager.net_getFace(item.user_id)} />
-                            <Text style={[CommonCSS.listName, { marginLeft: 10 }]}>{item.user_id}</Text>
+                            <Text style={[CommonCSS.listDescript, { marginLeft: 8 }]} >{item.user_id}</Text>
+                            <Text style={[CommonCSS.listDescript, { marginLeft: 10 }]} >{item.time}</Text>
                         </View>
-                        <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{item.time}</Text>
                         <Text style={[CommonCSS.listOnlyTitle, { marginTop: 10 }]}>{item.subject}</Text>
 
                         <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >

@@ -69,7 +69,7 @@ export default class NewSMTHBoardScreen extends Component {
                 />
 
                 <TabPageView
-                    titles={['主题', '相关']}
+                    titles={['主题', '置顶']}
                     pages={
                         [
                             (<NewSMTHBoardListScreen navigation={this.props.navigation} board={this.props.navigation.state.params.title} />),

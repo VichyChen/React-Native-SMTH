@@ -27,7 +27,8 @@ import {
     ToastUtil,
     AvatorImage,
     ReactNavigation,
-    GDTNativeExpressView
+    GDTNativeExpressView,
+    HorizontalSeperatorLine,
 } from '../config/Common';
 
 import { CommonCSS } from 'CommonCSS';
@@ -69,27 +70,51 @@ export default class NewSMTHBoardDetailScreen extends Component {
     getNewSMTHBoardThreadList() {
         NetworkManager.getNewSMTHBoardThreadList(this.props.board, 1, (result) => {
             this.$ = cio.load(result);
-            this.$ = cio.load(this.$('span[class=n-right]').html());
+            // this.$ = cio.load(this.$('span[class=n-right]').html());
+
+            // var dataArray = [];
+            // this.$('a').each(function (i, elem) {
+            //     this.$ = cio.load(elem);
+            //     console.log(this.$().parent().html().split('">')[1].split('</a>')[0]);
+            //     dataArray.push({
+            //         admin: this.$().parent().html().split('">')[1].split('</a>')[0],
+            //     });
+            // });
+
+            this.$ = cio.load(this.$('tbody').html());
 
             var dataArray = [];
-            this.$('a').each(function (i, elem) {
+            this.$('tr').each(function (i, elem) {
                 this.$ = cio.load(elem);
-                console.log(this.$().parent().html().split('">')[1].split('</a>')[0]);
-                dataArray.push({
-                    admin: this.$().parent().html().split('">')[1].split('</a>')[0],
-                });
+                var index = i;
+                if (this.$().parent().html().startsWith("<tr class=")) {
+                    dataArray.push({
+                        key: uuid.v4(),
+                        id: this.$('td[class=title_9]').children().first().attr('href').split('/')[4],
+                        // avatar: this.$('a[class=article-account-avatar]').children().attr('src'),
+                        authorID: this.$('td[class=title_12]').first().children().first().attr('href').split('/')[4],
+                        // authorName: this.$('a[class=article-account-avatar]').children().first().attr('title'),
+                        // name: this.$('div[class=article-account-name]').children().first().text(),
+                        time: this.$('td[class=title_9]').next().text(),
+                        title: this.$('td[class=title_9]').children().first().text().trim(),
+                        score: this.$('td[class*=title_11]').first().text(),
+                        like: this.$('td[class*=title_11]').first().next().text(),
+                        comment: this.$('td[class*=title_11]').last().text(),
+                    });
+                }
+                // }
             });
-
             this.$ = cio.load(result);
 
             this.setState({
                 pullLoading: false,
                 pullMoreLoading: false,
                 screenStatus: global.screen.none,
+                dataArray: dataArray,
                 totalThreadCount: this.$('li[class=page-pre]').first().children().first().text(),
                 todayCount: this.$('span[class=n-left]').text().split('今日帖数')[1].split(' 版面积分')[0],
                 onlineCount: this.$('span[class=n-left]').text().split('人在线[')[0].split('本版当前共有')[1],
-                maxOnlineCount: this.$('span[class=n-left]').children().first().text(),
+                maxOnlineCount: this.$('span[class=n-left]').children().first().text().replace('[最高', '').replace('人]', ''),
                 maxOnlineCountTime: this.$('span[class=n-left]').children().first().attr('title'),
                 boardScore: this.$('span[class=n-left]').text().split('版面积分:')[1],
             });
@@ -113,56 +138,20 @@ export default class NewSMTHBoardDetailScreen extends Component {
     }
 
     _renderItem = ({ item }) => {
-        if (item.type == 'ad') {
-            return (
+        return (
+            <CellBackground
+                onPress={() => {
+                    ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: item.id, board: this.props.board })
+                }}
+            >
                 <View>
-                    <GDTNativeExpressView
-                        style={{ height: this.state.adheight[item.adTag.toString()] }}
-                        adType={0}
-                        adTag={item.adTag}
-                        onRenderSuccess={(event) => {
-                            this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
-                            this.setState({
-                                adheight: this.state.adheight,
-                            });
-                        }}
-                    />
+                    <View style={styles.itemContainer}>
+                        <Text style={[CommonCSS.listOnlyTitle, { color: 'red' }]} >{item.title}</Text>
+                    </View>
                     <SeperatorLine />
                 </View>
-            );
-        }
-        else {
-            return (
-                <CellBackground
-                    onPress={() => {
-                        ReactNavigation.navigate(this.props.navigation, 'newThreadDetailScreen', { id: item.id });
-                    }}
-                >
-                    <View>
-                        <View style={styles.itemContainer}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                                <AvatorImage
-                                    style={styles.avator}
-                                    borderRadius={20}
-                                    widthAndHeight={40}
-                                    onPressClick={() => {
-                                        ReactNavigation.navigate(this.props.navigation, 'userScreen', { id: item.authorID });
-                                    }}
-                                    uri={NetworkManager.net_getFace(item.authorID)} />
-
-                                <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{item.authorID}</Text>
-                            </View>
-                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]} >{item.time}</Text>
-                            <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{item.title}</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }} >
-                                <Text style={[CommonCSS.listDescript, { marginTop: 10, marginLeft: -2, }]} >{(item.score.length > 0 ? (item.score + '评分 ') : '') + (item.like.length > 0 ? (item.like + 'Like ') : '') + (item.comment.length > 0 ? (item.comment + '回复 ') : '')}</Text>
-                            </View>
-                        </View>
-                        <SeperatorLine />
-                    </View>
-                </CellBackground>
-            )
-        }
+            </CellBackground>
+        )
     };
 
     render() {
@@ -174,15 +163,44 @@ export default class NewSMTHBoardDetailScreen extends Component {
                 this._page = 1;
                 this.getNewSMTHBoardThreadList();
             }} >
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'totalThreadCount:'+this.state.totalThreadCount}</Text>
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'todayCount:'+this.state.todayCount}</Text>
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'onlineCount:'+this.state.onlineCount}</Text>
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'maxOnlineCount:'+this.state.maxOnlineCount}</Text>
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'maxOnlineCountTime:'+this.state.maxOnlineCountTime}</Text>
-                <Text style={[CommonCSS.listTitle, { marginTop: 10 }]} >{'boardScore:'+this.state.boardScore}</Text>
-
-
-
+                <View style={{ flex: 1, flexDirection: 'column' }}>
+                    <View style={styles.container}>
+                        <Text style={[CommonCSS.listDescript]} >{'今天帖数' + this.state.todayCount + '，总主题数' + this.state.totalThreadCount}</Text>
+                        <Text style={[CommonCSS.listDescript, {
+                            marginTop: 8, lineHeight: global.constants.LineHeight,
+                        }]} >{'当前共有' + this.state.onlineCount + '人在线，最高' + this.state.maxOnlineCount + '人在线，' + this.state.maxOnlineCountTime}</Text>
+                    </View>
+                    <HorizontalSeperatorLine />
+                    <FlatList
+                        removeClippedSubviews={false}
+                        extraData={this.state}
+                        data={this.state.dataArray}
+                        renderItem={this._renderItem}
+                        style={styles.flatList}
+                        onRefresh={() => {
+                            this.setState({
+                                pullLoading: true
+                            });
+                            var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+                            nativeExpressAdManager.remove(this._adTag);
+                            this._page = 1;
+                            this.getNewSMTHBoardThreadList(this._page);
+                        }
+                        }
+                        onEndReached={() => {
+                            if (this.state.pullLoading == false && this.state.pullMoreLoading == false) {
+                                this.setState({
+                                    pullMoreLoading: true
+                                });
+                                this._page = this._page + 1;
+                                this.getNewSMTHBoardThreadList(this._page);
+                            }
+                        }
+                        }
+                        onEndReachedThreshold={2}
+                        refreshing={this.state.pullLoading}
+                    />
+                </View>
             </Screen>
         )
     }
@@ -191,8 +209,9 @@ export default class NewSMTHBoardDetailScreen extends Component {
 var styles = {
     get container() {
         return {
-            flex: 1,
-            backgroundColor: global.colors.whiteColor
+            backgroundColor: global.colors.whiteColor,
+            padding: global.constants.Padding,
+
         }
     },
     get flatList() {

@@ -26,11 +26,13 @@ import {
     Screen,
     HorizontalSeperatorLine,
     NavigationBar,
-    ReactNavigation
+    ReactNavigation,
+    ToastUtil
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
+import HTMLView from 'react-native-htmlview';
 
 export default class NewMessageMailDetailScreen extends Component {
 
@@ -50,12 +52,18 @@ export default class NewMessageMailDetailScreen extends Component {
 
     net_GetMail() {
         NetworkManager.getNewSMTHMailDetail(this.props.navigation.state.params.message.url, (result) => {
+
+            var subject = result['content'].split('标&nbsp;&nbsp;题:')[1].split('<br /> 发信站:')[0];
+            var author_id = result['content'].split('寄信人: ')[1].split('<br /> 标&nbsp;&nbsp;题:')[0].split(' (')[0];
+            var time = result['content'].split('发信站: 水木社区 (')[1].split(') <br /> 来&nbsp;&nbsp;源:')[0].replace('&nbsp;&nbsp;', ' ');
+            var content = '<p>' + result['content'].split(result['content'].split('<br />&nbsp;&nbsp;<br /> ')[0] + '<br />&nbsp;&nbsp;<br /> ')[1].replace('&nbsp;', '').replace('', '') + '</p>';
+
             this.setState({
                 screenStatus: global.screen.none,
-                // author_id: result['mail'].author_id,
-                // subject: result['mail'].subject,
-                // time: result['mail'].time,
-                body: result['content'],
+                author_id: author_id,
+                subject: subject,
+                time: time,
+                body: content,
             });
         }, (error) => {
             ToastUtil.info(error.message);
@@ -75,9 +83,13 @@ export default class NewMessageMailDetailScreen extends Component {
             <View style={styles.container}>
                 <NavigationBar
                     navigation={this.props.navigation}
-                    title='消息'
+                    title='收件箱'
                     showBackButton={true}
-                    showBottomLine={true} />
+                    showBottomLine={true} 
+                    rightButtonTitle={'回复'}
+                    rightButtonOnPress={() => {
+                        ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: this.state.author_id, title: 'Re:' + this.state.subject })
+                    }} />
                 <Screen status={this.state.screenStatus} text={this.state.screenText} onPress={() => {
                     this.setState({
                         screenStatus: global.screen.loading,
@@ -93,16 +105,19 @@ export default class NewMessageMailDetailScreen extends Component {
                         <View style={{ flex: 1, padding: global.constants.Padding }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', backgroundColor: global.colors.whiteColor }}>
                                 <AvatorImage style={styles.avator}
-                                    borderRadius={15}
-                                    widthAndHeight={30}
+                                    borderRadius={10}
+                                    widthAndHeight={20}
                                     onPressClick={() => {
                                         ReactNavigation.navigate(this.props.navigation, 'newUserScreen', { id: null, name: this.state.author_id });
                                     }}
                                     uri={NetworkManager.net_getFace(this.state.author_id)} />
                                 <Text style={[CommonCSS.listName, { marginLeft: 10 }]} >{this.state.author_id}</Text>
                             </View>
-                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{DateUtil.formatTimeStamp(this.state.time)}</Text>
-                            <Text style={[CommonCSS.content, { marginTop: 10 }]}>{this.state.body}</Text>
+                            <Text style={[CommonCSS.listTime, { marginTop: 10 }]}>{this.state.time}</Text>
+                            {/* <Text style={[CommonCSS.content, { marginTop: 10 }]}>{this.state.body}</Text> */}
+
+                            <HTMLView style={[{ marginTop: 10, marginLeft: -2, marginRight: -2,  }]} stylesheet={styles.content} value={this.state.body} />
+
                         </View>
                     </ScrollView>
                 </Screen>
@@ -156,6 +171,19 @@ var styles = {
             marginRight: 13,
             fontSize: global.configures.fontSize17,
             color: global.colors.fontColor,
+        }
+    },
+    get content() {
+        return {
+            p: {
+                marginBottom: -15,
+                lineHeight: global.constants.LineHeight,
+                fontSize: global.configures.fontSize17,
+                color: global.colors.fontColor,
+            },
+            a: {
+                color: global.colors.fontColor,
+            }
         }
     },
 }
