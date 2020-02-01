@@ -1,5 +1,9 @@
 
 const _pcUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36";
+// const {encode, decode} = require('../lib/base64-arraybuffer.js');
+import {
+  encode, decode
+} from '../config/Common';
 
 export default class NetworkUtil {
 
@@ -141,8 +145,7 @@ export default class NetworkUtil {
   static uploadNew(url, key, uri, name) {
 
     var data = new FormData();
-    // data.append('files', {uri: uri, name: '123.jpg', type: 'multipart/form-data'});
-    data.append(key, {uri: uri, name: name, type: 'multipart/form-data'});
+    data.append(key, { uri: uri, name: name, type: 'multipart/form-data' });
 
     return new Promise(function (resolve, reject) {
       NetworkUtil.timeout(30000, fetch(url, {
@@ -185,8 +188,8 @@ export default class NetworkUtil {
       NetworkUtil.timeout(15000, fetch(url, {
         method: 'GET',
         headers: {
-           "user-agent": _pcUserAgent,
-           "X-Requested-With": "XMLHttpRequest",
+          "user-agent": _pcUserAgent,
+          "X-Requested-With": "XMLHttpRequest",
         },
         credentials: 'include'
       }))
@@ -233,6 +236,34 @@ export default class NetworkUtil {
           reject(error);
         });
     });
+  }
+
+  static uploadNewSMTH(url, base64) {
+    return new Promise(function (resolve, reject) {
+      NetworkUtil.timeout(30000, fetch(url, {
+        method: 'POST',
+        headers: {
+          "origin": "http://www.newsmth.net",
+          "user-agent": _pcUserAgent,
+          "x-requested-with": " XMLHttpRequest",
+          "accept": "*/*",
+        },
+        credentials: 'include',
+        body: decode(base64),
+      }))
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log('ResponseJson:\n' + JSON.stringify(responseData));
+          resolve(responseData);
+        })
+        .catch((error) => {
+          console.log('error:' + error);
+          console.log('error.name====' + error.name);
+          console.log('error.message====' + error.message);
+          reject(error);
+        });
+    });
+
   }
 
   static timeout(time, promise) {

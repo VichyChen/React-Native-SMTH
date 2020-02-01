@@ -13,49 +13,49 @@ export default class AsyncStorageManger {
 
 
     static setAccessToken(token) {
-        AsyncStorageKit.set('new_access_token', token);
+        AsyncStorageKit.set('newsmth_access_token', token);
     }
 
     static getAccessToken() {
-        var token = AsyncStorageKit.get('new_access_token');
+        var token = AsyncStorageKit.get('newsmth_access_token');
         return token ? token : '';
     }
 
     static setUsername(username) {
-        AsyncStorageKit.set('new_username', username);
+        AsyncStorageKit.set('newsmth_username', username);
     }
 
     static getUsername() {
-        var username = AsyncStorageKit.get('new_username');
+        var username = AsyncStorageKit.get('newsmth_username');
         return username ? username : '';
     }
 
     static setID(id) {
-        AsyncStorageKit.set('new_id', id);
+        AsyncStorageKit.set('newsmth_id', id);
     }
 
     static getID() {
-        var id = AsyncStorageKit.get('new_id');
+        var id = AsyncStorageKit.get('newsmth_id');
         return id ? id : '';
     }
 
     static setPassword(password) {
-        AsyncStorageKit.set('new_password', password);
+        AsyncStorageKit.set('newsmth_password', password);
     }
 
     static getPassword() {
-        var password = AsyncStorageKit.get('new_password');
+        var password = AsyncStorageKit.get('newsmth_password');
         return password ? password : '';
     }
 
     static setUsernamePassword(username, password) {
-        AsyncStorageKit.set('new_username', username);
-        AsyncStorageKit.set('new_password', password);
+        AsyncStorageKit.set('newsmth_username', username);
+        AsyncStorageKit.set('newsmth_password', password);
     }
 
     static getUsernamePassword() {
-        var username = AsyncStorageKit.get('new_username');
-        var password = AsyncStorageKit.get('new_password');
+        var username = AsyncStorageKit.get('newsmth_username');
+        var password = AsyncStorageKit.get('newsmth_password');
         // return username ? username : '';
         var dic = new Array();
         dic["username"] = username;
@@ -66,11 +66,11 @@ export default class AsyncStorageManger {
 
     static setSectionArray(sectionArray) {
         var array = JSON.stringify(sectionArray);
-        AsyncStorageKit.set('new_sectionarray', array);
+        AsyncStorageKit.set('newsmth_sectionarray', array);
     }
 
     static getSectionArray() {
-        return AsyncStorage.getItem('new_sectionarray')
+        return AsyncStorage.getItem('newsmth_sectionarray')
             .then(req => JSON.parse(req))
             .then((json) => {
                 return json;
@@ -78,11 +78,11 @@ export default class AsyncStorageManger {
     }
 
     static setLogin(login) {
-        AsyncStorageKit.set('new_login', login == true ? '1' : '0');
+        AsyncStorageKit.set('newsmth_login', login == true ? '1' : '0');
     }
 
     static getLogin() {
-        return AsyncStorageKit.get('new_login').then(login => {
+        return AsyncStorageKit.get('newsmth_login').then(login => {
             return login == '1' ? true : false;
         });
     }

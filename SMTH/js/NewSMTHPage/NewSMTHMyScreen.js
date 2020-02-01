@@ -32,11 +32,6 @@ import {
 
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 
-var mailCount;
-var sentMailCount;
-var replyMeCount;
-var atMeCount;
-
 export default class NewSMTHMyScreen extends Component {
 
     constructor(props) {
@@ -46,19 +41,17 @@ export default class NewSMTHMyScreen extends Component {
             isLoading: true,
             dataArray: [],
             username: '',
-            notificationCount: 0,
+            mailCount: 0,
+            sentMailCount: 0,
+            likeCount: 0,
+            replyMeCount: 0,
+            atMeCount: 0,
         }
-
-        mailCount = 0;
-        sentMailCount = 0;
-        replyMeCount = 0;
-        atMeCount = 0;
 
         this.loginSuccessNotification = DeviceEventEmitter.addListener('LoginSuccessNotification', (user) => {
             this.setState({
                 login: true,
                 username: user.id,
-                notificationCount: 0,
             });
             this.network();
         });
@@ -67,6 +60,7 @@ export default class NewSMTHMyScreen extends Component {
                 login: false,
                 mailCount: 0,
                 sentMailCount: 0,
+                likeCount: 0,
                 replyMeCount: 0,
                 atMeCount: 0,
             });
@@ -80,20 +74,36 @@ export default class NewSMTHMyScreen extends Component {
             this.setState({});
         });
 
-        AsyncStorageManger.getLogin().then(login => {
-            global.login = login;
-            this.setState({
-                login: login,
-            });
-            if (login == true) {
-                AsyncStorageManger.getUsername().then(username => {
-                    this.setState({
-                        username: username,
-                    });
-                    this.network();
+        // AsyncStorageManger.getLogin().then(login => {
+        //     global.login = login;
+        //     this.setState({
+        //         login: login,
+        //     });
+        //     if (login == true) {
+        //         AsyncStorageManger.getUsername().then(username => {
+        //             this.setState({
+        //                 username: username,
+        //             });
+        //             this.network();
+        //         });
+        //     }
+        // });
+
+
+        if (global.login == true) {
+            AsyncStorageManger.getUsername().then(username => {
+                this.setState({
+                    login: true,
+                    username: username,
                 });
-            }
-        });
+                this.network();
+            });
+        }
+        else {
+            this.setState({
+                login: false,
+            });
+        }
 
     }
 
@@ -324,9 +334,9 @@ export default class NewSMTHMyScreen extends Component {
                                                 <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_mail} />
                                                 <Text style={styles.messageTextItem}>{'收件箱'}</Text>
                                                 {
-                                                    this.state.mailCount == true ?
+                                                    this.state.mailCount > 0 ?
                                                         <View style={styles.messageCountViewItem} >
-                                                            <Text style={styles.messageCountTextItem} >{'新'}</Text>
+                                                            <Text style={styles.messageCountTextItem} >{this.state.mailCount}</Text>
                                                         </View>
                                                         : null
                                                 }
@@ -379,7 +389,7 @@ export default class NewSMTHMyScreen extends Component {
                                                 <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
                                                 <Text style={styles.messageTextItem}>At我</Text>
                                                 {
-                                                    this.state.sentMailCount > 0 ?
+                                                    this.state.atMeCount > 0 ?
                                                         <View style={styles.messageCountViewItem} >
                                                             <Text style={styles.messageCountTextItem} >{this.state.atMeCount}</Text>
                                                         </View>
@@ -407,7 +417,7 @@ export default class NewSMTHMyScreen extends Component {
                                                 <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_reply} />
                                                 <Text style={styles.messageTextItem}>回复我</Text>
                                                 {
-                                                    this.state.sentMailCount > 0 ?
+                                                    this.state.replyMeCount > 0 ?
                                                         <View style={styles.messageCountViewItem} >
                                                             <Text style={styles.messageCountTextItem} >{this.state.replyMeCount}</Text>
                                                         </View>
@@ -432,12 +442,12 @@ export default class NewSMTHMyScreen extends Component {
                                     >
                                         <View style={[styles.messageItem]}>
                                             <View style={{ alignItems: 'center' }}>
-                                                <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_at} />
+                                                <Image style={styles.messageImageItem} resizeMode="cover" source={global.images.icon_message_like} />
                                                 <Text style={styles.messageTextItem}>Like我</Text>
                                                 {
-                                                    this.state.sentMailCount > 0 ?
+                                                    this.state.likeCount > 0 ?
                                                         <View style={styles.messageCountViewItem} >
-                                                            <Text style={styles.messageCountTextItem} >{this.state.atMeCount}</Text>
+                                                            <Text style={styles.messageCountTextItem} >{this.state.likeCount}</Text>
                                                         </View>
                                                         :
                                                         null
@@ -504,10 +514,10 @@ export default class NewSMTHMyScreen extends Component {
                                 showSelect={false}
                                 onPress={() => {
                                     if (this.state.login == true) {
-                                      ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
+                                        ReactNavigation.navigate(this.props.navigation, 'scanRecordScreen', { id: this.state.username })
                                     }
                                     else {
-                                      this.showLogin();
+                                        this.showLogin();
                                     }
                                 }}
                             >

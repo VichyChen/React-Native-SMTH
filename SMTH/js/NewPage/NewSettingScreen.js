@@ -60,17 +60,20 @@ export default class NewSettingScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
 
-        <NavigationBar title='设置' showBackButton={true} navigation={this.props.navigation} />
+        <NavigationBar title='设置' showBackButton={true} showBottomLine={false} navigation={this.props.navigation} />
 
         <ScrollView style={{ backgroundColor: global.colors.backgroundGrayColor }}>
-
+{/* 
           <View style={styles.rowView}>
             <Text style={styles.leftText} >更多的设置内容正在开发中...敬请期待</Text>
-          </View>
+          </View> */}
 
           <SectionBlankHeader />
 
           <CellBackground onPress={() => {
+            ReactNavigation.navigate(this.props.navigation, 'newSMTHThreadDetailScreen', { id: '2085', board: 'SMTHApp_Dev' })
+
+            return;
             if (global.login == true) {
               ReactNavigation.navigate(this.props.navigation, 'newMessageSendScreen', { user: 'VichyChen' })
             }
@@ -147,10 +150,10 @@ export default class NewSettingScreen extends Component {
             global.login == true
               ?
               <Button onPress={() => {
-               
+
                 LoginManager.logout();
                 LoginManager.postNewSMTHLogout();
-                
+
                 this.props.navigation.goBack();
               }} text='退出登录' />
               :

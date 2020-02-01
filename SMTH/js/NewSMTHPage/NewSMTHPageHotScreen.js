@@ -50,6 +50,7 @@ import uuid from 'uuid';
 import cio from 'cheerio-without-node-native';
 import Cookie from 'react-native-cookie';
 import ImageViewer from 'react-native-image-zoom-viewer';
+// import codePush from 'react-native-code-push'
 
 
 export default class NewSMTHPageHotScreen extends Component {
@@ -82,7 +83,6 @@ export default class NewSMTHPageHotScreen extends Component {
                 showLogin: true,
                 closeCallback: closeCallback,
             });
-            console.log(222222);
         });
         this.loginCloseNotification = DeviceEventEmitter.addListener('LoginCloseNotification', () => {
             this.setState({
@@ -93,9 +93,7 @@ export default class NewSMTHPageHotScreen extends Component {
             this.setState({
                 login: true,
                 showLogin: false,
-                screenStatus: global.screen.loading,
             });
-            this.net_LoadSectionHot();
         });
         this.logoutNotification = DeviceEventEmitter.addListener('LogoutNotification', () => {
             this.setState({
@@ -139,24 +137,78 @@ export default class NewSMTHPageHotScreen extends Component {
         // });
 
 
-        NetworkManager.getNewSMTHFirst(() => {
+        // NetworkManager.getNewSMTHFirst(() => {
 
-            this.setState({
-                screenStatus: global.screen.loading,
-            });
-            this.net_LoadSectionHot();
+        //     this.setState({
+        //         screenStatus: global.screen.loading,
+        //     });
+        //     this.net_LoadSectionHot();
 
-        }, (error) => {
-            this.setState({
-                isLoading: false,
-            })
-        }, (errorMessage) => {
-            this.setState({
-                isLoading: false,
-            })
+        // }, (error) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     })
+        // }, (errorMessage) => {
+        //     this.setState({
+        //         isLoading: false,
+        //     })
+        // });
+
+        AsyncStorageManger.getLogin().then(login => {
+            if (login == true) {
+                AsyncStorageManger.getUsername().then(username => {
+                    AsyncStorageManger.getPassword().then((password) => {
+                        NetworkManager.postNewSMTHLogin(username, password, 99999, (result) => {
+                            AsyncStorageManger.setLogin(true);
+                            global.login = true;
+                            global.current.username = username;
+        
+                            this.setState({
+                                screenStatus: global.screen.loading,
+                            });
+                            this.net_LoadSectionHot();
+        
+                        }, (error) => {
+                        }, (errorMessage) => {
+                        });
+                    });
+                });        
+            }
+            else {
+                this.setState({
+                    screenStatus: global.screen.loading,
+                });
+                this.net_LoadSectionHot();
+            }
         });
+
+
+        // AsyncStorageManger.getUsername().then(username => {
+        //     AsyncStorageManger.getPassword().then((password) => {
+        //         NetworkManager.postNewSMTHLogin(username, password, 99999, (result) => {
+        //             AsyncStorageManger.setLogin(true);
+        //             global.login = true;
+        //             global.current.username = username;
+
+        //             this.setState({
+        //                 screenStatus: global.screen.loading,
+        //             });
+        //             this.net_LoadSectionHot();
+
+
+        //         }, (error) => {
+        //         }, (errorMessage) => {
+        //         });
+        //     });
+        // });
+
+
     }
 
+    componentDidMount() {
+        // codePush.sync();
+      }
+    
     componentWillUnmount() {
         this.loginNotification.remove();
         this.loginSuccessNotification.remove();

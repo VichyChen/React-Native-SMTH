@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import {
     NetworkManager,
-  } from '../config/Common';
+} from '../config/Common';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
 import Cookie from 'react-native-cookie';
 
@@ -14,7 +14,14 @@ export default class LoginManager {
         Cookie.get('http://www.newsmth.net')
             .then((res) => {
                 if (res == null || res == undefined || res['main[UTMPUSERID]'] == 'guest') {
-                    LoginManager.logout();
+                    AsyncStorageManger.getLogin().then(login => {
+                        if (login == true) {
+                            LoginManager.postNewSMTHLogin();
+                        }
+                        else {
+                            LoginManager.logout();
+                        }
+                    });
                 }
             });
     }
@@ -33,6 +40,21 @@ export default class LoginManager {
         NetworkManager.postNewSMTHLogout(() => {
         }, (error) => {
         }, (errorMessage) => {
+        });
+    }
+
+    static postNewSMTHLogin() {
+        AsyncStorageManger.getUsername().then(username => {
+            AsyncStorageManger.getPassword().then((password) => {
+                NetworkManager.postNewSMTHLogin(username, password, 99999, (result) => {
+                    AsyncStorageManger.setLogin(true);
+                    global.login = true;
+                    global.current.username = username;
+                    DeviceEventEmitter.emit('LoginSuccessNotification', result);
+                }, (error) => {
+                }, (errorMessage) => {
+                });        
+            });
         });
     }
 }

@@ -308,20 +308,6 @@ export default class NewUserScreen extends Component {
 }
 
 var styles = {
-    get name() {
-        return {
-            fontSize: global.configures.fontSize18,
-            color: global.colors.fontColor,
-            marginTop: 5,
-        }
-    },
-    get nick() {
-        return {
-            fontSize: global.configures.fontSize16,
-            color: global.colors.gray1Color,
-            marginTop: 12,
-        }
-    },
     get container() {
         return {
             flex: 1,
@@ -335,14 +321,6 @@ var styles = {
             paddingHorizontal: global.constants.Padding,
             // justifyContent: 'flex-start',
             backgroundColor: global.colors.themeColor,
-        }
-    },
-    get name() {
-        return {
-            marginLeft: 10,
-            fontSize: global.configures.fontSize20,
-            fontWeight: '600',
-            color: global.colors.whiteColor
         }
     },
     get nick() {

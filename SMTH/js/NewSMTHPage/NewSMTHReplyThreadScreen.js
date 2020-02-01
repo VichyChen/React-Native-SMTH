@@ -33,11 +33,10 @@ import {
 import ImagePicker from 'react-native-image-picker';
 import cio from 'cheerio-without-node-native';
 
-var _title;
-var _content;
 
 export default class NewSMTHReplyThreadScreen extends Component {
 
+    _content;
     _images = [];
 
     constructor(props) {
@@ -62,7 +61,7 @@ export default class NewSMTHReplyThreadScreen extends Component {
                 content: content,
                 selection: { start: 0, end: 0 },
             });
-            _content = content;
+            this._content = content;
 
 
         }, (error) => {
@@ -79,8 +78,8 @@ export default class NewSMTHReplyThreadScreen extends Component {
     }
 
     save() {
-        if (_content == null) {
-            ToastUtil.info('请输入标题和内容');
+        if (this._content == null) {
+            ToastUtil.info('请输入内容');
             return;
         }
         if (this.state.isLoading == true) return;
@@ -88,35 +87,30 @@ export default class NewSMTHReplyThreadScreen extends Component {
             isLoading: true,
         });
 
-        
-            // if (this._images.length > 0) {
-            //     NetworkManager.postUpload(this._images, (result) => {
-
-            //         this.postReplSave();
-
-            //     }, (error) => {
-            //         this.setState({
-            //             isLoading: false,
-            //         });
-            //         ToastUtil.error(error);
-            //     }, (errorMessage) => {
-            //         this.setState({
-            //             isLoading: false,
-            //         });
-            //         ToastUtil.error(errorMessage);
-            //     });
-            // }
-            // else {
+        if (this._images.length > 0) {
+            NetworkManager.postNewSMTHUpload(this._images, this.props.navigation.state.params.board, (result) => {
                 this.postReplSave();
-            // }
+            }, (error) => {
+                this.setState({
+                    isLoading: false,
+                });
+                ToastUtil.error(error);
+            }, (errorMessage) => {
+                this.setState({
+                    isLoading: false,
+                });
+                ToastUtil.error(errorMessage);
+            });
+        }
+        else {
+            this.postReplSave();
+        }
     }
 
     postReplSave() {
-        NetworkManager.postNewSMTHReplyThread(this.props.navigation.state.params.board, this.state.title, _content, this.props.navigation.state.params.id,  (result) => {
-
+        NetworkManager.postNewSMTHReplyThread(this.props.navigation.state.params.board, this.state.title, this._content, this.props.navigation.state.params.id, (result) => {
             DeviceEventEmitter.emit('NewThreadRefreshNotification', this.props.navigation.state.params.threadID);
             this.props.navigation.goBack();
-
         }, (error) => {
             this.setState({
                 isLoading: false,
@@ -213,7 +207,7 @@ export default class NewSMTHReplyThreadScreen extends Component {
                                     this.setState({
                                         content: text
                                     });
-                                    _content = text;
+                                    this._content = text;
                                 }}
                                 value={this.state.content}
                             />

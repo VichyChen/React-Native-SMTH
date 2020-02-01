@@ -91,9 +91,6 @@ export default class NewLoginView extends Component {
             isLoading: true,
         })
 
-        // NetworkManager.postNewSignIn(_username, _password, _captcha, (result) => {
-
-        // NetworkManager.login(_username, _password, () => {
 
         NetworkManager.postNewSMTHLogin(_username, _password, 99999, (result) => {
 
@@ -117,36 +114,14 @@ export default class NewLoginView extends Component {
         }, (error) => {
             this.setState({
                 isLoading: false,
+                screenText: error,
             })
+            
         }, (errorMessage) => {
             this.setState({
                 isLoading: false,
             })
         });
-
-        // }, (error) => {
-        //     this.setState({
-        //         isLoading: false,
-        //     })
-        // }, (errorMessage) => {
-        //     this.setState({
-        //         isLoading: false,
-        //     })
-        // });
-
-        // }, (error) => {
-        //     this.refreshCaptcha();
-        //     _captcha = '';
-        //     this.setState({
-        //         captcha: '',
-        //         screenText: error,
-        //         isLoading: false,
-        //     })
-        // }, (errorMessage) => {
-        //     this.setState({
-        //         isLoading: false,
-        //     })
-        // });
     }
 
     componentWillUnmount() {
@@ -363,7 +338,7 @@ var styles = {
             height: 20,
             textAlign: 'center',
             color: 'red',
-            fontSize: global.configures.fontSize17,
+            fontSize: global.configures.fontSize15,
         }
     },
     get login() {

@@ -21,7 +21,7 @@ export default class ScanRecordModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'new_scanrecord.realm',
+                path: 'newsmth_scanrecord.realm',
                 schema: [ScanRecordSchema]
             })
                 .then(realm => {

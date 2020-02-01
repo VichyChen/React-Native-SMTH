@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import AsyncStorageManger from './js/storage/AsyncStorageManger';
 import { BoardModel } from 'ModelModule';
-import codePush from 'react-native-code-push';
+// import codePush from 'react-native-code-push';
 
 global.login = false;
 
@@ -98,7 +98,8 @@ global.images = {
     get icon_message_sendmail() { return require('./js/image/icon_message_sendmail.png') },
     get icon_message_reply() { return require('./js/image/icon_message_reply.png') },
     get icon_message_at() { return require('./js/image/icon_message_at.png') },
-
+    get icon_message_like() { return require('./js/image/icon_message_like.png') },
+    
     get icon_male() { return require('./js/image/icon_male.png') },
     get icon_female() { return require('./js/image/icon_female.png') },
 
@@ -179,7 +180,7 @@ function init() {
 
 async function configure() {
 
-    codePush.sync();
+    // codePush.sync();
 
     // //字体大小
     // var fontSize = await AsyncStorageManger.get(global.storageKeys.fontSize);

@@ -20,7 +20,7 @@ export default class FavouriteThreadModel {
     static open() {
         return new Promise(function (resolve, reject) {
             Realm.open({
-                path: 'new_favouritethread.realm',
+                path: 'newsmth_favouritethread.realm',
                 schema: [FavouriteThreadSchema]
             })
                 .then(realm => {

@@ -43,9 +43,9 @@ export default class NewSMTHFavouriteBoardScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: true,
+            login: global.login == true ? true : false,
             pullLoading: false,
-            screenStatus: global.screen.loading,
+            screenStatus: global.login == true ? global.screen.loading : global.screen.none,
             screenText: null,
             isDeleting: false,
             editing: false,
@@ -68,21 +68,35 @@ export default class NewSMTHFavouriteBoardScreen extends Component {
             });
         });
 
-        AsyncStorageManger.getLogin().then(login => {
-            global.login = login;
-            if (login == true) {
-                this.setState({
-                    login: login,
-                    screenStatus: global.screen.loading,
-                });
-                this.net_LoadFavorites();
-            }
-            else {
-                this.setState({
-                    login: login,
-                });
-            }
-        });
+        // AsyncStorageManger.getLogin().then(login => {
+        //     global.login = login;
+        //     if (login == true) {
+        //         this.setState({
+        //             login: login,
+        //             screenStatus: global.screen.loading,
+        //         });
+        //         this.net_LoadFavorites();
+        //     }
+        //     else {
+        //         this.setState({
+        //             login: login,
+        //         });
+        //     }
+        // });
+
+        if (global.login == true) {
+            // this.setState({
+            //     login: true,
+            //     screenStatus: global.screen.loading,
+            // });
+            this.net_LoadFavorites();
+        }
+        else {
+            // this.setState({
+            //     login: false,
+            //     screenStatus: global.screen.none,
+            // });
+        }
     }
 
     componentDidMount() {
@@ -201,7 +215,7 @@ export default class NewSMTHFavouriteBoardScreen extends Component {
                                                         ReactNavigation.navigate(this.props.navigation, 'newSMTHBoardScreen', { id: '', name: item.description, title: item.name });
                                                     }}>
                                                         {item.description}
-                                                    </Text> 
+                                                    </Text>
                                                     {
                                                         this.state.editing == true
                                                             ?

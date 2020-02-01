@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.imagepicker.ImagePickerPackage;
 import im.shimo.react.cookie.CookieManagerPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import io.realm.react.RealmReactPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.ReactNativeHost;
@@ -41,7 +40,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFetchBlobPackage(),
             new ImagePickerPackage(),
             new CookieManagerPackage(),
-            new RNFetchBlobPackage(),
             new RealmReactPackage(),
             new PickerViewPackage(),
 //              new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)

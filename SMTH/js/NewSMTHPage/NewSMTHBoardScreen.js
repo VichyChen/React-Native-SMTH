@@ -124,7 +124,7 @@ export default class NewSMTHBoardScreen extends Component {
                         //分享
                         else if (index == 4) {
                             var shareManager = NativeModules.ShareManager;
-                            shareManager.share(this.props.navigation.state.params.name + ' - ' + this.props.navigation.state.params.title + ' - 水木社区', 'https://exp.newsmth.net/board/' + this.props.navigation.state.params.id);
+                            shareManager.share(this.props.navigation.state.params.name + ' - ' + this.props.navigation.state.params.title + ' - 水木社区', 'http://www.newsmth.net/nForum/#!board/' + this.props.navigation.state.params.title);
                         }
                         else {
 

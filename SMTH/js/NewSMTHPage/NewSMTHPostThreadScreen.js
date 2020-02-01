@@ -29,11 +29,11 @@ import {
 } from '../config/Common';
 import ImagePicker from 'react-native-image-picker';
 
-var _title;
-var _content;
 
 export default class NewSMTHPostThreadScreen extends Component {
 
+    _title;
+    _content;
     _images = [];
 
     constructor(props) {
@@ -45,7 +45,7 @@ export default class NewSMTHPostThreadScreen extends Component {
     }
 
     save() {
-        if (_title == null || _content == null) {
+        if (this._title == null || this._content == null) {
             ToastUtil.info('请输入标题和内容');
             return;
         }
@@ -53,44 +53,29 @@ export default class NewSMTHPostThreadScreen extends Component {
         this.setState({
             isLoading: true,
         });
-        // NetworkManager.getNewSMTHPostThreadDetail(this.props.navigation.state.params.title, (result) => {
 
-            // if (this._images.length > 0) {
-            //     NetworkManager.postUpload(this._images, (result) => {
-
-            //         this.postReplSave();
-
-            //     }, (error) => {
-            //         this.setState({
-            //             isLoading: false,
-            //         });
-            //         ToastUtil.error(error);
-            //     }, (errorMessage) => {
-            //         this.setState({
-            //             isLoading: false,
-            //         });
-            //         ToastUtil.error(errorMessage);
-            //     });
-            // }
-            // else {
+        if (this._images.length > 0) {
+            NetworkManager.postNewSMTHUpload(this._images, this.props.navigation.state.params.title, (result) => {
                 this.postReplSave();
-            // }
-
-        // }, (error) => {
-        //     this.setState({
-        //         isLoading: false,
-        //     });
-        //     ToastUtil.error(error);
-        // }, (errorMessage) => {
-        //     this.setState({
-        //         isLoading: false,
-        //     });
-        //     ToastUtil.error(errorMessage);
-        // });
+            }, (error) => {
+                this.setState({
+                    isLoading: false,
+                });
+                ToastUtil.error(error);
+            }, (errorMessage) => {
+                this.setState({
+                    isLoading: false,
+                });
+                ToastUtil.error(errorMessage);
+            });
+        }
+        else {
+            this.postReplSave();
+        }
     }
 
     postReplSave() {
-        NetworkManager.postNewSMTHPostThread(this.props.navigation.state.params.title, _title, _content, (result) => {
+        NetworkManager.postNewSMTHPostThread(this.props.navigation.state.params.title, this._title, this._content, (result) => {
 
             ToastUtil.info('发帖成功');
             setTimeout(() => {
@@ -176,7 +161,7 @@ export default class NewSMTHPostThreadScreen extends Component {
                                 placeholder={'输入文章主题'}
                                 placeholderTextColor={global.colors.gray3Color}
                                 autoCapitalize={'none'}
-                                onChangeText={(text) => { this.setState({ title: text }); _title = text; }}
+                                onChangeText={(text) => { this.setState({ title: text }); this._title = text; }}
                                 value={this.state.title}
                             />
 
@@ -192,7 +177,7 @@ export default class NewSMTHPostThreadScreen extends Component {
                                 placeholderTextColor={global.colors.gray3Color}
                                 autoCapitalize={'none'}
                                 onFocus={() => this.setState({ selection: { start: 0, end: 0 } })}
-                                onChangeText={(text) => { this.setState({ content: text }); _content = text; }}
+                                onChangeText={(text) => { this.setState({ content: text }); this._content = text; }}
                                 value={this.state.content}
                             />
 

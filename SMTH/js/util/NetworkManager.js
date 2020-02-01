@@ -4,7 +4,8 @@ import {
 
 import NetworkUtil from './NetworkUtil';
 import AsyncStorageManger from '../storage/AsyncStorageManger';
-import RNFetchBlob from "react-native-fetch-blob";
+// import RNFetchBlob from "react-native-fetch-blob";
+import Cookie from 'react-native-cookie';
 
 import LoginManager from '../util/LoginManager';
 
@@ -1197,17 +1198,17 @@ export default class NetworkManager {
 
     //获取登陆验证码
     static getNewCaptcha(success, failure, netError) {
-        RNFetchBlob.config({
-            fileCache: false
-        })
-            .fetch("GET", "https://exp.newsmth.net/authorize/captcha")
-            .then(resp => {
-                return resp.readFile("base64");
-            })
-            .then(base64Data => {
-                console.log('base64Data' + base64Data);
-                success(base64Data);
-            });
+        // RNFetchBlob.config({
+        //     fileCache: false
+        // })
+        //     .fetch("GET", "https://exp.newsmth.net/authorize/captcha")
+        //     .then(resp => {
+        //         return resp.readFile("base64");
+        //     })
+        //     .then(base64Data => {
+        //         console.log('base64Data' + base64Data);
+        //         success(base64Data);
+        //     });
     }
 
     //登陆
@@ -1341,7 +1342,7 @@ export default class NetworkManager {
     static getNewSMTHFirst(success, failure, netError) {
         NetworkUtil.getNewSMTH('http://www.newsmth.net/nForum/', null
         ).then(async result => {
-            LoginManager.update();
+            // LoginManager.update();
             success();
         }).catch(error => {
             if (error.message == 'Timeout' || error.message == 'Network request failed') {
@@ -1394,9 +1395,13 @@ export default class NetworkManager {
         }
         NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/user/ajax_login.json', params
         ).then(async result => {
-            AsyncStorageManger.setUsername(id);
-            AsyncStorageManger.setPassword(password);
-            success(result);
+            if (result['ajax_st'] == 1 && result['ajax_code'] == '0005') {
+                AsyncStorageManger.setUsername(id);
+                AsyncStorageManger.setPassword(password);
+                success(result);
+            } else {
+                failure(result['ajax_msg']);
+            }
         }).catch(error => {
             if (error.message == 'Timeout' || error.message == 'Network request failed') {
                 netError('网络连接出错');
@@ -1842,6 +1847,63 @@ export default class NetworkManager {
         });
     }
 
+    //上传图片
+    static postNewSMTHUpload(images, board, success, failure, netError) {
+        var length = images.length;
+        var count = 0;
+        for (var i = 0; i < length; i++) {
+            var array = images[i].uri.split('/');
+            NetworkUtil.uploadNewSMTH('http://www.newsmth.net/nForum/att/' + board + '/ajax_add.json?name=' + array[array.length - 1], images[i].data
+            ).then(async result => {
+                console.log('result:' + result)
+                count++;
+                if (count == length) {
+                    success();
+                }
+            }).catch(error => {
+                if (error.message == 'Timeout' || error.message == 'Network request failed') {
+                    netError('网络连接出错');
+                }
+                else {
+                    failure(error.message);
+                }
+            });
+        }
+
+        // Cookie.get('http://www.newsmth.net')
+        //     .then((cookie) => {
+
+        //         for (var i = 0; i < length; i++) {
+        //             var array = images[i].uri.split('/');
+        //             console.log('board:' + board)
+        //             console.log('name:' + array[array.length - 1])
+        //             console.log('uri:' + images[i].uri)
+
+
+        //             RNFetchBlob.fetch('POST', 'http://www.newsmth.net/nForum/att/' + board + '/ajax_add.json?name=' + array[array.length - 1], {
+        //                 'Content-Type': 'application/octet-stream',
+        //                 "x-requested-with": " XMLHttpRequest",
+        //                 "Origin": "http://www.newsmth.net",
+        //                 "Host": "www.newsmth.net",
+        //                 "Accept": "*/*",
+        //                 "Cookie": "",
+        //             }, RNFetchBlob.wrap(images[i].uri))
+        //                 .then((res) => {
+        //                     console.log('resresresresresresresres:' + res.text())
+        //                     count++;
+        //                     if (count == length) {
+        //                         success();
+        //                     }
+        //                 })
+        //                 .catch((err) => {
+        //                     console.log(err.text())
+        //                     failure('图片上传失败');
+        //                 })
+        //         }
+        //     });
+    }
+
+
     // Like
     static postNewSMTHLike(board, id, score, msg, tag, success, failure, netError) {
         let params = {
@@ -1852,7 +1914,11 @@ export default class NetworkManager {
         NetworkUtil.postNewSMTH('http://www.newsmth.net/nForum/article/' + board + '/ajax_add_like/' + id + '.json', params
         ).then(async result => {
             LoginManager.update();
-            success(result._bodyInit);
+            if (result['ajax_st'] == 1 && result['ajax_code'] == '1801') {
+                success(result._bodyInit);
+            } else {
+                failure(result['ajax_msg']);
+            }
         }).catch(error => {
             if (error.message == 'Timeout' || error.message == 'Network request failed') {
                 netError('网络连接出错');

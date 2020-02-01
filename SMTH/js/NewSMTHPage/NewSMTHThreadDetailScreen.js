@@ -58,7 +58,8 @@ import {
     SectionBlankHeader,
     ReactNavigation,
     CellBackground,
-    LoginButtonView
+    LoginButtonView,
+    GDTNativeExpressView
 } from '../config/Common';
 import { CommonCSS } from 'CommonCSS';
 import uuid from 'uuid';
@@ -68,7 +69,11 @@ import {
     FavouriteThreadModel
 } from 'ModelModule';
 
+count = 0;
+
 export default class NewSMTHThreadDetailScreen extends Component {
+
+    _adTag = [400, 401, 402, 403];
 
     webURL;
     currentPage;
@@ -109,7 +114,10 @@ export default class NewSMTHThreadDetailScreen extends Component {
             // selectedValue: '1',
             showMoreLike: true,
             needLogin: false,
+            adheight: { '400': 0, '401': 0, '402': 0, '403': 0 },
         }
+        count++;
+
         this.scanRecord = false;
         this.webURL = 'https://exp.newsmth.net/topic/' + (this.props.navigation.state.params.type == null ? '' : 'article/') + this.props.navigation.state.params.id;
 
@@ -143,11 +151,19 @@ export default class NewSMTHThreadDetailScreen extends Component {
         this.newThreadRefreshNotification.remove();
         this.loginSuccessNotification.remove();
         DeviceEventEmitter.emit('RefreshScanRecordNotification', null);
+
+        if (count == 1) {
+            var nativeExpressAdManager = NativeModules.GDTNativeExpressAdManager;
+            nativeExpressAdManager.remove(this._adTag);
+        }
+        count--;
+
+        console.log('componentWillUnmount');
     }
 
     getNewSMTHThread(page, author) {
         NetworkManager.getNewSMTHThread(this.props.navigation.state.params.board, this.props.navigation.state.params.id, author, page, (result) => {
-        // NetworkManager.getNewSMTHThread('Universal', '1966175', author, page, (result) => {
+            // NetworkManager.getNewSMTHThread('Universal', '1966175', author, page, (result) => {
             var array = [];
 
             console.log('___________________________________________________________________________' + '');
@@ -303,7 +319,7 @@ export default class NewSMTHThreadDetailScreen extends Component {
                     } else {
                         time = this.$('td[class=a-content]').children().first().html().split('<br>')[2].split('发信站: 水木社区自动发信系统 (')[1].split(')')[0];
                     }
-                    
+
                     console.log('123123123123123' + this.$('td[class=a-content]').children().first().html().split('<br>')[2].split('发信站: 水木社区 (')[1]);
 
                     array.push({
@@ -336,15 +352,16 @@ export default class NewSMTHThreadDetailScreen extends Component {
                     }
                 });
 
-                // var login = this.$('ul[class*=navbar-right]').children().first().children().first().text();
-                // console.log('loginloginloginlogin:' + login);
-                // if (login == '登录') {
-                //   AsyncStorageManger.setLogin(false);
-                //   global.login = false;
-                // }
-                // else {
-                // }
-
+                if (page == 1) {
+                    if (global.bool.iOS) {
+                        array.push({
+                            key: 'ad' + uuid.v4(),
+                            section: 5,
+                            // adTag: { '5': 400, '15': 401, '25': 402, '35': 403 }[(i + ((page - 1) * 20)).toString()],
+                            adTag: 400,
+                        });
+                    }
+                }
 
                 if (page == 1 && array.length == 0) {
                     this.setState({
@@ -704,7 +721,24 @@ export default class NewSMTHThreadDetailScreen extends Component {
                 </View>
             );
         }
-    };
+        else if (item.section == 5) {
+            return (
+                <View>
+                    <GDTNativeExpressView
+                        style={{ height: this.state.adheight[item.adTag.toString()] }}
+                        adType={0}
+                        adTag={item.adTag}
+                        onRenderSuccess={(event) => {
+                            this.state.adheight[item.adTag.toString()] = event.nativeEvent.height;
+                            this.setState({
+                                adheight: this.state.adheight,
+                            });
+                        }}
+                    />
+                </View>
+            );
+        };
+    }
 
     _attachmentImageItem = ({ item }) => (
         <TouchableWithoutFeedback
